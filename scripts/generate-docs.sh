@@ -110,6 +110,27 @@ setup_source() {
     echo "$source_dir"
 }
 
+# Function to create fallback documentation when doxygen fails
+create_fallback_docs() {
+    local distribution=$1
+    local output_dir="$2"
+    
+    mkdir -p "$output_dir/html"
+    cat > "$output_dir/html/index.html" <<EOF
+<!DOCTYPE html>
+<html><head><title>$distribution Documentation</title></head>
+<body><h1>Documentation generation failed for $distribution</h1>
+<p>The documentation build encountered an error. Please check the GitHub Actions logs.</p>
+<p>This may be due to:</p>
+<ul>
+<li>Missing dependencies</li>
+<li>Build configuration issues</li>
+<li>Source code changes that broke the build</li>
+</ul>
+</body></html>
+EOF
+}
+
 # Function to generate doxygen documentation
 generate_doxygen() {
     local distribution=$1
@@ -132,27 +153,56 @@ generate_doxygen() {
     local commit_hash=$(cd "$source_dir" && git rev-parse HEAD)
     local build_date=$(date -u +"%Y-%m-%d")
     
-    # Create Doxyfile from template
+    # Use rclcpp's built-in Doxyfile and modify it for our needs
+    local original_doxyfile="$source_dir/rclcpp/Doxyfile"
     local doxyfile="$WORK_DIR/Doxyfile.$distribution"
-    sed "s|{{DISTRIBUTION}}|$distribution|g; \
-         s|{{VERSION}}|$version|g; \
-         s|{{OUTPUT_DIR}}|$output_dir|g; \
-         s|{{SOURCE_DIR}}|$source_dir|g" \
-         "$REPO_ROOT/doxygen/Doxyfile.template" > "$doxyfile"
     
-    # Run doxygen
-    cd "$WORK_DIR"
-    if ! doxygen "$doxyfile" 2>/dev/null; then
-        warn "Doxygen failed for $distribution, but continuing..."
-        # Create a basic index.html as fallback
-        mkdir -p "$output_dir/html"
-        cat > "$output_dir/html/index.html" <<EOF
-<!DOCTYPE html>
-<html><head><title>$distribution Documentation</title></head>
-<body><h1>Documentation generation failed for $distribution</h1>
-<p>The documentation build encountered an error. Please check the GitHub Actions logs.</p>
-</body></html>
-EOF
+    if [ -f "$original_doxyfile" ]; then
+        log "Using rclcpp's built-in Doxyfile for $distribution"
+        # Copy and modify the original Doxyfile
+        cp "$original_doxyfile" "$doxyfile"
+        
+        # Update PROJECT_NUMBER to include distribution
+        sed -i "s/PROJECT_NUMBER.*/PROJECT_NUMBER = $distribution ($version)/" "$doxyfile"
+        
+        # Update OUTPUT_DIRECTORY to our target
+        sed -i "s|OUTPUT_DIRECTORY.*|OUTPUT_DIRECTORY = $output_dir|" "$doxyfile"
+        
+        # Ensure INPUT points to the include directory
+        sed -i "s|INPUT.*|INPUT = ./include|" "$doxyfile"
+        
+        # Change to rclcpp directory and run doxygen
+        cd "$source_dir/rclcpp"
+        if ! doxygen "$doxyfile"; then
+            warn "Doxygen failed for $distribution using built-in Doxyfile, trying fallback..."
+            
+            # Fallback: try with our template
+            sed "s|{{DISTRIBUTION}}|$distribution|g; \
+                 s|{{VERSION}}|$version|g; \
+                 s|{{OUTPUT_DIR}}|$output_dir|g; \
+                 s|{{SOURCE_DIR}}|$source_dir|g" \
+                 "$REPO_ROOT/doxygen/Doxyfile.template" > "$doxyfile"
+            
+            cd "$WORK_DIR"
+            if ! doxygen "$doxyfile" 2>/dev/null; then
+                warn "Both Doxyfiles failed for $distribution, creating placeholder..."
+                create_fallback_docs "$distribution" "$output_dir"
+            fi
+        fi
+    else
+        warn "No built-in Doxyfile found, using template for $distribution"
+        # Fallback to our template
+        sed "s|{{DISTRIBUTION}}|$distribution|g; \
+             s|{{VERSION}}|$version|g; \
+             s|{{OUTPUT_DIR}}|$output_dir|g; \
+             s|{{SOURCE_DIR}}|$source_dir|g" \
+             "$REPO_ROOT/doxygen/Doxyfile.template" > "$doxyfile"
+        
+        cd "$WORK_DIR"
+        if ! doxygen "$doxyfile" 2>/dev/null; then
+            warn "Template Doxyfile failed for $distribution, creating placeholder..."
+            create_fallback_docs "$distribution" "$output_dir"
+        fi
     fi
     
     # Update distribution metadata
