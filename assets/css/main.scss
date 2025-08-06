@@ -145,7 +145,7 @@ h2 {
 /* Custom styles for ROS 2 documentation site */
 
 .intro {
-  background: linear-gradient(135deg, var(--nav2-light-blue), #2596be);
+  background: var(--nav2-blue);
   color: #ffffff;
   border-radius: 12px;
   padding: 2rem;
@@ -173,7 +173,7 @@ h2 {
 
 .about-section, .resources-section {
   margin: 3rem 0;
-  background: linear-gradient(135deg, var(--nav2-blue), #2596be);
+  background: var(--nav2-blue);
   color: #ffffff;
   border-radius: 12px;
   padding: 2rem;
@@ -276,7 +276,7 @@ h2 {
 }
 
 .btn-primary {
-  background: linear-gradient(45deg, var(--nav2-accent), #2596be);
+  background: var(--nav2-blue);
   color: white;
   box-shadow: 0 2px 4px rgba(71, 198, 238, 0.3);
 }
@@ -333,7 +333,7 @@ h2 {
 }
 
 .status.active {
-  background: linear-gradient(45deg, var(--nav2-accent), #2596be);
+  background: var(--nav2-blue);
   color: white;
   box-shadow: 0 2px 4px rgba(71, 198, 238, 0.3);
 }
@@ -396,7 +396,7 @@ h2 {
 }
 
 .version-info {
-  background: linear-gradient(135deg, var(--nav2-blue), #2596be);
+  background: var(--nav2-blue);
   border: 1px solid var(--nav2-accent);
   border-radius: 8px;
   padding: 1.5rem;

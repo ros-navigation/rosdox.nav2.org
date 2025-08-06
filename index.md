@@ -1,11 +1,11 @@
 ---
 layout: home
-title: "ROS 2 rclcpp Documentation"
+title: "ROS 2 API Docs"
 ---
 
-# ROS 2 rclcpp API Documentation
+# ROS 2 API Docs
 
-Welcome to the developer-friendly ROS 2 rclcpp API documentation. This site provides comprehensive Doxygen-generated documentation for multiple ROS 2 distributions.
+Welcome to the C++ developer-friendly ROS 2 API documentation. This site provides comprehensive Doxygen-generated documentation for multiple ROS 2 distributions because I (Your Friendly Neighborhood Navigator) find the new format utterly unreadable and I needed a new solution before my total descent into madness.
 
 ## Available Distributions
 
