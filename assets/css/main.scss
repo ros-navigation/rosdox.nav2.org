@@ -1,9 +1,144 @@
 ---
 ---
 
-@import "minima";
+/* Base styles for ROS 2 documentation site */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #24292e;
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header styles */
+.site-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e1e4e8;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.site-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.site-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #24292e;
+  text-decoration: none;
+}
+
+.site-title:hover {
+  color: #0366d6;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  color: #586069;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: #0366d6;
+}
+
+/* Main content */
+.site-content {
+  min-height: calc(100vh - 200px);
+  padding: 2rem 0;
+}
+
+/* Footer */
+.site-footer {
+  background: #f6f8fa;
+  border-top: 1px solid #e1e4e8;
+  padding: 2rem 0;
+  text-align: center;
+  color: #586069;
+  font-size: 0.9rem;
+}
+
+.site-footer a {
+  color: #0366d6;
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: #24292e;
+  margin-top: 0;
+}
+
+h1 {
+  font-size: 2rem;
+  border-bottom: 1px solid #e1e4e8;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
 
 /* Custom styles for ROS 2 documentation site */
+
+.intro {
+  background: #f6f8fa;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.about-section, .resources-section {
+  margin: 3rem 0;
+}
+
+.resources-list {
+  list-style: none;
+  padding: 0;
+}
+
+.resources-list li {
+  margin: 0.5rem 0;
+}
+
+.resources-list a {
+  color: #0366d6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.resources-list a:hover {
+  text-decoration: underline;
+}
 
 .distribution-grid {
   display: grid;

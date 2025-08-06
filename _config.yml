@@ -5,7 +5,6 @@ url: "https://[username].github.io"
 
 markdown: kramdown
 highlighter: rouge
-theme: minima
 
 plugins:
   - jekyll-feed
