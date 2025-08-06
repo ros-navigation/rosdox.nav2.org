@@ -1,7 +1,7 @@
 title: "ROS 2 rclcpp Documentation"
 description: "Developer-friendly ROS 2 rclcpp API documentation"
-baseurl: ""
-url: "https://rosdox.nav2.org"
+baseurl: "/rosdox.nav2.org"
+url: "https://[username].github.io"
 
 markdown: kramdown
 highlighter: rouge

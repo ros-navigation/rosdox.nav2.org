@@ -1,40 +1,30 @@
-# Setup Instructions for rosdox.nav2.org
+# Setup Instructions for ROS 2 rclcpp Documentation
 
-This document outlines the steps needed to set up and deploy the ROS 2 rclcpp documentation website.
+This document outlines the steps needed to set up and deploy the ROS 2 rclcpp documentation website on GitHub Pages.
 
 ## GitHub Pages Configuration
 
-### 1. Enable GitHub Pages
+### 1. Repository Setup
+
+1. Create a new repository on GitHub named `rosdox.nav2.org` (or any name you prefer)
+2. Push this code to the repository
+3. The site will be available at: `https://[your-username].github.io/rosdox.nav2.org/`
+
+### 2. Enable GitHub Pages
 
 1. Go to your repository settings on GitHub
 2. Navigate to "Pages" in the left sidebar
 3. Under "Source", select "GitHub Actions"
 4. The site will be automatically deployed when the workflow runs
 
-### 2. Custom Domain Setup
+### 3. No DNS Configuration Needed
 
-The CNAME file is already configured for `rosdox.nav2.org`. To complete the setup:
-
-1. In your repository settings, go to "Pages"
-2. Under "Custom domain", enter: `rosdox.nav2.org`
-3. Check "Enforce HTTPS"
-
-### 3. DNS Configuration
-
-You'll need to configure DNS records for the subdomain. Add these records to your DNS provider:
-
+The site will automatically be hosted at:
 ```
-Type: CNAME
-Name: rosdox
-Value: [your-github-username].github.io
+https://[your-username].github.io/rosdox.nav2.org/
 ```
 
-For nav2.org specifically, you'll need to add:
-```
-Type: CNAME
-Name: rosdox.nav2.org
-Value: [your-github-username].github.io
-```
+No custom domain setup or DNS configuration required!
 
 ## GitHub Actions Setup
 
@@ -130,10 +120,10 @@ To trigger documentation updates manually:
 
 ### Linking from nav2.org
 
-Once the subdomain is set up, you can link to the documentation from nav2.org:
+You can link to the documentation from nav2.org using the GitHub Pages URL:
 
 ```html
-<a href="https://rosdox.nav2.org">ROS 2 rclcpp API Documentation</a>
+<a href="https://[your-username].github.io/rosdox.nav2.org/">ROS 2 rclcpp API Documentation</a>
 ```
 
 ### Navigation Integration
