@@ -10,22 +10,29 @@ DOCS_OUTPUT_DIR="$REPO_ROOT"
 # ROS 2 distributions to build
 DISTRIBUTIONS=("humble" "jazzy" "rolling")
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+# Colors for output (only in CI environment)
+if [ -n "$CI" ]; then
+    RED=''
+    GREEN=''
+    YELLOW=''
+    NC=''
+else
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    NC='\033[0m'
+fi
 
 log() {
-    echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] $1${NC}"
+    echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] $1${NC}" >&2
 }
 
 warn() {
-    echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] WARNING: $1${NC}"
+    echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] WARNING: $1${NC}" >&2
 }
 
 error() {
-    echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] ERROR: $1${NC}"
+    echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] ERROR: $1${NC}" >&2
 }
 
 # Function to get the latest tag for a distribution
@@ -60,31 +67,46 @@ setup_source() {
     if [ -d "$source_dir" ]; then
         log "Updating existing repository for $distribution"
         cd "$source_dir"
-        git fetch --all --tags
-        git clean -fd
+        git fetch --all --tags 2>/dev/null || true
+        git clean -fd 2>/dev/null || true
     else
         log "Cloning rclcpp repository for $distribution"
         mkdir -p "$WORK_DIR"
-        git clone https://github.com/ros2/rclcpp.git "$source_dir"
+        git clone https://github.com/ros2/rclcpp.git "$source_dir" 2>/dev/null
         cd "$source_dir"
     fi
     
     # Switch to the appropriate branch/tag
     if [ "$distribution" = "rolling" ]; then
-        git checkout rolling
-        git pull origin rolling
+        if git show-ref --verify --quiet refs/remotes/origin/rolling; then
+            git checkout rolling 2>/dev/null || git checkout -b rolling origin/rolling 2>/dev/null
+            git pull origin rolling 2>/dev/null || true
+        else
+            log "No rolling branch found, using main/master"
+            git checkout main 2>/dev/null || git checkout master 2>/dev/null
+            git pull 2>/dev/null || true
+        fi
     else
         # Try to checkout the distribution branch
-        if git rev-parse --verify "origin/$distribution" >/dev/null 2>&1; then
-            git checkout "$distribution"
-            git pull "origin/$distribution"
+        if git show-ref --verify --quiet refs/remotes/origin/$distribution; then
+            git checkout $distribution 2>/dev/null || git checkout -b $distribution origin/$distribution 2>/dev/null
+            git pull origin $distribution 2>/dev/null || true
         else
-            warn "No $distribution branch found, using main/master"
-            git checkout main || git checkout master
-            git pull
+            warn "No $distribution branch found, checking for release tags"
+            # Look for release tags
+            local release_tag=$(git tag -l "*$distribution*" --sort=-version:refname | head -n1)
+            if [ -n "$release_tag" ]; then
+                log "Using release tag: $release_tag"
+                git checkout "$release_tag" 2>/dev/null
+            else
+                warn "No $distribution branch or tags found, using main/master"
+                git checkout main 2>/dev/null || git checkout master 2>/dev/null
+                git pull 2>/dev/null || true
+            fi
         fi
     fi
     
+    # Output the source directory path (this is the return value)
     echo "$source_dir"
 }
 
@@ -95,6 +117,12 @@ generate_doxygen() {
     local output_dir="$DOCS_OUTPUT_DIR/$distribution"
     
     log "Generating documentation for $distribution..."
+    
+    # Verify source directory exists and contains rclcpp
+    if [ ! -d "$source_dir/rclcpp" ]; then
+        error "rclcpp directory not found in $source_dir"
+        return 1
+    fi
     
     # Create output directory
     mkdir -p "$output_dir"
@@ -114,7 +142,18 @@ generate_doxygen() {
     
     # Run doxygen
     cd "$WORK_DIR"
-    doxygen "$doxyfile"
+    if ! doxygen "$doxyfile" 2>/dev/null; then
+        warn "Doxygen failed for $distribution, but continuing..."
+        # Create a basic index.html as fallback
+        mkdir -p "$output_dir/html"
+        cat > "$output_dir/html/index.html" <<EOF
+<!DOCTYPE html>
+<html><head><title>$distribution Documentation</title></head>
+<body><h1>Documentation generation failed for $distribution</h1>
+<p>The documentation build encountered an error. Please check the GitHub Actions logs.</p>
+</body></html>
+EOF
+    fi
     
     # Update distribution metadata
     local dist_file="$REPO_ROOT/_distributions/$distribution.md"
@@ -151,8 +190,13 @@ main() {
     for distribution in "${DISTRIBUTIONS[@]}"; do
         log "Processing $distribution distribution..."
         
-        # Setup source code
+        # Setup source code and capture the directory path
         source_dir=$(setup_source "$distribution")
+        
+        if [ -z "$source_dir" ] || [ ! -d "$source_dir" ]; then
+            error "Failed to setup source for $distribution"
+            continue
+        fi
         
         # Generate documentation
         generate_doxygen "$distribution" "$source_dir"
