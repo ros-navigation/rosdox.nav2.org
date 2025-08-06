@@ -25,7 +25,10 @@
     <header class="site-header">
         <div class="container">
             <nav class="site-nav">
-                <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
+                <div class="site-branding">
+                    <img src="{{ '/assets/images/nav2-logo.png' | relative_url }}" alt="Nav2 Logo" class="site-logo">
+                    <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
+                </div>
                 <div class="nav-links">
                     <a href="{{ '/' | relative_url }}">Home</a>
                     <a href="https://docs.ros.org/" target="_blank">ROS 2 Docs</a>
