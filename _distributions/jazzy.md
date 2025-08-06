@@ -1,11 +1,11 @@
 ---
 title: "ROS 2 Jazzy"
-description: "Latest stable release with new features and improvements"
-status: "Active"
+description: "Active Long Term Support (LTS) release - Recommended for production use"
+status: "LTS"
 order: 2
 ros_version: "jazzy"
 last_updated: 2025-08-06
 slug: "jazzy"
 ---
 
-ROS 2 Jazzy Jalisco is the latest stable release, featuring the newest developments and improvements to the ROS 2 ecosystem.
+ROS 2 Jazzy Jalisco is an active Long Term Support (LTS) release of ROS 2, providing stability and long-term support for production deployments.

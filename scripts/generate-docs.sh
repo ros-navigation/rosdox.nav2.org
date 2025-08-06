@@ -66,48 +66,105 @@ setup_source() {
     
     if [ -d "$source_dir" ]; then
         log "Updating existing repository for $distribution"
-        cd "$source_dir"
-        git fetch --all --tags 2>/dev/null || true
-        git clean -fd 2>/dev/null || true
+        cd "$source_dir" || { error "Failed to cd to $source_dir"; return 1; }
+        git fetch --all --tags || { warn "Failed to fetch updates"; }
+        git clean -fd || { warn "Failed to clean directory"; }
     else
         log "Cloning rclcpp repository for $distribution"
-        mkdir -p "$WORK_DIR"
-        git clone https://github.com/ros2/rclcpp.git "$source_dir" 2>/dev/null
-        cd "$source_dir"
+        mkdir -p "$WORK_DIR" || { error "Failed to create work directory"; return 1; }
+        
+        if ! git clone https://github.com/ros2/rclcpp.git "$source_dir"; then
+            error "Failed to clone rclcpp repository"
+            return 1
+        fi
+        
+        cd "$source_dir" || { error "Failed to cd to cloned directory"; return 1; }
+    fi
+    
+    # Verify we have a git repository
+    if ! git rev-parse --git-dir >/dev/null 2>&1; then
+        error "Not a git repository: $source_dir"
+        return 1
     fi
     
     # Switch to the appropriate branch/tag
     if [ "$distribution" = "rolling" ]; then
+        log "Setting up rolling distribution"
+        # For rolling, just use the default branch (main/master)
         if git show-ref --verify --quiet refs/remotes/origin/rolling; then
-            git checkout rolling 2>/dev/null || git checkout -b rolling origin/rolling 2>/dev/null
-            git pull origin rolling 2>/dev/null || true
+            log "Checking out rolling branch"
+            git checkout rolling || git checkout -b rolling origin/rolling || {
+                warn "Failed to checkout rolling branch, using default"
+                git checkout main || git checkout master || {
+                    error "Failed to checkout any branch"
+                    return 1
+                }
+            }
         else
-            log "No rolling branch found, using main/master"
-            git checkout main 2>/dev/null || git checkout master 2>/dev/null
-            git pull 2>/dev/null || true
+            log "No rolling branch found, using default branch"
+            git checkout main || git checkout master || {
+                error "Failed to checkout default branch"
+                return 1
+            }
         fi
     else
-        # Try to checkout the distribution branch
-        if git show-ref --verify --quiet refs/remotes/origin/$distribution; then
-            git checkout $distribution 2>/dev/null || git checkout -b $distribution origin/$distribution 2>/dev/null
-            git pull origin $distribution 2>/dev/null || true
+        log "Setting up $distribution distribution"
+        # For stable distributions, try various approaches
+        if git show-ref --verify --quiet "refs/remotes/origin/$distribution"; then
+            log "Found $distribution branch, checking out"
+            git checkout "$distribution" || git checkout -b "$distribution" "origin/$distribution" || {
+                warn "Failed to checkout $distribution branch"
+                setup_fallback_branch "$distribution"
+            }
         else
-            warn "No $distribution branch found, checking for release tags"
-            # Look for release tags
-            local release_tag=$(git tag -l "*$distribution*" --sort=-version:refname | head -n1)
-            if [ -n "$release_tag" ]; then
-                log "Using release tag: $release_tag"
-                git checkout "$release_tag" 2>/dev/null
-            else
-                warn "No $distribution branch or tags found, using main/master"
-                git checkout main 2>/dev/null || git checkout master 2>/dev/null
-                git pull 2>/dev/null || true
-            fi
+            log "No $distribution branch found, trying alternative approaches"
+            setup_fallback_branch "$distribution"
         fi
     fi
     
+    # Verify we successfully checked out something
+    if ! git rev-parse HEAD >/dev/null 2>&1; then
+        error "Failed to checkout any valid branch/tag for $distribution"
+        return 1
+    fi
+    
+    local current_branch=$(git branch --show-current 2>/dev/null || echo "detached")
+    log "Successfully set up $distribution using: $current_branch"
+    
     # Output the source directory path (this is the return value)
     echo "$source_dir"
+}
+
+# Helper function to set up fallback branch when main distribution branch doesn't exist
+setup_fallback_branch() {
+    local distribution=$1
+    
+    # Try to find release tags matching the distribution
+    local release_tag=$(git tag -l "*$distribution*" --sort=-version:refname | head -n1)
+    if [ -n "$release_tag" ]; then
+        log "Using release tag: $release_tag"
+        if git checkout "$release_tag"; then
+            return 0
+        fi
+    fi
+    
+    # Try common tag patterns
+    for pattern in "${distribution}" "${distribution}-*" "*${distribution}*" "release/${distribution}*"; do
+        release_tag=$(git tag -l "$pattern" --sort=-version:refname | head -n1)
+        if [ -n "$release_tag" ]; then
+            log "Trying tag pattern '$pattern': found $release_tag"
+            if git checkout "$release_tag"; then
+                return 0
+            fi
+        fi
+    done
+    
+    # Last resort: use main/master branch
+    warn "No $distribution-specific branch or tags found, using main/master"
+    git checkout main || git checkout master || {
+        error "Failed to checkout fallback branch"
+        return 1
+    }
 }
 
 # Function to create fallback documentation when doxygen fails
@@ -241,17 +298,23 @@ main() {
         log "Processing $distribution distribution..."
         
         # Setup source code and capture the directory path
-        source_dir=$(setup_source "$distribution")
-        
-        if [ -z "$source_dir" ] || [ ! -d "$source_dir" ]; then
+        if source_dir=$(setup_source "$distribution"); then
+            if [ -n "$source_dir" ] && [ -d "$source_dir" ]; then
+                log "Source setup successful for $distribution: $source_dir"
+                
+                # Generate documentation
+                generate_doxygen "$distribution" "$source_dir"
+                
+                log "Completed $distribution distribution"
+            else
+                error "Setup returned invalid source directory for $distribution: '$source_dir'"
+                continue
+            fi
+        else
             error "Failed to setup source for $distribution"
             continue
         fi
         
-        # Generate documentation
-        generate_doxygen "$distribution" "$source_dir"
-        
-        log "Completed $distribution distribution"
         echo
     done
     

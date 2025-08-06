@@ -129,7 +129,7 @@ h2 {
 /* Custom styles for ROS 2 documentation site */
 
 .intro {
-  background: linear-gradient(135deg, var(--nav2-light-blue), var(--nav2-accent));
+  background: linear-gradient(135deg, var(--nav2-light-blue), #2596be);
   color: #ffffff;
   border-radius: 12px;
   padding: 2rem;
@@ -197,9 +197,9 @@ h2 {
 }
 
 .distribution-card:hover {
-  box-shadow: 0 8px 16px rgba(30, 58, 138, 0.15);
+  box-shadow: 0 8px 16px rgba(71, 198, 238, 0.15);
   transform: translateY(-2px);
-  border-top-color: var(--nav2-light-blue);
+  border-top-color: #2596be;
 }
 
 .distribution-card h3 {
@@ -243,24 +243,24 @@ h2 {
 }
 
 .btn-primary {
-  background: linear-gradient(45deg, var(--nav2-accent), var(--nav2-light-blue));
+  background: linear-gradient(45deg, var(--nav2-accent), #2596be);
   color: white;
-  box-shadow: 0 2px 4px rgba(29, 78, 216, 0.3);
+  box-shadow: 0 2px 4px rgba(71, 198, 238, 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(29, 78, 216, 0.4);
+  box-shadow: 0 4px 8px rgba(71, 198, 238, 0.4);
 }
 
 .btn-secondary {
   background: #ffffff;
   color: var(--nav2-blue);
-  border: 2px solid var(--nav2-light-blue);
+  border: 2px solid var(--nav2-blue);
 }
 
 .btn-secondary:hover {
-  background: var(--nav2-light-blue);
+  background: var(--nav2-blue);
   color: white;
   transform: translateY(-1px);
 }
@@ -300,9 +300,9 @@ h2 {
 }
 
 .status.active {
-  background: linear-gradient(45deg, var(--nav2-accent), var(--nav2-light-blue));
+  background: linear-gradient(45deg, var(--nav2-accent), #2596be);
   color: white;
-  box-shadow: 0 2px 4px rgba(29, 78, 216, 0.3);
+  box-shadow: 0 2px 4px rgba(71, 198, 238, 0.3);
 }
 
 .status.development {
@@ -339,20 +339,20 @@ h2 {
 }
 
 .doc-link:hover {
-  border-color: #0366d6;
+  border-color: var(--nav2-blue);
   background: #f6f8fa;
   text-decoration: none;
   color: #24292e;
 }
 
 .doc-link.primary {
-  border-color: #0366d6;
+  border-color: var(--nav2-blue);
   background: #f1f8ff;
 }
 
 .doc-link h3 {
   margin: 0 0 0.5rem 0;
-  color: #0366d6;
+  color: var(--nav2-blue);
   font-size: 1.1rem;
 }
 
@@ -363,17 +363,18 @@ h2 {
 }
 
 .version-info {
-  background: #f6f8fa;
-  border: 1px solid #e1e4e8;
+  background: linear-gradient(135deg, var(--nav2-blue), #2596be);
+  border: 1px solid var(--nav2-accent);
   border-radius: 8px;
   padding: 1.5rem;
   margin: 2rem 0;
+  color: #ffffff;
 }
 
 .version-info h2 {
   margin-top: 0;
   margin-bottom: 1rem;
-  color: #24292e;
+  color: #ffffff;
 }
 
 .version-info ul {
@@ -383,13 +384,15 @@ h2 {
 
 .version-info li {
   padding: 0.25rem 0;
-  color: #586069;
+  color: #ffffff;
+  opacity: 0.9;
 }
 
 .version-info code {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
   padding: 0.2rem 0.4rem;
-  border: 1px solid #e1e4e8;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 4px;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.9rem;
@@ -421,7 +424,7 @@ h2 {
   }
   
   .distribution-card h3 a {
-    color: #58a6ff;
+    color: var(--nav2-blue);
   }
   
   .distribution-header {
@@ -440,12 +443,12 @@ h2 {
   
   .doc-link:hover {
     background: #161b22;
-    border-color: #58a6ff;
+    border-color: var(--nav2-blue);
   }
   
   .doc-link.primary {
     background: #0c2d6b;
-    border-color: #58a6ff;
+    border-color: var(--nav2-blue);
   }
   
   .version-info {

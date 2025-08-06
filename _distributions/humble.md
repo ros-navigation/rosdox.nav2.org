@@ -1,6 +1,6 @@
 ---
 title: "ROS 2 Humble"
-description: "Long Term Support (LTS) release - Recommended for production use"
+description: "Active Long Term Support (LTS) release - Recommended for production use"
 status: "LTS"
 order: 1
 ros_version: "humble"
