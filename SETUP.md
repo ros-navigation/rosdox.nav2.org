@@ -133,8 +133,8 @@ Consider adding navigation links in the Jekyll layout to connect back to nav2.or
 ```yaml
 # In _config.yml
 navigation:
-  - title: "Navigation2"
-    url: "https://navigation.ros.org/"
+  - title: "Nav2"
+    url: "https://nav2.org/"
   - title: "API Docs"
     url: "/"
 ```

@@ -10,17 +10,10 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
 
+# Distribution data for the homepage
 collections:
   distributions:
-    output: true
-    permalink: /:name/
-
-defaults:
-  - scope:
-      path: ""
-      type: "distributions"
-    values:
-      layout: "distribution"
+    output: false
 
 exclude:
   - .github/

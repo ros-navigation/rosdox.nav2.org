@@ -34,4 +34,4 @@ This documentation is automatically generated weekly from the latest ROS 2 rclcp
 
 - [ROS 2 Official Documentation](https://docs.ros.org/)
 - [rclcpp GitHub Repository](https://github.com/ros2/rclcpp)
-- [Navigation2 Project](https://navigation.ros.org/)"
+- [Nav2 Project](https://nav2.org/)

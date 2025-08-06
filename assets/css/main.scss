@@ -1,7 +1,18 @@
 ---
 ---
 
-/* Base styles for ROS 2 documentation site */
+/* Base styles for ROS 2 documentation site - Nav2 Branded */
+
+:root {
+  --nav2-blue: #1e3a8a;
+  --nav2-light-blue: #3b82f6;
+  --nav2-accent: #1d4ed8;
+  --nav2-bg: #f8fafc;
+  --nav2-card-bg: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+}
 
 * {
   box-sizing: border-box;
@@ -10,8 +21,8 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
   line-height: 1.6;
-  color: #24292e;
-  background-color: #ffffff;
+  color: var(--text-primary);
+  background-color: var(--nav2-bg);
   margin: 0;
   padding: 0;
 }
@@ -22,14 +33,15 @@ body {
   padding: 0 20px;
 }
 
-/* Header styles */
+/* Header styles - Nav2 Branded */
 .site-header {
-  background: #ffffff;
-  border-bottom: 1px solid #e1e4e8;
+  background: var(--nav2-blue);
+  border-bottom: 3px solid var(--nav2-accent);
   padding: 1rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .site-nav {
@@ -41,12 +53,12 @@ body {
 .site-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #24292e;
+  color: #ffffff;
   text-decoration: none;
 }
 
 .site-title:hover {
-  color: #0366d6;
+  color: #dbeafe;
 }
 
 .nav-links {
@@ -55,13 +67,17 @@ body {
 }
 
 .nav-links a {
-  color: #586069;
+  color: #dbeafe;
   text-decoration: none;
   font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
 }
 
 .nav-links a:hover {
-  color: #0366d6;
+  color: #ffffff;
+  background: var(--nav2-accent);
 }
 
 /* Main content */
@@ -70,34 +86,36 @@ body {
   padding: 2rem 0;
 }
 
-/* Footer */
+/* Footer - Nav2 Branded */
 .site-footer {
-  background: #f6f8fa;
-  border-top: 1px solid #e1e4e8;
+  background: var(--nav2-blue);
+  border-top: 3px solid var(--nav2-accent);
   padding: 2rem 0;
   text-align: center;
-  color: #586069;
+  color: #dbeafe;
   font-size: 0.9rem;
 }
 
 .site-footer a {
-  color: #0366d6;
+  color: #ffffff;
   text-decoration: none;
+  font-weight: 500;
 }
 
 .site-footer a:hover {
   text-decoration: underline;
+  color: #dbeafe;
 }
 
-/* Typography */
+/* Typography - Nav2 Branded */
 h1, h2, h3, h4, h5, h6 {
-  color: #24292e;
+  color: var(--nav2-blue);
   margin-top: 0;
 }
 
 h1 {
   font-size: 2rem;
-  border-bottom: 1px solid #e1e4e8;
+  border-bottom: 2px solid var(--nav2-accent);
   padding-bottom: 0.5rem;
   margin-bottom: 1.5rem;
 }
@@ -105,16 +123,36 @@ h1 {
 h2 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
+  color: var(--nav2-blue);
 }
 
 /* Custom styles for ROS 2 documentation site */
 
 .intro {
-  background: #f6f8fa;
-  border: 1px solid #e1e4e8;
-  border-radius: 8px;
-  padding: 1.5rem;
+  background: linear-gradient(135deg, var(--nav2-light-blue), var(--nav2-accent));
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
   margin: 2rem 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.intro::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
 }
 
 .about-section, .resources-section {
@@ -131,13 +169,14 @@ h2 {
 }
 
 .resources-list a {
-  color: #0366d6;
+  color: var(--nav2-accent);
   text-decoration: none;
   font-weight: 500;
 }
 
 .resources-list a:hover {
   text-decoration: underline;
+  color: var(--nav2-blue);
 }
 
 .distribution-grid {
@@ -148,37 +187,82 @@ h2 {
 }
 
 .distribution-card {
-  border: 1px solid #e1e4e8;
-  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
   padding: 1.5rem;
-  background: #ffffff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  background: var(--nav2-card-bg);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  border-top: 4px solid var(--nav2-accent);
 }
 
 .distribution-card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 16px rgba(30, 58, 138, 0.15);
   transform: translateY(-2px);
+  border-top-color: var(--nav2-light-blue);
 }
 
 .distribution-card h3 {
   margin-top: 0;
   margin-bottom: 0.5rem;
-  color: #24292e;
+  color: var(--nav2-blue);
 }
 
 .distribution-card h3 a {
   text-decoration: none;
-  color: #0366d6;
+  color: var(--nav2-blue);
+  font-weight: 600;
 }
 
 .distribution-card h3 a:hover {
-  text-decoration: underline;
+  color: var(--nav2-accent);
 }
 
 .distribution-card p {
   margin-bottom: 0.5rem;
-  color: #586069;
+  color: var(--text-secondary);
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, var(--nav2-accent), var(--nav2-light-blue));
+  color: white;
+  box-shadow: 0 2px 4px rgba(29, 78, 216, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(29, 78, 216, 0.4);
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: var(--nav2-blue);
+  border: 2px solid var(--nav2-light-blue);
+}
+
+.btn-secondary:hover {
+  background: var(--nav2-light-blue);
+  color: white;
+  transform: translateY(-1px);
 }
 
 .distribution-header {
@@ -205,21 +289,26 @@ h2 {
   font-size: 0.85rem;
   font-weight: 600;
   text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 0.5rem;
 }
 
 .status.lts {
-  background: #28a745;
+  background: linear-gradient(45deg, #059669, #10b981);
   color: white;
+  box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
 }
 
 .status.active {
-  background: #0366d6;
+  background: linear-gradient(45deg, var(--nav2-accent), var(--nav2-light-blue));
   color: white;
+  box-shadow: 0 2px 4px rgba(29, 78, 216, 0.3);
 }
 
 .status.development {
-  background: #f66a0a;
+  background: linear-gradient(45deg, #ea580c, #f97316);
   color: white;
+  box-shadow: 0 2px 4px rgba(234, 88, 12, 0.3);
 }
 
 .last-updated {

@@ -4,7 +4,7 @@ description: "Latest stable release with new features and improvements"
 status: "Active"
 order: 2
 ros_version: "jazzy"
-last_updated: 2024-01-01
+last_updated: 2025-08-06
 slug: "jazzy"
 ---
 

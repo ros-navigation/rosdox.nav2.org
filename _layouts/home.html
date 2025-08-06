@@ -4,7 +4,9 @@ layout: default
 
 <div class="home-page">
   <div class="intro">
-    <p>Welcome to the developer-friendly ROS 2 rclcpp API documentation. This site provides comprehensive Doxygen-generated documentation for multiple ROS 2 distributions.</p>
+    <h2 style="margin-top: 0; color: #ffffff; font-size: 1.8rem;">ROS 2 rclcpp API Documentation</h2>
+    <p style="font-size: 1.1rem; margin-bottom: 1rem;">Welcome to the developer-friendly ROS 2 rclcpp API documentation. This site provides comprehensive Doxygen-generated documentation for multiple ROS 2 distributions.</p>
+    <p style="font-style: italic; opacity: 0.9; margin-bottom: 0; font-size: 1rem;">✨ Vibe coded for you by <strong>Open Navigation</strong> ✨</p>
   </div>
 
   <h2>Available Distributions</h2>
@@ -13,10 +15,14 @@ layout: default
     {% assign sorted_distributions = site.distributions | sort: 'order' %}
     {% for dist in sorted_distributions %}
     <div class="distribution-card">
-      <h3><a href="{{ dist.url | relative_url }}">{{ dist.title }}</a></h3>
+      <h3><a href="{{ site.baseurl }}/{{ dist.slug }}/html/index.html">{{ dist.title }}</a></h3>
       <div class="status {{ dist.status | downcase }}">{{ dist.status }}</div>
       <p><strong>Description:</strong> {{ dist.description }}</p>
       <p><strong>Last Updated:</strong> {{ dist.last_updated | date: "%B %d, %Y" }}</p>
+      <div class="card-actions">
+        <a href="{{ site.baseurl }}/{{ dist.slug }}/html/index.html" class="btn-primary">Browse API Docs</a>
+        <a href="{{ site.baseurl }}/{{ dist.slug }}/html/annotated.html" class="btn-secondary">Class List</a>
+      </div>
     </div>
     {% endfor %}
   </div>
@@ -37,7 +43,7 @@ layout: default
     <ul class="resources-list">
       <li><a href="https://docs.ros.org/" target="_blank">ROS 2 Official Documentation</a></li>
       <li><a href="https://github.com/ros2/rclcpp" target="_blank">rclcpp GitHub Repository</a></li>
-      <li><a href="https://navigation.ros.org/" target="_blank">Navigation2 Project</a></li>
+      <li><a href="https://nav2.org/" target="_blank">Nav2 Project</a></li>
     </ul>
   </div>
 </div>

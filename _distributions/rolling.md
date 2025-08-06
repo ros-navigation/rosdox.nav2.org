@@ -4,7 +4,7 @@ description: "Development release with cutting-edge features"
 status: "Development"
 order: 3
 ros_version: "rolling"
-last_updated: 2024-01-01
+last_updated: 2025-08-06
 slug: "rolling"
 ---
 
