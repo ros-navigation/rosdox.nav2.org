@@ -157,6 +157,21 @@ h2 {
 
 .about-section, .resources-section {
   margin: 3rem 0;
+  background: linear-gradient(135deg, var(--nav2-blue), #2596be);
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.about-section h2, .resources-section h2 {
+  color: #ffffff;
+  margin-top: 0;
+}
+
+.about-section ul, .about-section p {
+  color: #ffffff;
+  opacity: 0.9;
 }
 
 .resources-list {
