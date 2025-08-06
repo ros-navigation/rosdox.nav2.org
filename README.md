@@ -5,4 +5,4 @@ I'm frustrated by the [new API doc format](https://docs.ros.org/en/jazzy/p/rclcp
 Totally vibe-coded with Claude Code to the minimum degree required to function.
 Read the source code and submit PRs at your own (sanity's) risk.
 Contributions welcome, but manual testing is required.
-The only changes made here are changes you submit yourself.
+The only changes made here are changes you submit yourself - little to no changes will be made here otherwise other than keeping it online.

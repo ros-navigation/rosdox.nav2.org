@@ -1,6 +1,6 @@
 ---
 title: "ROS 2 Jazzy"
-description: "Active Long Term Support (LTS) release - Recommended for production use"
+description: "Active Long Term Support (LTS) release - Recommended for production"
 status: "LTS"
 order: 2
 ros_version: "jazzy"
