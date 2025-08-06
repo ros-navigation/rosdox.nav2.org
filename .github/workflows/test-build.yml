@@ -1,0 +1,71 @@
+name: Test Documentation Build
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test-build:
+    runs-on: ubuntu-22.04
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          bundler-cache: true
+      
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            doxygen \
+            graphviz \
+            git \
+            curl \
+            build-essential
+      
+      - name: Setup Git configuration
+        run: |
+          git config --global user.name 'Documentation Bot'
+          git config --global user.email 'action@github.com'
+      
+      - name: Test documentation generation (single distribution)
+        run: |
+          echo "Testing documentation generation for Humble only..."
+          # Modify the script to only build Humble for testing
+          sed -i 's/DISTRIBUTIONS=("humble" "jazzy" "rolling")/DISTRIBUTIONS=("humble")/' scripts/generate-docs.sh
+          ./scripts/generate-docs.sh
+          echo "Test documentation generation completed"
+      
+      - name: Test Jekyll build
+        run: |
+          echo "Testing Jekyll site build..."
+          bundle exec jekyll build --verbose
+          echo "Jekyll test build completed"
+      
+      - name: Validate generated files
+        run: |
+          echo "Validating generated documentation..."
+          if [ -d "humble/html" ]; then
+            echo "✓ Humble documentation generated"
+            ls -la humble/html/ | head -10
+          else
+            echo "✗ Humble documentation not found"
+            exit 1
+          fi
+          
+          if [ -f "_site/index.html" ]; then
+            echo "✓ Jekyll site generated"
+          else
+            echo "✗ Jekyll site not generated"
+            exit 1
+          fi
+          echo "Validation completed successfully"

@@ -1,0 +1,32 @@
+title: "ROS 2 rclcpp Documentation"
+description: "Developer-friendly ROS 2 rclcpp API documentation"
+baseurl: ""
+url: "https://rosdox.nav2.org"
+
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+collections:
+  distributions:
+    output: true
+    permalink: /:name/
+
+defaults:
+  - scope:
+      path: ""
+      type: "distributions"
+    values:
+      layout: "distribution"
+
+exclude:
+  - .github/
+  - scripts/
+  - doxygen/
+  - Gemfile*
+  - README.md
+  - LICENSE

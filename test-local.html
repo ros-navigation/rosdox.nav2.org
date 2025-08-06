@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROS 2 rclcpp Documentation - Local Test</title>
+    <style>
+        /* Embedded styles for testing */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #24292e;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            border-bottom: 1px solid #e1e4e8;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .distribution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .distribution-card {
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 1.5rem;
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .distribution-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .distribution-card h3 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: #24292e;
+        }
+
+        .distribution-card h3 a {
+            text-decoration: none;
+            color: #0366d6;
+        }
+
+        .distribution-card h3 a:hover {
+            text-decoration: underline;
+        }
+
+        .distribution-card p {
+            margin-bottom: 0.5rem;
+            color: #586069;
+            font-size: 0.9rem;
+        }
+
+        .status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .status.lts {
+            background: #28a745;
+            color: white;
+        }
+
+        .status.active {
+            background: #0366d6;
+            color: white;
+        }
+
+        .status.development {
+            background: #f66a0a;
+            color: white;
+        }
+        
+        .intro {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .resources {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e1e4e8;
+        }
+        
+        .resources ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .resources li {
+            margin: 0.5rem 0;
+        }
+        
+        .resources a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        
+        .resources a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ROS 2 rclcpp API Documentation</h1>
+        </header>
+        
+        <div class="intro">
+            <p><strong>Local Test Version</strong> - This is a preview of how the site will look when deployed.</p>
+            <p>Welcome to the developer-friendly ROS 2 rclcpp API documentation. This site provides comprehensive Doxygen-generated documentation for multiple ROS 2 distributions.</p>
+        </div>
+
+        <h2>Available Distributions</h2>
+
+        <div class="distribution-grid">
+            <div class="distribution-card">
+                <h3><a href="./humble/html/index.html">ROS 2 Humble</a></h3>
+                <div class="status lts">LTS</div>
+                <p><strong>Description:</strong> Long Term Support (LTS) release - Recommended for production use</p>
+                <p><strong>Last Updated:</strong> Will be updated weekly</p>
+                <p><em>Note: Documentation will be generated when the GitHub Action runs</em></p>
+            </div>
+            
+            <div class="distribution-card">
+                <h3><a href="./jazzy/html/index.html">ROS 2 Jazzy</a></h3>
+                <div class="status active">Active</div>
+                <p><strong>Description:</strong> Latest stable release with new features and improvements</p>
+                <p><strong>Last Updated:</strong> Will be updated weekly</p>
+                <p><em>Note: Documentation will be generated when the GitHub Action runs</em></p>
+            </div>
+            
+            <div class="distribution-card">
+                <h3><a href="./rolling/html/index.html">ROS 2 Rolling</a></h3>
+                <div class="status development">Development</div>
+                <p><strong>Description:</strong> Development release with cutting-edge features</p>
+                <p><strong>Last Updated:</strong> Will be updated weekly</p>
+                <p><em>Note: Documentation will be generated when the GitHub Action runs</em></p>
+            </div>
+        </div>
+
+        <div class="intro">
+            <h2>About</h2>
+            <p>This documentation is automatically generated weekly from the latest ROS 2 rclcpp source code. The site provides:</p>
+            <ul>
+                <li>Complete API reference for rclcpp</li>
+                <li>Cross-referenced source code</li>
+                <li>Search functionality</li>
+                <li>Mobile-friendly interface</li>
+            </ul>
+        </div>
+
+        <div class="resources">
+            <h2>Resources</h2>
+            <ul>
+                <li><a href="https://docs.ros.org/" target="_blank">ROS 2 Official Documentation</a></li>
+                <li><a href="https://github.com/ros2/rclcpp" target="_blank">rclcpp GitHub Repository</a></li>
+                <li><a href="https://navigation.ros.org/" target="_blank">Navigation2 Project</a></li>
+            </ul>
+        </div>
+        
+        <footer style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #e1e4e8; color: #586069; font-size: 0.9rem;">
+            <p>Generated for the ROS 2 community | Hosted at <a href="https://rosdox.nav2.org">rosdox.nav2.org</a></p>
+        </footer>
+    </div>
+</body>
+</html>

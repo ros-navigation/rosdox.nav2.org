@@ -1,0 +1,57 @@
+---
+layout: default
+---
+
+<div class="distribution-page">
+  <header class="distribution-header">
+    <h1>{{ page.title }}</h1>
+    <p>{{ page.description }}</p>
+    <div class="distribution-meta">
+      <span class="status {{ page.status | downcase }}">{{ page.status }}</span>
+      <span class="last-updated">Last Updated: {{ page.last_updated | date: "%B %d, %Y at %I:%M %p UTC" }}</span>
+    </div>
+  </header>
+
+  <div class="distribution-content">
+    {{ content }}
+
+    <div class="documentation-links">
+      <h2>Documentation</h2>
+      <div class="doc-links">
+        <a href="{{ page.baseurl }}/{{ page.slug }}/html/index.html" class="doc-link primary">
+          <h3>Browse API Documentation</h3>
+          <p>Complete rclcpp API reference with cross-references</p>
+        </a>
+        
+        <a href="{{ page.baseurl }}/{{ page.slug }}/html/annotated.html" class="doc-link">
+          <h3>Class List</h3>
+          <p>All classes with brief descriptions</p>
+        </a>
+        
+        <a href="{{ page.baseurl }}/{{ page.slug }}/html/namespaces.html" class="doc-link">
+          <h3>Namespaces</h3>
+          <p>Organized by namespace hierarchy</p>
+        </a>
+        
+        <a href="{{ page.baseurl }}/{{ page.slug }}/html/files.html" class="doc-link">
+          <h3>File List</h3>
+          <p>Browse documentation by source files</p>
+        </a>
+      </div>
+    </div>
+
+    {% if page.ros_version %}
+    <div class="version-info">
+      <h2>Version Information</h2>
+      <ul>
+        <li><strong>ROS 2 Distribution:</strong> {{ page.title }}</li>
+        <li><strong>ROS Version:</strong> {{ page.ros_version }}</li>
+        <li><strong>Build Date:</strong> {{ page.build_date | date: "%B %d, %Y" }}</li>
+        {% if page.commit_hash %}
+        <li><strong>Source Commit:</strong> <code>{{ page.commit_hash }}</code></li>
+        {% endif %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+</div>

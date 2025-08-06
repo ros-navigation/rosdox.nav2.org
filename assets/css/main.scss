@@ -1,0 +1,238 @@
+---
+---
+
+@import "minima";
+
+/* Custom styles for ROS 2 documentation site */
+
+.distribution-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.distribution-card {
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.distribution-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+}
+
+.distribution-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #24292e;
+}
+
+.distribution-card h3 a {
+  text-decoration: none;
+  color: #0366d6;
+}
+
+.distribution-card h3 a:hover {
+  text-decoration: underline;
+}
+
+.distribution-card p {
+  margin-bottom: 0.5rem;
+  color: #586069;
+}
+
+.distribution-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.distribution-header h1 {
+  margin-bottom: 0.5rem;
+  color: #24292e;
+}
+
+.distribution-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status.lts {
+  background: #28a745;
+  color: white;
+}
+
+.status.active {
+  background: #0366d6;
+  color: white;
+}
+
+.status.development {
+  background: #f66a0a;
+  color: white;
+}
+
+.last-updated {
+  color: #586069;
+  font-size: 0.9rem;
+}
+
+.documentation-links {
+  margin: 2rem 0;
+}
+
+.doc-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.doc-link {
+  display: block;
+  padding: 1.5rem;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #24292e;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.doc-link:hover {
+  border-color: #0366d6;
+  background: #f6f8fa;
+  text-decoration: none;
+  color: #24292e;
+}
+
+.doc-link.primary {
+  border-color: #0366d6;
+  background: #f1f8ff;
+}
+
+.doc-link h3 {
+  margin: 0 0 0.5rem 0;
+  color: #0366d6;
+  font-size: 1.1rem;
+}
+
+.doc-link p {
+  margin: 0;
+  color: #586069;
+  font-size: 0.9rem;
+}
+
+.version-info {
+  background: #f6f8fa;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.version-info h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #24292e;
+}
+
+.version-info ul {
+  list-style: none;
+  padding: 0;
+}
+
+.version-info li {
+  padding: 0.25rem 0;
+  color: #586069;
+}
+
+.version-info code {
+  background: #ffffff;
+  padding: 0.2rem 0.4rem;
+  border: 1px solid #e1e4e8;
+  border-radius: 4px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .distribution-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .doc-links {
+    grid-template-columns: 1fr;
+  }
+  
+  .distribution-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .distribution-card {
+    background: #0d1117;
+    border-color: #30363d;
+    color: #c9d1d9;
+  }
+  
+  .distribution-card h3 a {
+    color: #58a6ff;
+  }
+  
+  .distribution-header {
+    border-color: #30363d;
+  }
+  
+  .distribution-header h1 {
+    color: #c9d1d9;
+  }
+  
+  .doc-link {
+    background: #0d1117;
+    border-color: #30363d;
+    color: #c9d1d9;
+  }
+  
+  .doc-link:hover {
+    background: #161b22;
+    border-color: #58a6ff;
+  }
+  
+  .doc-link.primary {
+    background: #0c2d6b;
+    border-color: #58a6ff;
+  }
+  
+  .version-info {
+    background: #0d1117;
+    border-color: #30363d;
+    color: #c9d1d9;
+  }
+  
+  .version-info code {
+    background: #161b22;
+    border-color: #30363d;
+    color: #c9d1d9;
+  }
+}

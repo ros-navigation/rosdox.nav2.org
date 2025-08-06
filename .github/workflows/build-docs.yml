@@ -1,0 +1,78 @@
+name: Build and Deploy ROS 2 rclcpp Documentation
+
+on:
+  schedule:
+    # Run every Sunday at 2:00 AM UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:  # Allow manual triggering
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/**'
+      - 'doxygen/**'
+      - 'scripts/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-22.04
+    
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          bundler-cache: true
+      
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            doxygen \
+            graphviz \
+            git \
+            curl \
+            build-essential
+      
+      - name: Setup Git configuration
+        run: |
+          git config --global user.name 'Documentation Bot'
+          git config --global user.email 'action@github.com'
+      
+      - name: Generate documentation
+        run: |
+          echo "Starting documentation generation..."
+          ./scripts/generate-docs.sh
+          echo "Documentation generation completed"
+      
+      - name: Build Jekyll site
+        run: |
+          echo "Building Jekyll site..."
+          bundle exec jekyll build --verbose
+          echo "Jekyll build completed"
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
