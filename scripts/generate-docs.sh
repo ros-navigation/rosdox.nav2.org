@@ -87,22 +87,22 @@ setup_source() {
         return 1
     fi
     
-    # Switch to the appropriate branch/tag
+    # Switch to the appropriate branch/tag (redirect git output to avoid contaminating function output)
     if [ "$distribution" = "rolling" ]; then
         log "Setting up rolling distribution"
         # For rolling, just use the default branch (main/master)
         if git show-ref --verify --quiet refs/remotes/origin/rolling; then
             log "Checking out rolling branch"
-            git checkout rolling || git checkout -b rolling origin/rolling || {
+            git checkout rolling >/dev/null 2>&1 || git checkout -b rolling origin/rolling >/dev/null 2>&1 || {
                 warn "Failed to checkout rolling branch, using default"
-                git checkout main || git checkout master || {
+                git checkout main >/dev/null 2>&1 || git checkout master >/dev/null 2>&1 || {
                     error "Failed to checkout any branch"
                     return 1
                 }
             }
         else
             log "No rolling branch found, using default branch"
-            git checkout main || git checkout master || {
+            git checkout main >/dev/null 2>&1 || git checkout master >/dev/null 2>&1 || {
                 error "Failed to checkout default branch"
                 return 1
             }
@@ -112,7 +112,7 @@ setup_source() {
         # For stable distributions, try various approaches
         if git show-ref --verify --quiet "refs/remotes/origin/$distribution"; then
             log "Found $distribution branch, checking out"
-            git checkout "$distribution" || git checkout -b "$distribution" "origin/$distribution" || {
+            git checkout "$distribution" >/dev/null 2>&1 || git checkout -b "$distribution" "origin/$distribution" >/dev/null 2>&1 || {
                 warn "Failed to checkout $distribution branch"
                 setup_fallback_branch "$distribution"
             }
@@ -143,7 +143,7 @@ setup_fallback_branch() {
     local release_tag=$(git tag -l "*$distribution*" --sort=-version:refname | head -n1)
     if [ -n "$release_tag" ]; then
         log "Using release tag: $release_tag"
-        if git checkout "$release_tag"; then
+        if git checkout "$release_tag" >/dev/null 2>&1; then
             return 0
         fi
     fi
@@ -153,7 +153,7 @@ setup_fallback_branch() {
         release_tag=$(git tag -l "$pattern" --sort=-version:refname | head -n1)
         if [ -n "$release_tag" ]; then
             log "Trying tag pattern '$pattern': found $release_tag"
-            if git checkout "$release_tag"; then
+            if git checkout "$release_tag" >/dev/null 2>&1; then
                 return 0
             fi
         fi
@@ -161,7 +161,7 @@ setup_fallback_branch() {
     
     # Last resort: use main/master branch
     warn "No $distribution-specific branch or tags found, using main/master"
-    git checkout main || git checkout master || {
+    git checkout main >/dev/null 2>&1 || git checkout master >/dev/null 2>&1 || {
         error "Failed to checkout fallback branch"
         return 1
     }
