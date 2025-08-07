@@ -35,17 +35,6 @@ Welcome to the C++ developer-friendly Nav2 API documentation. This site provides
   {% endfor %}
 </div>
 
-## About
-
-This documentation is automatically generated weekly from the latest ROS 2 rclcpp, RCL, and Nav2 source code. The site provides:
-
-- Complete API reference for rclcpp, RCL, and Nav2
-- Cross-referenced source code with call graphs
-- Enhanced cross-referencing between rclcpp APIs and RCL implementations
-- Nav2 navigation stack comprehensive documentation
-- Search functionality
-- Mobile-friendly interface
-
 ## Resources
 
 - [ROS 2 Official Documentation](https://docs.ros.org/)
