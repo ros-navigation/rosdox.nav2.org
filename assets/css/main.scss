@@ -233,8 +233,8 @@ h2 {
   transition: all 0.2s ease;
   border-top: 4px solid var(--nav2-accent);
   position: relative;
-  flex: 0 0 300px;
-  max-width: 400px;
+  flex: 1 1 300px;
+  max-width: 450px;
 }
 
 .distribution-card:hover {
@@ -388,6 +388,12 @@ h2 {
   background: linear-gradient(45deg, #ea580c, #f97316);
   color: #414141;
   box-shadow: 0 2px 4px rgba(234, 88, 12, 0.3);
+}
+
+.status.non-lts {
+  background: var(--nav2-blue);
+  color: #414141;
+  box-shadow: 0 2px 4px rgba(71, 198, 238, 0.3);
 }
 
 .last-updated {
