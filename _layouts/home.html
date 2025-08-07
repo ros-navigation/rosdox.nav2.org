@@ -17,6 +17,7 @@ layout: default
     {% assign sorted_nav2_distributions = site.nav2_distributions | sort: 'order' %}
     {% for dist in sorted_nav2_distributions %}
     <div class="distribution-card nav2-card">
+      <img src="/assets/images/nav2-logo.png" alt="Nav2 Logo" class="distribution-mascot">
       <h3><a href="/nav2-{{ dist.slug }}/html/index.html">{{ dist.title }}</a></h3>
       <div class="status {{ dist.status | downcase }}">{{ dist.status }}</div>
       <p><strong>Description:</strong> {{ dist.description }}</p>
