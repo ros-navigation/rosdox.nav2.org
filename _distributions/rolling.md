@@ -2,7 +2,7 @@
 title: "ROS 2 Rolling"
 description: "Development release with cutting-edge features - Recommended for developers"
 status: "Development"
-order: 3
+order: 4
 ros_version: "rolling"
 last_updated: 2025-08-06
 slug: "rolling"

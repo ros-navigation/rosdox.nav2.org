@@ -8,13 +8,14 @@ WORK_DIR="$REPO_ROOT/work"
 DOCS_OUTPUT_DIR="$REPO_ROOT"
 
 # ROS 2 distributions to build
-DISTRIBUTIONS=("humble" "jazzy" "rolling")
+DISTRIBUTIONS=("humble" "jazzy" "kilted" "rolling")
 
 # Nav2 distributions to build (maps to Nav2 branches)
-NAV2_DISTRIBUTIONS=("humble" "jazzy" "main")
+NAV2_DISTRIBUTIONS=("humble" "jazzy" "kilted" "main")
 declare -A NAV2_BRANCH_MAP=(
     ["humble"]="humble" 
     ["jazzy"]="jazzy" 
+    ["kilted"]="kilted"
     ["rolling"]="main"
 )
 

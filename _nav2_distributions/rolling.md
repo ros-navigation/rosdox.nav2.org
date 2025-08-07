@@ -2,7 +2,7 @@
 title: "Nav2 Rolling"
 description: "Nav2 for ROS 2 Rolling - Recommended for development"
 status: "Development"
-order: 3
+order: 4
 nav2_version: "rolling"
 last_updated: 2025-08-07
 slug: "rolling"
