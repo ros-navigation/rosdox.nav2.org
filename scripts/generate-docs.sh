@@ -10,6 +10,14 @@ DOCS_OUTPUT_DIR="$REPO_ROOT"
 # ROS 2 distributions to build
 DISTRIBUTIONS=("humble" "jazzy" "rolling")
 
+# Nav2 distributions to build (maps to Nav2 branches)
+NAV2_DISTRIBUTIONS=("humble" "jazzy" "main")
+declare -A NAV2_BRANCH_MAP=(
+    ["humble"]="humble" 
+    ["jazzy"]="jazzy" 
+    ["rolling"]="main"
+)
+
 # Colors for output (only in CI environment)
 if [ -n "$CI" ]; then
     RED=''
@@ -219,6 +227,143 @@ create_fallback_docs() {
 EOF
 }
 
+# Function to setup Nav2 repository
+setup_nav2_source() {
+    local distribution=$1
+    local nav2_branch="${NAV2_BRANCH_MAP[$distribution]}"
+    local nav2_source_dir="$WORK_DIR/navigation2-$distribution"
+    
+    log "Setting up Nav2 repository for $distribution (branch: $nav2_branch)..."
+    
+    # Setup Navigation2 repository
+    if [ -d "$nav2_source_dir" ]; then
+        log "Updating existing Nav2 repository for $distribution"
+        cd "$nav2_source_dir" || { error "Failed to cd to $nav2_source_dir"; return 1; }
+        git fetch --all --tags || { warn "Failed to fetch Nav2 updates"; }
+        git clean -fd || { warn "Failed to clean Nav2 directory"; }
+    else
+        log "Cloning Nav2 repository for $distribution"
+        mkdir -p "$WORK_DIR" || { error "Failed to create work directory"; return 1; }
+        
+        if ! git clone https://github.com/ros-navigation/navigation2.git "$nav2_source_dir"; then
+            error "Failed to clone Nav2 repository"
+            return 1
+        fi
+        
+        cd "$nav2_source_dir" || { error "Failed to cd to cloned Nav2 directory"; return 1; }
+    fi
+    
+    # Setup branch for Nav2
+    setup_nav2_repository_branch "$distribution" "$nav2_source_dir" "$nav2_branch"
+    
+    # Output source directory
+    echo "$nav2_source_dir"
+}
+
+# Helper function to setup Nav2 repository branch
+setup_nav2_repository_branch() {
+    local distribution=$1
+    local repo_dir="$2"
+    local target_branch="$3"
+    
+    cd "$repo_dir" || { error "Failed to cd to $repo_dir"; return 1; }
+    
+    # Verify we have a git repository
+    if ! git rev-parse --git-dir >/dev/null 2>&1; then
+        error "Not a git repository: $repo_dir"
+        return 1
+    fi
+    
+    # Switch to the appropriate branch
+    log "Setting up Nav2 $distribution distribution (target branch: $target_branch)"
+    
+    if git show-ref --verify --quiet "refs/remotes/origin/$target_branch"; then
+        log "Found $target_branch branch for Nav2, checking out"
+        git checkout "$target_branch" >/dev/null 2>&1 || git checkout -b "$target_branch" "origin/$target_branch" >/dev/null 2>&1 || {
+            warn "Failed to checkout $target_branch branch for Nav2"
+            # Fallback to main/master
+            git checkout main >/dev/null 2>&1 || git checkout master >/dev/null 2>&1 || {
+                error "Failed to checkout any branch for Nav2"
+                return 1
+            }
+        }
+    else
+        log "No $target_branch branch found for Nav2, using main/master"
+        git checkout main >/dev/null 2>&1 || git checkout master >/dev/null 2>&1 || {
+            error "Failed to checkout main/master branch for Nav2"
+            return 1
+        }
+    fi
+    
+    # Verify we successfully checked out something
+    if ! git rev-parse HEAD >/dev/null 2>&1; then
+        error "Failed to checkout any valid branch for Nav2 $distribution"
+        return 1
+    fi
+    
+    local current_branch=$(git branch --show-current 2>/dev/null || echo "detached")
+    log "Successfully set up Nav2 $distribution using: $current_branch"
+}
+
+# Function to generate Nav2 doxygen documentation
+generate_nav2_doxygen() {
+    local distribution=$1
+    local nav2_source_dir="$2"
+    local output_dir="$DOCS_OUTPUT_DIR/nav2-$distribution"
+    
+    log "Generating Nav2 documentation for $distribution..."
+    log "Nav2 source: $nav2_source_dir"
+    
+    # Verify source directory exists and contains expected content
+    if [ ! -d "$nav2_source_dir" ]; then
+        error "Nav2 directory not found: $nav2_source_dir"
+        return 1
+    fi
+    
+    # Create output directory
+    mkdir -p "$output_dir"
+    
+    # Get version information
+    local nav2_branch="${NAV2_BRANCH_MAP[$distribution]}"
+    local commit_hash=$(cd "$nav2_source_dir" && git rev-parse HEAD)
+    local build_date=$(date -u +"%Y-%m-%d")
+    
+    # Use our Nav2 template
+    local doxyfile="$WORK_DIR/Doxyfile.nav2.$distribution"
+    
+    log "Using template Doxyfile for Nav2 $distribution"
+    
+    # Generate Doxyfile from Nav2 template
+    sed "s|{{DISTRIBUTION}}|$distribution|g; \
+         s|{{VERSION}}|$nav2_branch|g; \
+         s|{{OUTPUT_DIR}}|$output_dir|g; \
+         s|{{NAV2_SOURCE_DIR}}|$nav2_source_dir|g" \
+         "$REPO_ROOT/doxygen/Doxyfile.nav2.template" > "$doxyfile"
+    
+    cd "$WORK_DIR"
+    if ! doxygen "$doxyfile" 2>/dev/null; then
+        warn "Doxygen failed for Nav2 $distribution, creating placeholder..."
+        create_fallback_docs "nav2-$distribution" "$output_dir"
+    fi
+    
+    # Update Nav2 distribution metadata
+    local dist_file="$REPO_ROOT/_nav2_distributions/$distribution.md"
+    if [ -f "$dist_file" ]; then
+        # Update the last_updated field in the front matter
+        sed -i "s/^last_updated:.*/last_updated: $(date -u +"%Y-%m-%d")/" "$dist_file"
+        
+        # Add build metadata if not present
+        if ! grep -q "build_date:" "$dist_file"; then
+            sed -i "/^last_updated:/a build_date: $build_date\ncommit_hash: $commit_hash" "$dist_file"
+        else
+            sed -i "s/^build_date:.*/build_date: $build_date/" "$dist_file"
+            sed -i "s/^commit_hash:.*/commit_hash: $commit_hash/" "$dist_file"
+        fi
+    fi
+    
+    log "Nav2 documentation generated for $distribution (branch: $nav2_branch)"
+}
+
 # Function to generate doxygen documentation
 generate_doxygen() {
     local distribution=$1
@@ -291,7 +436,7 @@ generate_doxygen() {
 
 # Main execution
 main() {
-    log "Starting ROS 2 rclcpp documentation generation"
+    log "Starting ROS 2 rclcpp + RCL and Nav2 documentation generation"
     
     # Check if doxygen is installed
     if ! command -v doxygen &> /dev/null; then
@@ -302,9 +447,10 @@ main() {
     # Create work directory
     mkdir -p "$WORK_DIR"
     
-    # Process each distribution
+    # Process each ROS 2 distribution
+    log "=== Building ROS 2 rclcpp + RCL Documentation ==="
     for distribution in "${DISTRIBUTIONS[@]}"; do
-        log "Processing $distribution distribution..."
+        log "Processing ROS 2 $distribution distribution..."
         
         # Setup source code and capture the directory paths
         if source_dirs=$(setup_source "$distribution"); then
@@ -313,22 +459,50 @@ main() {
             local rcl_source_dir=$(echo "$source_dirs" | cut -d':' -f2)
             
             if [ -n "$rclcpp_source_dir" ] && [ -d "$rclcpp_source_dir" ] && [ -n "$rcl_source_dir" ] && [ -d "$rcl_source_dir" ]; then
-                log "Source setup successful for $distribution"
+                log "Source setup successful for ROS 2 $distribution"
                 log "  rclcpp: $rclcpp_source_dir"
                 log "  rcl: $rcl_source_dir"
                 
                 # Generate documentation
                 generate_doxygen "$distribution" "$source_dirs"
                 
-                log "Completed $distribution distribution"
+                log "Completed ROS 2 $distribution distribution"
             else
-                error "Setup returned invalid source directories for $distribution"
+                error "Setup returned invalid source directories for ROS 2 $distribution"
                 error "  rclcpp: '$rclcpp_source_dir'"
                 error "  rcl: '$rcl_source_dir'"
                 continue
             fi
         else
-            error "Failed to setup source for $distribution"
+            error "Failed to setup source for ROS 2 $distribution"
+            continue
+        fi
+        
+        echo
+    done
+    
+    # Process each Nav2 distribution
+    log "=== Building Nav2 Documentation ==="
+    for distribution in "${DISTRIBUTIONS[@]}"; do
+        log "Processing Nav2 $distribution distribution..."
+        
+        # Setup Nav2 source code
+        if nav2_source_dir=$(setup_nav2_source "$distribution"); then
+            if [ -n "$nav2_source_dir" ] && [ -d "$nav2_source_dir" ]; then
+                log "Nav2 source setup successful for $distribution"
+                log "  Nav2: $nav2_source_dir"
+                
+                # Generate Nav2 documentation
+                generate_nav2_doxygen "$distribution" "$nav2_source_dir"
+                
+                log "Completed Nav2 $distribution distribution"
+            else
+                error "Setup returned invalid Nav2 source directory for $distribution"
+                error "  Nav2: '$nav2_source_dir'"
+                continue
+            fi
+        else
+            error "Failed to setup Nav2 source for $distribution"
             continue
         fi
         
@@ -339,7 +513,7 @@ main() {
     log "Cleaning up work directory..."
     rm -rf "$WORK_DIR"
     
-    log "Documentation generation completed for all distributions!"
+    log "Documentation generation completed for all ROS 2 and Nav2 distributions!"
 }
 
 # Run main function
