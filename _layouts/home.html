@@ -33,7 +33,7 @@ layout: default
   <div class="distribution-grid">
     {% assign sorted_distributions = site.distributions | sort: 'order' %}
     {% for dist in sorted_distributions %}
-    <div class="distribution-card">
+    <div class="distribution-card nav2-card">
       <img src="/assets/images/distributions/{{ dist.slug }}.png" alt="{{ dist.title }} mascot" class="distribution-mascot">
       <h3><a href="/{{ dist.slug }}/html/index.html">{{ dist.title }}</a></h3>
       <div class="status {{ dist.status | downcase }}">{{ dist.status }}</div>
