@@ -1,7 +1,7 @@
 ---
 title: "Nav2 Jazzy"
 description: "Nav2 for ROS 2 Jazzy - Latest and recommended stable release"
-status: "Active"
+status: "LTS - Active"
 order: 2
 nav2_version: "jazzy"
 last_updated: 2025-08-07

@@ -1,7 +1,7 @@
 ---
 title: "ROS 2 Kilted"
 description: "Active release - Recommended for new projects"
-status: "Active"
+status: "Non-LTS"
 order: 3
 ros_version: "kilted"
 last_updated: 2025-08-07
