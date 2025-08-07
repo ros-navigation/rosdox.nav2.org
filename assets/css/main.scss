@@ -231,6 +231,7 @@ h2 {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: all 0.2s ease;
   border-top: 4px solid var(--nav2-accent);
+  position: relative;
 }
 
 .distribution-card:hover {
@@ -281,6 +282,21 @@ h2 {
 .distribution-card p {
   margin-bottom: 0.5rem;
   color: var(--text-secondary);
+}
+
+.distribution-mascot {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 60px;
+  height: 60px;
+  opacity: 0.8;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.distribution-card:hover .distribution-mascot {
+  opacity: 1;
 }
 
 .card-actions {

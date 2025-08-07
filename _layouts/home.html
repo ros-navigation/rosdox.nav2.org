@@ -11,23 +11,6 @@ layout: default
 
   <h2>Available Distributions</h2>
 
-  <h3>ROS 2 rclcpp + RCL API Documentation</h3>
-
-  <div class="distribution-grid">
-    {% assign sorted_distributions = site.distributions | sort: 'order' %}
-    {% for dist in sorted_distributions %}
-    <div class="distribution-card">
-      <h3><a href="/{{ dist.slug }}/html/index.html">{{ dist.title }}</a></h3>
-      <div class="status {{ dist.status | downcase }}">{{ dist.status }}</div>
-      <p><strong>Description:</strong> {{ dist.description }}</p>
-      <div class="card-actions">
-        <a href="/{{ dist.slug }}/html/index.html" class="btn-primary">Browse API Docs</a>
-        <a href="/{{ dist.slug }}/html/annotated.html" class="btn-secondary">Class List</a>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-
   <h3>Nav2 API Documentation</h3>
 
   <div class="distribution-grid">
@@ -40,6 +23,24 @@ layout: default
       <div class="card-actions">
         <a href="/nav2-{{ dist.slug }}/html/index.html" class="btn-primary">Browse API Docs</a>
         <a href="/nav2-{{ dist.slug }}/html/annotated.html" class="btn-secondary">Class List</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <h3>ROS 2 rclcpp + RCL API Documentation</h3>
+
+  <div class="distribution-grid">
+    {% assign sorted_distributions = site.distributions | sort: 'order' %}
+    {% for dist in sorted_distributions %}
+    <div class="distribution-card">
+      <img src="/assets/images/distributions/{{ dist.slug }}.png" alt="{{ dist.title }} mascot" class="distribution-mascot">
+      <h3><a href="/{{ dist.slug }}/html/index.html">{{ dist.title }}</a></h3>
+      <div class="status {{ dist.status | downcase }}">{{ dist.status }}</div>
+      <p><strong>Description:</strong> {{ dist.description }}</p>
+      <div class="card-actions">
+        <a href="/{{ dist.slug }}/html/index.html" class="btn-primary">Browse API Docs</a>
+        <a href="/{{ dist.slug }}/html/annotated.html" class="btn-secondary">Class List</a>
       </div>
     </div>
     {% endfor %}
