@@ -4,11 +4,11 @@
 /* Base styles for ROS 2 documentation site - Nav2 Branded */
 
 :root {
-  --nav2-blue: #47C6EE;
-  --nav2-light-blue: #47C6EE;
-  --nav2-accent: #47C6EE;
+  --nav2-blue: #64E0F3;
+  --nav2-light-blue: #64E0F3;
+  --nav2-accent: #64E0F3;
   --nav2-bg: #f8fafc;
-  --nav2-card-bg: #ffffff;
+  --nav2-card-bg: #414141;
   --text-primary: #1e293b;
   --text-secondary: #64748b;
   --border-color: #e2e8f0;
@@ -37,7 +37,7 @@ body {
 .site-header {
   background: var(--nav2-blue);
   border-bottom: 3px solid var(--nav2-accent);
-  padding: 1rem 0;
+  padding: 1.625rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -106,7 +106,7 @@ body {
 .site-footer {
   background: var(--nav2-blue);
   border-top: 3px solid var(--nav2-accent);
-  padding: 2rem 0;
+  padding: 2.4rem 0;
   text-align: center;
   color: #dbeafe;
   font-size: 0.9rem;

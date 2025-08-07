@@ -16,7 +16,6 @@ Welcome to the C++ developer-friendly ROS 2 API documentation. This site provide
     <h3><a href="{{ dist.url }}">{{ dist.title }}</a></h3>
     <p>{{ dist.description }}</p>
     <p><strong>Status:</strong> {{ dist.status }}</p>
-    <p><strong>Last Updated:</strong> {{ dist.last_updated | date: "%B %d, %Y" }}</p>
   </div>
   {% endfor %}
 </div>
