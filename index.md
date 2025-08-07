@@ -38,7 +38,7 @@ Welcome to the C++ developer-friendly Nav2 API documentation. This site provides
 ## Resources
 
 - [ROS 2 Official Documentation](https://docs.ros.org/)
-- [rclcpp GitHub Repository](https://github.com/ros2/rclcpp)
-- [RCL GitHub Repository](https://github.com/ros2/rcl)
+- [Rclcpp GitHub Repository](https://github.com/ros2/rclcpp)
 - [Nav2 GitHub Repository](https://github.com/ros-navigation/navigation2)
 - [Nav2 Project](https://nav2.org/)
+- [Nav2 Docs](https://docs.nav2.org/)
