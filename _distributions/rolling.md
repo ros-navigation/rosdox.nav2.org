@@ -1,6 +1,6 @@
 ---
 title: "ROS 2 Rolling"
-description: "Development release with cutting-edge features"
+description: "Development release with cutting-edge features - Recommended for developers"
 status: "Development"
 order: 3
 ros_version: "rolling"
