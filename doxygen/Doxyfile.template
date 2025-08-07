@@ -4,9 +4,9 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = "ROS 2 rclcpp - {{DISTRIBUTION}}"
+PROJECT_NAME           = "ROS 2 rclcpp + rcl - {{DISTRIBUTION}}"
 PROJECT_NUMBER         = {{VERSION}}
-PROJECT_BRIEF          = "ROS 2 C++ Client Library"
+PROJECT_BRIEF          = "ROS 2 C++ Client Library with ROS Client Library"
 PROJECT_LOGO           = 
 OUTPUT_DIRECTORY       = {{OUTPUT_DIR}}
 CREATE_SUBDIRS         = NO
@@ -28,8 +28,10 @@ ABBREVIATE_BRIEF       = "The $name class" \
 ALWAYS_DETAILED_SEC    = NO
 INLINE_INHERITED_MEMB  = NO
 FULL_PATH_NAMES        = YES
-STRIP_FROM_PATH        = {{SOURCE_DIR}}
-STRIP_FROM_INC_PATH    = 
+STRIP_FROM_PATH        = {{RCLCPP_SOURCE_DIR}} \
+                         {{RCL_SOURCE_DIR}}
+STRIP_FROM_INC_PATH    = {{RCLCPP_SOURCE_DIR}}/rclcpp/include \
+                         {{RCL_SOURCE_DIR}}/rcl/include 
 SHORT_NAMES            = NO
 JAVADOC_AUTOBRIEF      = NO
 QT_AUTOBRIEF           = NO
@@ -115,8 +117,10 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = {{SOURCE_DIR}}/rclcpp/include \
-                         {{SOURCE_DIR}}/rclcpp/src
+INPUT                  = {{RCLCPP_SOURCE_DIR}}/rclcpp/include \
+                         {{RCLCPP_SOURCE_DIR}}/rclcpp/src \
+                         {{RCL_SOURCE_DIR}}/rcl/include \
+                         {{RCL_SOURCE_DIR}}/rcl/src
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cc \
@@ -186,8 +190,8 @@ USE_MDFILE_AS_MAINPAGE =
 SOURCE_BROWSER         = YES
 INLINE_SOURCES         = NO
 STRIP_CODE_COMMENTS    = YES
-REFERENCED_BY_RELATION = NO
-REFERENCES_RELATION    = NO
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION    = YES
 REFERENCES_LINK_SOURCE = YES
 SOURCE_TOOLTIPS        = YES
 USE_HTAGS              = NO
@@ -360,7 +364,7 @@ CLASS_DIAGRAMS         = YES
 MSCGEN_PATH            = 
 DIA_PATH               = 
 HIDE_UNDOC_RELATIONS   = YES
-HAVE_DOT               = NO
+HAVE_DOT               = YES
 DOT_NUM_THREADS        = 0
 DOT_FONTNAME           = Helvetica
 DOT_FONTSIZE           = 10
@@ -373,8 +377,8 @@ UML_LIMIT_NUM_FIELDS   = 10
 TEMPLATE_RELATIONS     = NO
 INCLUDE_GRAPH          = YES
 INCLUDED_BY_GRAPH      = YES
-CALL_GRAPH             = NO
-CALLER_GRAPH           = NO
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
 GRAPHICAL_HIERARCHY    = YES
 DIRECTORY_GRAPH        = YES
 DOT_IMAGE_FORMAT       = png

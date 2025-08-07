@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Jekyll-based static site that generates developer-friendly ROS 2 rclcpp API documentation using Doxygen. It automatically clones the rclcpp repository, generates documentation for multiple ROS 2 distributions (Humble, Jazzy, Rolling), and hosts them on GitHub Pages.
+This is a Jekyll-based static site that generates developer-friendly ROS 2 rclcpp and RCL API documentation using Doxygen. It automatically clones both the rclcpp and RCL repositories, generates comprehensive cross-referenced documentation for multiple ROS 2 distributions (Humble, Jazzy, Rolling), and hosts them on GitHub Pages.
 
 ## Development Commands
 
@@ -62,11 +62,13 @@ bundle install
 ```
 
 ### Documentation Generation Process
-1. `generate-docs.sh` clones rclcpp repository for each distribution
-2. Creates distribution-specific Doxygen configuration from template
-3. Generates HTML documentation in distribution directories (`/humble/`, `/jazzy/`, `/rolling/`)
-4. Updates distribution metadata with build information
-5. Jekyll builds the site including the generated documentation
+1. `generate-docs.sh` clones both rclcpp and RCL repositories for each distribution
+2. Sets up appropriate branches/tags for both repositories
+3. Creates distribution-specific Doxygen configuration from template
+4. Generates cross-referenced HTML documentation including both rclcpp and RCL sources
+5. Outputs documentation in distribution directories (`/humble/`, `/jazzy/`, `/rolling/`)
+6. Updates distribution metadata with build information
+7. Jekyll builds the site including the generated documentation
 
 ### Distribution Management
 Each ROS 2 distribution has:

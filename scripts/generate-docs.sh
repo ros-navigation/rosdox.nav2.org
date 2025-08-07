@@ -57,87 +57,118 @@ get_latest_tag() {
     fi
 }
 
-# Function to clone or update rclcpp repository
+# Function to clone or update repositories (rclcpp and rcl)
 setup_source() {
     local distribution=$1
-    local source_dir="$WORK_DIR/rclcpp-$distribution"
+    local rclcpp_source_dir="$WORK_DIR/rclcpp-$distribution"
+    local rcl_source_dir="$WORK_DIR/rcl-$distribution"
     
-    log "Setting up source for $distribution..."
+    log "Setting up source repositories for $distribution..."
     
-    if [ -d "$source_dir" ]; then
-        log "Updating existing repository for $distribution"
-        cd "$source_dir" || { error "Failed to cd to $source_dir"; return 1; }
-        git fetch --all --tags || { warn "Failed to fetch updates"; }
-        git clean -fd || { warn "Failed to clean directory"; }
+    # Setup rclcpp repository
+    if [ -d "$rclcpp_source_dir" ]; then
+        log "Updating existing rclcpp repository for $distribution"
+        cd "$rclcpp_source_dir" || { error "Failed to cd to $rclcpp_source_dir"; return 1; }
+        git fetch --all --tags || { warn "Failed to fetch rclcpp updates"; }
+        git clean -fd || { warn "Failed to clean rclcpp directory"; }
     else
         log "Cloning rclcpp repository for $distribution"
         mkdir -p "$WORK_DIR" || { error "Failed to create work directory"; return 1; }
         
-        if ! git clone https://github.com/ros2/rclcpp.git "$source_dir"; then
+        if ! git clone https://github.com/ros2/rclcpp.git "$rclcpp_source_dir"; then
             error "Failed to clone rclcpp repository"
             return 1
         fi
-        
-        cd "$source_dir" || { error "Failed to cd to cloned directory"; return 1; }
     fi
+    
+    # Setup rcl repository
+    if [ -d "$rcl_source_dir" ]; then
+        log "Updating existing rcl repository for $distribution"
+        cd "$rcl_source_dir" || { error "Failed to cd to $rcl_source_dir"; return 1; }
+        git fetch --all --tags || { warn "Failed to fetch rcl updates"; }
+        git clean -fd || { warn "Failed to clean rcl directory"; }
+    else
+        log "Cloning rcl repository for $distribution"
+        
+        if ! git clone https://github.com/ros2/rcl.git "$rcl_source_dir"; then
+            error "Failed to clone rcl repository"
+            return 1
+        fi
+        
+        cd "$rcl_source_dir" || { error "Failed to cd to cloned rcl directory"; return 1; }
+    fi
+    
+    # Setup branches for both repositories
+    setup_repository_branch "$distribution" "$rclcpp_source_dir" "rclcpp"
+    setup_repository_branch "$distribution" "$rcl_source_dir" "rcl"
+    
+    # Output both source directories (this is the return value)
+    echo "$rclcpp_source_dir:$rcl_source_dir"
+}
+
+# Helper function to setup repository branch
+setup_repository_branch() {
+    local distribution=$1
+    local repo_dir="$2"
+    local repo_name="$3"
+    
+    cd "$repo_dir" || { error "Failed to cd to $repo_dir"; return 1; }
     
     # Verify we have a git repository
     if ! git rev-parse --git-dir >/dev/null 2>&1; then
-        error "Not a git repository: $source_dir"
+        error "Not a git repository: $repo_dir"
         return 1
     fi
     
     # Switch to the appropriate branch/tag (redirect git output to avoid contaminating function output)
     if [ "$distribution" = "rolling" ]; then
-        log "Setting up rolling distribution"
+        log "Setting up rolling distribution for $repo_name"
         # For rolling, just use the default branch (main/master)
         if git show-ref --verify --quiet refs/remotes/origin/rolling; then
-            log "Checking out rolling branch"
+            log "Checking out rolling branch for $repo_name"
             git checkout rolling >/dev/null 2>&1 || git checkout -b rolling origin/rolling >/dev/null 2>&1 || {
-                warn "Failed to checkout rolling branch, using default"
+                warn "Failed to checkout rolling branch for $repo_name, using default"
                 git checkout main >/dev/null 2>&1 || git checkout master >/dev/null 2>&1 || {
-                    error "Failed to checkout any branch"
+                    error "Failed to checkout any branch for $repo_name"
                     return 1
                 }
             }
         else
-            log "No rolling branch found, using default branch"
+            log "No rolling branch found for $repo_name, using default branch"
             git checkout main >/dev/null 2>&1 || git checkout master >/dev/null 2>&1 || {
-                error "Failed to checkout default branch"
+                error "Failed to checkout default branch for $repo_name"
                 return 1
             }
         fi
     else
-        log "Setting up $distribution distribution"
+        log "Setting up $distribution distribution for $repo_name"
         # For stable distributions, try various approaches
         if git show-ref --verify --quiet "refs/remotes/origin/$distribution"; then
-            log "Found $distribution branch, checking out"
+            log "Found $distribution branch for $repo_name, checking out"
             git checkout "$distribution" >/dev/null 2>&1 || git checkout -b "$distribution" "origin/$distribution" >/dev/null 2>&1 || {
-                warn "Failed to checkout $distribution branch"
-                setup_fallback_branch "$distribution"
+                warn "Failed to checkout $distribution branch for $repo_name"
+                setup_fallback_branch "$distribution" "$repo_name"
             }
         else
-            log "No $distribution branch found, trying alternative approaches"
-            setup_fallback_branch "$distribution"
+            log "No $distribution branch found for $repo_name, trying alternative approaches"
+            setup_fallback_branch "$distribution" "$repo_name"
         fi
     fi
     
     # Verify we successfully checked out something
     if ! git rev-parse HEAD >/dev/null 2>&1; then
-        error "Failed to checkout any valid branch/tag for $distribution"
+        error "Failed to checkout any valid branch/tag for $distribution in $repo_name"
         return 1
     fi
     
     local current_branch=$(git branch --show-current 2>/dev/null || echo "detached")
-    log "Successfully set up $distribution using: $current_branch"
-    
-    # Output the source directory path (this is the return value)
-    echo "$source_dir"
+    log "Successfully set up $distribution for $repo_name using: $current_branch"
 }
 
 # Helper function to set up fallback branch when main distribution branch doesn't exist
 setup_fallback_branch() {
     local distribution=$1
+    local repo_name=$2
     
     # Try to find release tags matching the distribution
     local release_tag=$(git tag -l "*$distribution*" --sort=-version:refname | head -n1)
@@ -191,14 +222,25 @@ EOF
 # Function to generate doxygen documentation
 generate_doxygen() {
     local distribution=$1
-    local source_dir="$2"
+    local source_dirs="$2"  # Now contains both directories separated by ":"
     local output_dir="$DOCS_OUTPUT_DIR/$distribution"
     
-    log "Generating documentation for $distribution..."
+    # Parse the source directories
+    local rclcpp_source_dir=$(echo "$source_dirs" | cut -d':' -f1)
+    local rcl_source_dir=$(echo "$source_dirs" | cut -d':' -f2)
     
-    # Verify source directory exists and contains rclcpp
-    if [ ! -d "$source_dir/rclcpp" ]; then
-        error "rclcpp directory not found in $source_dir"
+    log "Generating documentation for $distribution..."
+    log "rclcpp source: $rclcpp_source_dir"
+    log "rcl source: $rcl_source_dir"
+    
+    # Verify source directories exist and contain expected content
+    if [ ! -d "$rclcpp_source_dir/rclcpp" ]; then
+        error "rclcpp directory not found in $rclcpp_source_dir"
+        return 1
+    fi
+    
+    if [ ! -d "$rcl_source_dir/rcl" ]; then
+        error "rcl directory not found in $rcl_source_dir"
         return 1
     fi
     
@@ -206,60 +248,27 @@ generate_doxygen() {
     mkdir -p "$output_dir"
     
     # Get version information
-    local version=$(get_latest_tag "$distribution" "$source_dir")
-    local commit_hash=$(cd "$source_dir" && git rev-parse HEAD)
+    local version=$(get_latest_tag "$distribution" "$rclcpp_source_dir")
+    local commit_hash=$(cd "$rclcpp_source_dir" && git rev-parse HEAD)
     local build_date=$(date -u +"%Y-%m-%d")
     
-    # Use rclcpp's built-in Doxyfile and modify it for our needs
-    local original_doxyfile="$source_dir/rclcpp/Doxyfile"
+    # Use our template that includes both rclcpp and rcl
     local doxyfile="$WORK_DIR/Doxyfile.$distribution"
     
-    if [ -f "$original_doxyfile" ]; then
-        log "Using rclcpp's built-in Doxyfile for $distribution"
-        # Copy and modify the original Doxyfile
-        cp "$original_doxyfile" "$doxyfile"
-        
-        # Update PROJECT_NUMBER to include distribution
-        sed -i "s/PROJECT_NUMBER.*/PROJECT_NUMBER = $distribution ($version)/" "$doxyfile"
-        
-        # Update OUTPUT_DIRECTORY to our target
-        sed -i "s|OUTPUT_DIRECTORY.*|OUTPUT_DIRECTORY = $output_dir|" "$doxyfile"
-        
-        # Ensure INPUT points to the include directory
-        sed -i "s|INPUT.*|INPUT = ./include|" "$doxyfile"
-        
-        # Change to rclcpp directory and run doxygen
-        cd "$source_dir/rclcpp"
-        if ! doxygen "$doxyfile"; then
-            warn "Doxygen failed for $distribution using built-in Doxyfile, trying fallback..."
-            
-            # Fallback: try with our template
-            sed "s|{{DISTRIBUTION}}|$distribution|g; \
-                 s|{{VERSION}}|$version|g; \
-                 s|{{OUTPUT_DIR}}|$output_dir|g; \
-                 s|{{SOURCE_DIR}}|$source_dir|g" \
-                 "$REPO_ROOT/doxygen/Doxyfile.template" > "$doxyfile"
-            
-            cd "$WORK_DIR"
-            if ! doxygen "$doxyfile" 2>/dev/null; then
-                warn "Both Doxyfiles failed for $distribution, creating placeholder..."
-                create_fallback_docs "$distribution" "$output_dir"
-            fi
-        fi
-    else
-        warn "No built-in Doxyfile found, using template for $distribution"
-        # Fallback to our template
-        sed "s|{{DISTRIBUTION}}|$distribution|g; \
-             s|{{VERSION}}|$version|g; \
-             s|{{OUTPUT_DIR}}|$output_dir|g; \
-             s|{{SOURCE_DIR}}|$source_dir|g" \
-             "$REPO_ROOT/doxygen/Doxyfile.template" > "$doxyfile"
-        
-        cd "$WORK_DIR"
-        if ! doxygen "$doxyfile" 2>/dev/null; then
-            warn "Template Doxyfile failed for $distribution, creating placeholder..."
-            create_fallback_docs "$distribution" "$output_dir"
-        fi
+    log "Using template Doxyfile for $distribution with rclcpp and rcl support"
+    
+    # Generate Doxyfile from template with both source directories
+    sed "s|{{DISTRIBUTION}}|$distribution|g; \
+         s|{{VERSION}}|$version|g; \
+         s|{{OUTPUT_DIR}}|$output_dir|g; \
+         s|{{RCLCPP_SOURCE_DIR}}|$rclcpp_source_dir|g; \
+         s|{{RCL_SOURCE_DIR}}|$rcl_source_dir|g" \
+         "$REPO_ROOT/doxygen/Doxyfile.template" > "$doxyfile"
+    
+    cd "$WORK_DIR"
+    if ! doxygen "$doxyfile" 2>/dev/null; then
+        warn "Doxygen failed for $distribution, creating placeholder..."
+        create_fallback_docs "$distribution" "$output_dir"
     fi
     
     # Update distribution metadata
@@ -297,17 +306,25 @@ main() {
     for distribution in "${DISTRIBUTIONS[@]}"; do
         log "Processing $distribution distribution..."
         
-        # Setup source code and capture the directory path
-        if source_dir=$(setup_source "$distribution"); then
-            if [ -n "$source_dir" ] && [ -d "$source_dir" ]; then
-                log "Source setup successful for $distribution: $source_dir"
+        # Setup source code and capture the directory paths
+        if source_dirs=$(setup_source "$distribution"); then
+            # Parse the source directories
+            local rclcpp_source_dir=$(echo "$source_dirs" | cut -d':' -f1)
+            local rcl_source_dir=$(echo "$source_dirs" | cut -d':' -f2)
+            
+            if [ -n "$rclcpp_source_dir" ] && [ -d "$rclcpp_source_dir" ] && [ -n "$rcl_source_dir" ] && [ -d "$rcl_source_dir" ]; then
+                log "Source setup successful for $distribution"
+                log "  rclcpp: $rclcpp_source_dir"
+                log "  rcl: $rcl_source_dir"
                 
                 # Generate documentation
-                generate_doxygen "$distribution" "$source_dir"
+                generate_doxygen "$distribution" "$source_dirs"
                 
                 log "Completed $distribution distribution"
             else
-                error "Setup returned invalid source directory for $distribution: '$source_dir'"
+                error "Setup returned invalid source directories for $distribution"
+                error "  rclcpp: '$rclcpp_source_dir'"
+                error "  rcl: '$rcl_source_dir'"
                 continue
             fi
         else
