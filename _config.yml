@@ -16,6 +16,9 @@ collections:
     output: false
   nav2_distributions:
     output: false
+  action_docs:
+    output: true
+    permalink: /:collection/:name/
 
 exclude:
   - .github/

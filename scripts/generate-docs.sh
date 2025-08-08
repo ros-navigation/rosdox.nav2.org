@@ -306,6 +306,38 @@ setup_nav2_repository_branch() {
     log "Successfully set up Nav2 $distribution using: $current_branch"
 }
 
+# Function to generate Nav2 action documentation
+generate_nav2_action_docs() {
+    local distribution=$1
+    local nav2_source_dir="$2"
+    local output_dir="$DOCS_OUTPUT_DIR"
+    
+    log "Generating Nav2 Action API documentation for $distribution..."
+    log "Nav2 source: $nav2_source_dir"
+    
+    # Verify source directory exists
+    if [ ! -d "$nav2_source_dir" ]; then
+        error "Nav2 directory not found: $nav2_source_dir"
+        return 1
+    fi
+    
+    # Check if Python script exists
+    if [ ! -f "$SCRIPT_DIR/generate-action-docs.py" ]; then
+        warn "Action documentation generator not found, skipping action docs"
+        return 0
+    fi
+    
+    # Generate action documentation using Python script
+    if python3 "$SCRIPT_DIR/generate-action-docs.py" \
+        --distribution "$distribution" \
+        --source-dir "$nav2_source_dir" \
+        --output-dir "$output_dir"; then
+        log "Action API documentation generated for $distribution"
+    else
+        warn "Failed to generate action documentation for $distribution"
+    fi
+}
+
 # Function to generate Nav2 doxygen documentation
 generate_nav2_doxygen() {
     local distribution=$1
@@ -495,6 +527,9 @@ main() {
                 
                 # Generate Nav2 documentation
                 generate_nav2_doxygen "$distribution" "$nav2_source_dir"
+                
+                # Generate Nav2 Action API documentation
+                generate_nav2_action_docs "$distribution" "$nav2_source_dir"
                 
                 log "Completed Nav2 $distribution distribution"
             else

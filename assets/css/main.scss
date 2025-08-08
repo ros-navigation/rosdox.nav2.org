@@ -553,3 +553,202 @@ h2 {
     color: #c9d1d9;
   }
 }
+
+/* Action API Documentation Styles */
+
+.action-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.action-card {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  border-left: 4px solid var(--nav2-blue);
+  flex: 1 1 300px;
+  max-width: 400px;
+}
+
+.action-card:hover {
+  box-shadow: 0 8px 16px rgba(71, 198, 238, 0.15);
+  transform: translateY(-2px);
+  border-left-color: #2596be;
+}
+
+.action-card h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: var(--nav2-blue);
+}
+
+.action-card h4 a {
+  text-decoration: none;
+  color: var(--nav2-blue);
+  font-weight: 600;
+}
+
+.action-card h4 a:hover {
+  color: var(--nav2-accent);
+}
+
+.action-package {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: #f1f8ff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  border: 1px solid #c9d1d9;
+}
+
+.action-description {
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+/* Action page specific styles */
+.action-nav {
+  background: var(--nav2-blue);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.action-nav a {
+  color: #414141;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.action-nav a:hover {
+  text-decoration: underline;
+}
+
+.action-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border-left: 4px solid var(--nav2-blue);
+}
+
+.action-section h3 {
+  margin-top: 0;
+  color: var(--nav2-blue);
+}
+
+/* Message table styling */
+.action-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.action-section table th {
+  background: var(--nav2-blue);
+  color: #414141;
+  padding: 0.75rem;
+  text-align: left;
+  border: 1px solid #ddd;
+  font-weight: 600;
+}
+
+.action-section table td {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  vertical-align: top;
+}
+
+.action-section table tr:nth-child(even) {
+  background: #ffffff;
+}
+
+.action-section table tr:nth-child(odd) {
+  background: #f9f9f9;
+}
+
+.action-section table code {
+  background: #f1f1f1;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9rem;
+}
+
+/* Code examples styling */
+.action-examples {
+  margin: 2rem 0;
+}
+
+.action-examples pre {
+  background: #0d1117;
+  color: #c9d1d9;
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  border: 1px solid #30363d;
+}
+
+.action-examples code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Action API buttons in distribution cards */
+.action-api-btn {
+  background: #059669;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
+}
+
+.action-api-btn:hover {
+  background: #047857;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(5, 150, 105, 0.4);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Responsive design for action documentation */
+@media (max-width: 768px) {
+  .action-grid {
+    justify-content: center;
+  }
+  
+  .action-card {
+    flex: 1 1 280px;
+    max-width: 100%;
+  }
+  
+  .action-section {
+    padding: 1rem;
+  }
+  
+  .action-section table {
+    font-size: 0.85rem;
+  }
+  
+  .action-section table th,
+  .action-section table td {
+    padding: 0.5rem;
+  }
+}

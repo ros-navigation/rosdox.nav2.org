@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{TITLE}} - Nav2 API Docs</title>
+    <style>
+/* Base styles for ROS 2 documentation site - Nav2 Branded */
+
+:root {
+  --nav2-blue: #64E0F3;
+  --nav2-light-blue: #64E0F3;
+  --nav2-accent: #64E0F3;
+  --nav2-bg: #f8fafc;
+  --nav2-card-bg: #414141;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--nav2-bg);
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header styles - Nav2 Branded */
+.site-header {
+  background: var(--nav2-blue);
+  border-bottom: 3px solid var(--nav2-accent);
+  padding: 1.3rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.site-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.site-branding {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.site-logo {
+  height: 40px;
+  width: auto;
+  transition: transform 0.2s ease;
+}
+
+.site-logo:hover {
+  transform: scale(1.05);
+}
+
+.site-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #414141;
+  text-decoration: none;
+}
+
+.site-title:hover {
+  color: #dbeafe;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  color: #414141;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.nav-links a:hover {
+  color: #414141;
+  background: var(--nav2-accent);
+}
+
+/* Main content */
+.site-content {
+  min-height: calc(100vh - 200px);
+  padding: 2rem 0;
+}
+
+/* Footer - Nav2 Branded */
+.site-footer {
+  background: var(--nav2-blue);
+  border-top: 3px solid var(--nav2-accent);
+  padding: 2.4rem 0;
+  text-align: center;
+  color: #dbeafe;
+  font-size: 0.9rem;
+}
+
+.site-footer a {
+  color: #414141;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+  color: #dbeafe;
+}
+
+/* Typography - Nav2 Branded */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--nav2-blue);
+  margin-top: 0;
+}
+
+h1 {
+  font-size: 2rem;
+  border-bottom: 2px solid var(--nav2-accent);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--nav2-blue);
+}
+
+/* Custom styles for ROS 2 documentation site */
+
+.intro {
+  background: var(--nav2-blue);
+  color: #414141;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.intro h1 {
+  color: #414141;
+}
+
+.intro::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.resources-section {
+  margin: 3rem 0;
+  background: var(--nav2-blue);
+  color: #414141;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.resources-section h2 {
+  color: #414141;
+  margin-top: 0;
+}
+
+.resources-list {
+  list-style: none;
+  padding: 0;
+}
+
+.resources-list li {
+  margin: 0.5rem 0;
+}
+
+.resources-list a {
+  color: #414141;
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease;
+}
+
+.resources-list a:hover {
+  border-bottom-color: #414141;
+  opacity: 0.8;
+}
+
+.distribution-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.distribution-card {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  background: var(--nav2-card-bg);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  border-top: 4px solid var(--nav2-accent);
+  position: relative;
+  flex: 1 1 300px;
+  max-width: 450px;
+}
+
+.distribution-card:hover {
+  box-shadow: 0 8px 16px rgba(71, 198, 238, 0.15);
+  transform: translateY(-2px);
+  border-top-color: #2596be;
+}
+
+.distribution-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: var(--nav2-blue);
+}
+
+.distribution-card h3 a {
+  text-decoration: none;
+  color: var(--nav2-blue);
+  font-weight: 600;
+}
+
+.distribution-card h3 a:hover {
+  color: var(--nav2-accent);
+}
+
+/* Nav2-specific card styling */
+.distribution-card.nav2-card {
+  border-top-color: #2563eb;
+  background: linear-gradient(135deg, var(--nav2-card-bg) 0%, #374151 100%);
+}
+
+.distribution-card.nav2-card:hover {
+  border-top-color: #1d4ed8;
+  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.15);
+}
+
+.distribution-card.nav2-card h3 {
+  color: #3b82f6;
+}
+
+.distribution-card.nav2-card h3 a {
+  color: #3b82f6;
+}
+
+.distribution-card.nav2-card h3 a:hover {
+  color: #2563eb;
+}
+
+.distribution-card p {
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.distribution-mascot {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 60px;
+  height: 60px;
+  opacity: 1;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.distribution-card:hover .distribution-mascot {
+  opacity: 1;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--nav2-blue);
+  color: #414141;
+  box-shadow: 0 2px 4px rgba(71, 198, 238, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(71, 198, 238, 0.4);
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: var(--nav2-blue);
+  border: 2px solid var(--nav2-blue);
+}
+
+.btn-secondary:hover {
+  background: var(--nav2-blue);
+  color: #414141;
+  transform: translateY(-1px);
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.status.lts {
+  background: linear-gradient(45deg, #059669, #10b981);
+  color: #414141;
+  box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
+}
+
+.status.ltsmaintained {
+  background: linear-gradient(45deg, #059669, #10b981);
+  color: #414141;
+  box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
+}
+
+.status.ltsactive {
+  background: var(--nav2-blue);
+  color: #414141;
+  box-shadow: 0 2px 4px rgba(71, 198, 238, 0.3);
+}
+
+.status.active {
+  background: var(--nav2-blue);
+  color: #414141;
+  box-shadow: 0 2px 4px rgba(71, 198, 238, 0.3);
+}
+
+.status.non-lts {
+  background: var(--nav2-blue);
+  color: #414141;
+  box-shadow: 0 2px 4px rgba(71, 198, 238, 0.3);
+}
+
+.status.development {
+  background: linear-gradient(45deg, #ea580c, #f97316);
+  color: #414141;
+  box-shadow: 0 2px 4px rgba(234, 88, 12, 0.3);
+}
+
+/* Action API Documentation Styles */
+
+.action-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.action-card {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  border-left: 4px solid var(--nav2-blue);
+  flex: 1 1 300px;
+  max-width: 400px;
+}
+
+.action-card:hover {
+  box-shadow: 0 8px 16px rgba(71, 198, 238, 0.15);
+  transform: translateY(-2px);
+  border-left-color: #2596be;
+}
+
+.action-card h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: var(--nav2-blue);
+}
+
+.action-card h4 a {
+  text-decoration: none;
+  color: var(--nav2-blue);
+  font-weight: 600;
+}
+
+.action-card h4 a:hover {
+  color: var(--nav2-accent);
+}
+
+.action-package {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: #f1f8ff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  border: 1px solid #c9d1d9;
+}
+
+.action-description {
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+/* Action API buttons in distribution cards */
+.action-api-btn {
+  background: #059669;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
+}
+
+.action-api-btn:hover {
+  background: #047857;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(5, 150, 105, 0.4);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Message table styling */
+.action-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.action-section table th {
+  background: var(--nav2-blue);
+  color: #414141;
+  padding: 0.75rem;
+  text-align: left;
+  border: 1px solid #ddd;
+  font-weight: 600;
+}
+
+.action-section table td {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  vertical-align: top;
+}
+
+.action-section table tr:nth-child(even) {
+  background: #ffffff;
+}
+
+.action-section table tr:nth-child(odd) {
+  background: #f9f9f9;
+}
+
+.action-section table code {
+  background: #f1f1f1;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9rem;
+}
+
+/* Code examples styling */
+.action-examples pre {
+  background: #0d1117;
+  color: #c9d1d9;
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  border: 1px solid #30363d;
+}
+
+.action-examples code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .distribution-grid {
+    justify-content: center;
+  }
+  
+  .distribution-card {
+    flex: 1 1 280px;
+    max-width: 100%;
+  }
+  
+  .action-grid {
+    justify-content: center;
+  }
+  
+  .action-card {
+    flex: 1 1 280px;
+    max-width: 100%;
+  }
+}
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <nav class="site-nav">
+                <div class="site-branding">
+                    <img src="assets/images/nav2-logo.png" alt="Nav2 Logo" class="site-logo" onerror="this.style.display='none'">
+                    <a href="/" class="site-title">Nav2 API Docs</a>
+                </div>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="https://nav2.org/" target="_blank">Nav2</a>
+                    <a href="https://github.com/ros-navigation/navigation2/" target="_blank">Nav2 Repo</a>
+                    <a href="https://docs.nav2.org/" target="_blank">Nav2 Docs</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="site-content">
+        <div class="container">
+            {{CONTENT}}
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nav2 API Documentation. ✨ Vibe coded for you by Open Navigation ✨</p>
+            <p>
+                <a href="https://github.com/ros-navigation/navigation2">Nav2 GitHub</a> |
+                <a href="https://docs.ros.org/">ROS 2 Docs</a> |
+                <a href="https://nav2.org/">Nav2 Project</a> |
+                <a href="https://opennav.org/">Open Navigation</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
