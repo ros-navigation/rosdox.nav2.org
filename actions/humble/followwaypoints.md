@@ -24,14 +24,14 @@ Navigate robot through a series of waypoints with optional task execution at eac
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `missed_waypoints` | `int32[]` | Parameter for the action (see Nav2 documentation) |
+| `missed_waypoints` | `int32[]` | The statuses of waypoints if missed|
 
 
 ### Feedback Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `current_waypoint` | `uint32` | Integer numeric value |
+| `current_waypoint` | `uint32` | Current waypoint being executed|
 
 
 

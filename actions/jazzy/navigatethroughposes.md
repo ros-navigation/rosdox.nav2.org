@@ -26,7 +26,7 @@ Navigate robot through a sequence of poses in order
 | Field | Type | Description |
 |-------|------|-------------|
 | `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE|
-| `error_msg` | `string` | Text string parameter |
+| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
 
 
 ### Feedback Message
@@ -38,7 +38,7 @@ Navigate robot through a sequence of poses in order
 | `estimated_time_remaining` | `builtin_interfaces/Duration` | Estimated time remaining to reach the goal |
 | `number_of_recoveries` | `int16` | Number of recovery behaviors executed during navigation |
 | `distance_remaining` | `float32` | Approximate distance remaining to the goal |
-| `number_of_poses_remaining` | `int16` | Integer numeric value |
+| `number_of_poses_remaining` | `int16` | Number of goals left in the goal set to execute|
 
 
 

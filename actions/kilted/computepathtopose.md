@@ -30,7 +30,7 @@ Compute an optimal path from current position to a target pose
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
 | `planning_time` | `builtin_interfaces/Duration` | Time spent in path planning phase |
 | `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, INVALID_PLANNER, TF_ERROR, START_OUTSIDE_MAP, GOAL_OUTSIDE_MAP, START_OCCUPIED, GOAL_OCCUPIED, TIMEOUT, NO_VALID_PATH|
-| `error_msg` | `string` | Text string parameter |
+| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
 
 
 ### Feedback Message

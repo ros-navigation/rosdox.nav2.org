@@ -26,7 +26,7 @@ Navigate robot to a specific pose with obstacle avoidance and recovery behaviors
 | Field | Type | Description |
 |-------|------|-------------|
 | `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE|
-| `error_msg` | `string` | Text string parameter |
+| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
 
 
 ### Feedback Message

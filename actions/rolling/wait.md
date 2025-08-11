@@ -26,7 +26,7 @@ Pause robot operation for a specified duration or until condition is met
 |-------|------|-------------|
 | `total_elapsed_time` | `builtin_interfaces/Duration` | Total time taken to complete the action |
 | `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, TIMEOUT|
-| `error_msg` | `string` | Text string parameter |
+| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
 
 
 ### Feedback Message

@@ -29,7 +29,7 @@ Execute path following using a specified controller with progress monitoring
 |-------|------|-------------|
 | `result` | `std_msgs/Empty` | Empty result indicating successful completion |
 | `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, INVALID_CONTROLLER, TF_ERROR, INVALID_PATH, PATIENCE_EXCEEDED, FAILED_TO_MAKE_PROGRESS, NO_VALID_CONTROL, CONTROLLER_TIMED_OUT|
-| `error_msg` | `string` | Text string parameter |
+| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
 
 
 ### Feedback Message

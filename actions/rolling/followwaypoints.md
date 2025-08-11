@@ -17,8 +17,8 @@ Navigate robot through a series of waypoints with optional task execution at eac
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `number_of_loops` | `uint32` | Integer numeric value |
-| `goal_index` | `uint32` | Integer numeric value |
+| `number_of_loops` | `uint32` | Number of loops if the waypoints should be repeated|
+| `goal_index` | `uint32` | The goal index to start following waypoints from, if not the start|
 | `poses` | `geometry_msgs/PoseStamped[]` | Array of poses defining waypoints or path |
 
 
@@ -26,16 +26,16 @@ Navigate robot through a series of waypoints with optional task execution at eac
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `missed_waypoints` | `WaypointStatus[]` | Parameter for the action (see Nav2 documentation) |
+| `missed_waypoints` | `WaypointStatus[]` | The statuses of waypoints if missed|
 | `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, TASK_EXECUTOR_FAILED, NO_VALID_WAYPOINTS, STOP_ON_MISSED_WAYPOINT|
-| `error_msg` | `string` | Text string parameter |
+| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
 
 
 ### Feedback Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `current_waypoint` | `uint32` | Integer numeric value |
+| `current_waypoint` | `uint32` | Current waypoint being executed|
 
 
 

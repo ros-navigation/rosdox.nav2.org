@@ -32,7 +32,7 @@ Autonomously dock robot to a charging station or docking platform
 | `success` | `bool` | docking success status |
 | `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, DOCK_NOT_IN_DB, DOCK_NOT_VALID, FAILED_TO_STAGE, FAILED_TO_DETECT_DOCK, FAILED_TO_CONTROL, FAILED_TO_CHARGE, UNKNOWN|
 | `num_retries` | `uint16` | Number of retries attempted |
-| `error_msg` | `string` | Text string parameter |
+| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
 
 
 ### Feedback Message

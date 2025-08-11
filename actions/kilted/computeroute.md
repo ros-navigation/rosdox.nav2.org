@@ -33,7 +33,7 @@ Compute a high-level route between waypoints using graph search
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
 | `route` | `Route` | Computed route with waypoints and metadata |
 | `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, TF_ERROR, NO_VALID_GRAPH, INDETERMINANT_NODES_ON_GRAPH, TIMEOUT, NO_VALID_ROUTE, INVALID_EDGE_SCORER_USE|
-| `error_msg` | `string` | Text string parameter |
+| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
 
 
 ### Feedback Message

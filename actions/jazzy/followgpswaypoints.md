@@ -17,25 +17,25 @@ Navigate robot through GPS-based waypoints for outdoor navigation
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `number_of_loops` | `uint32` | Integer numeric value |
-| `goal_index` | `uint32` | Integer numeric value |
-| `gps_poses` | `geographic_msgs/GeoPose[]` | Parameter for the action (see Nav2 documentation) |
+| `number_of_loops` | `uint32` | Number of loops if the waypoints should be repeated|
+| `goal_index` | `uint32` | The goal index to start following waypoints from, if not the start|
+| `gps_poses` | `geographic_msgs/GeoPose[]` | Poses in GPS coordinates to follow|
 
 
 ### Result Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `missed_waypoints` | `MissedWaypoint[]` | Parameter for the action (see Nav2 documentation) |
+| `missed_waypoints` | `MissedWaypoint[]` | The statuses of waypoints if missed|
 | `error_code` | `int16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, TASK_EXECUTOR_FAILED|
-| `error_msg` | `string` | Text string parameter |
+| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
 
 
 ### Feedback Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `current_waypoint` | `uint32` | feedback |
+| `current_waypoint` | `uint32` | Current waypoint being executed|
 
 
 

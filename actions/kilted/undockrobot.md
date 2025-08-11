@@ -27,7 +27,7 @@ Autonomously undock robot from a charging station or docking platform
 |-------|------|-------------|
 | `success` | `bool` | docking success status |
 | `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, DOCK_NOT_VALID, FAILED_TO_CONTROL, TIMEOUT, UNKNOWN|
-| `error_msg` | `string` | Text string parameter |
+| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
 
 
 ### Feedback Message

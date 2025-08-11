@@ -26,8 +26,8 @@ Navigate robot through a sequence of poses in order
 | Field | Type | Description |
 |-------|------|-------------|
 | `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, FAILED_TO_LOAD_BEHAVIOR_TREE, TF_ERROR, TIMEOUT|
-| `error_msg` | `string` | Text string parameter |
-| `waypoint_statuses` | `WaypointStatus[]` | Parameter for the action (see Nav2 documentation) |
+| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
+| `waypoint_statuses` | `WaypointStatus[]` | Status of each waypoint to be navigated through|
 
 
 ### Feedback Message
@@ -39,8 +39,8 @@ Navigate robot through a sequence of poses in order
 | `estimated_time_remaining` | `builtin_interfaces/Duration` | Estimated time remaining to reach the goal |
 | `number_of_recoveries` | `int16` | Number of recovery behaviors executed during navigation |
 | `distance_remaining` | `float32` | Approximate distance remaining to the goal |
-| `number_of_poses_remaining` | `int16` | Integer numeric value |
-| `waypoint_statuses` | `WaypointStatus[]` | Parameter for the action (see Nav2 documentation) |
+| `number_of_poses_remaining` | `int16` | Number of goals left in the goal set to execute|
+| `waypoint_statuses` | `WaypointStatus[]` | Status of each waypoint to be navigated through|
 
 
 
