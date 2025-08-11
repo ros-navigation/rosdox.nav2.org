@@ -33,7 +33,7 @@ Pause robot operation for a specified duration or until condition is met
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `time_left` | `builtin_interfaces/Duration` | Time duration value |
+| `time_left` | `builtin_interfaces/Duration` | Time left to wait|
 
 
 

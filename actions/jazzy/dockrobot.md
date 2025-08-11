@@ -17,7 +17,7 @@ Autonomously dock robot to a charging station or docking platform
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `use_dock_id` | `bool` | goal definition. Whether to use the dock_id or dock_pose fields |
+| `use_dock_id` | `bool` | Whether to use the dock_id or dock_pose fields |
 | `dock_id` | `string` | Dock name or ID to dock at, from given dock database |
 | `dock_pose` | `geometry_msgs/PoseStamped` | Dock pose |
 | `dock_type` | `string` | If using dock_pose, what type of dock it is. Not necessary if only using one type of dock. |

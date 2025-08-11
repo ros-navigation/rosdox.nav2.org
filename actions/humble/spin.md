@@ -32,7 +32,7 @@ Rotate robot in place to a target yaw angle with collision checking
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `angular_distance_traveled` | `float32` | Floating point numeric value |
+| `angular_distance_traveled` | `float32` | Angular distance so far spun|
 
 
 

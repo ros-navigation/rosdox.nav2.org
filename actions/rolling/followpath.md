@@ -20,7 +20,7 @@ Execute path following using a specified controller with progress monitoring
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
 | `controller_id` | `string` | Name of the controller plugin to use for path following |
 | `goal_checker_id` | `string` | Name of the goal checker plugin to use |
-| `progress_checker_id` | `string` | Text string parameter |
+| `progress_checker_id` | `string` | Progress checker plugin ID to use|
 
 
 ### Result Message
@@ -36,7 +36,7 @@ Execute path following using a specified controller with progress monitoring
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `distance_to_goal` | `float32` | Floating point numeric value |
+| `distance_to_goal` | `float32` | Distance to the goal|
 | `speed` | `float32` | Speed for movement (m/s) |
 
 

@@ -17,9 +17,9 @@ Compute a high-level route between waypoints using graph search
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `start_id` | `uint16` | Integer numeric value |
+| `start_id` | `uint16` | ID of start node to use on the graph|
 | `start` | `geometry_msgs/PoseStamped` | Starting pose for path planning |
-| `goal_id` | `uint16` | Integer numeric value |
+| `goal_id` | `uint16` | ID of goal node to use on the graph|
 | `goal` | `geometry_msgs/PoseStamped` | Target goal pose for path planning |
 | `use_start` | `bool` | Whether to use the start field or find the start pose in TF |
 | `use_poses` | `bool` | Whether to use the poses or the IDs fields for request |

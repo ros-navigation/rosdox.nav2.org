@@ -17,9 +17,9 @@ Compute and actively track a route with dynamic replanning
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `start_id` | `uint16` | Integer numeric value |
+| `start_id` | `uint16` | ID of start node to use on the graph|
 | `start` | `geometry_msgs/PoseStamped` | Starting pose for path planning |
-| `goal_id` | `uint16` | Integer numeric value |
+| `goal_id` | `uint16` | ID of goal node to use on the graph|
 | `goal` | `geometry_msgs/PoseStamped` | Target goal pose for path planning |
 | `use_start` | `bool` | Whether to use the start field or find the start pose in TF |
 | `use_poses` | `bool` | Whether to use the poses or the IDs fields for request |
@@ -29,20 +29,20 @@ Compute and actively track a route with dynamic replanning
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `execution_duration` | `builtin_interfaces/Duration` | Time duration value |
+| `execution_duration` | `builtin_interfaces/Duration` | execution duration of the action|
 
 
 ### Feedback Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `last_node_id` | `uint16` | Integer numeric value |
-| `next_node_id` | `uint16` | Integer numeric value |
-| `current_edge_id` | `uint16` | Integer numeric value |
+| `last_node_id` | `uint16` | The last node achieved on the route|
+| `next_node_id` | `uint16` | The next node to be achieved following the current edge|
+| `current_edge_id` | `uint16` | The current edge being followed|
 | `route` | `Route` | Computed route with waypoints and metadata |
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
 | `operations_triggered` | `string[]` | Parameter for the action (see Nav2 documentation) |
-| `rerouted` | `bool` | Boolean true/false flag |
+| `rerouted` | `bool` | Whether a rerouting request was processed|
 
 
 

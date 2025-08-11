@@ -33,7 +33,7 @@ Execute path following using a specified controller with progress monitoring
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `distance_to_goal` | `float32` | Floating point numeric value |
+| `distance_to_goal` | `float32` | Distance to the goal|
 | `speed` | `float32` | Speed for movement (m/s) |
 
 

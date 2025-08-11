@@ -33,7 +33,7 @@ Drive robot forward in a specific direction for a given distance
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `distance_traveled` | `float32` | Floating point numeric value |
+| `distance_traveled` | `float32` | Distance traveled so far|
 
 
 

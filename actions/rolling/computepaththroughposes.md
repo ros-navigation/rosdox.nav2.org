@@ -17,7 +17,7 @@ Compute an optimal path connecting multiple poses in sequence
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `goals` | `nav_msgs/Goals` | Parameter for the action (see Nav2 documentation) |
+| `goals` | `nav_msgs/Goals` | Vector of goals to achieve|
 | `start` | `geometry_msgs/PoseStamped` | Starting pose for path planning |
 | `planner_id` | `string` | Name of the planner plugin to use for path planning |
 | `use_start` | `bool` | If false, use current robot pose as path start, if true, use start above instead |

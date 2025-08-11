@@ -17,7 +17,7 @@ Compute an optimal path connecting multiple poses in sequence
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `goals` | `geometry_msgs/PoseStamped[]` | Pose with header information (frame_id and timestamp) |
+| `goals` | `geometry_msgs/PoseStamped[]` | Vector of goals to achieve|
 | `start` | `geometry_msgs/PoseStamped` | Starting pose for path planning |
 | `planner_id` | `string` | Name of the planner plugin to use for path planning |
 | `use_start` | `bool` | If false, use current robot pose as path start, if true, use start above instead |

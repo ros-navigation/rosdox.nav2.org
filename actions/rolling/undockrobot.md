@@ -17,7 +17,7 @@ Autonomously undock robot from a charging station or docking platform
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `dock_type` | `string` | goal definition If initialized on a dock so the server doesn't know what type of dock its on, you must specify what dock it is to know where to stage for undocking. If only one type of dock plugin is present, it is not necessary to set. If not set & server instance was used to dock, server will use current dock information from last docking request. |
+| `dock_type` | `string` | If initialized on a dock so the server doesn't know what type of dock its on, you must specify what dock it is to know where to stage for undocking. If only one type of dock plugin is present, it is not necessary to set. If not set & server instance was used to dock, server will use current dock information from last docking request. |
 | `max_undocking_time` | `float32` | Maximum time to undock |
 
 

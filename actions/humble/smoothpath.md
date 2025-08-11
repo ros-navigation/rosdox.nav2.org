@@ -18,9 +18,9 @@ Generate a smoother, kinematically feasible path from a discrete path
 | Field | Type | Description |
 |-------|------|-------------|
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
-| `smoother_id` | `string` | Text string parameter |
-| `max_smoothing_duration` | `builtin_interfaces/Duration` | Time duration value |
-| `check_for_collisions` | `bool` | Boolean true/false flag |
+| `smoother_id` | `string` | ID of Smoother Plugin to utilize|
+| `max_smoothing_duration` | `builtin_interfaces/Duration` | The maximum time allowed to smooth|
+| `check_for_collisions` | `bool` | Whether or not to check for collisions on the smoothed path|
 
 
 ### Result Message
@@ -28,8 +28,8 @@ Generate a smoother, kinematically feasible path from a discrete path
 | Field | Type | Description |
 |-------|------|-------------|
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
-| `smoothing_duration` | `builtin_interfaces/Duration` | Time duration value |
-| `was_completed` | `bool` | Boolean true/false flag |
+| `smoothing_duration` | `builtin_interfaces/Duration` | Total time spent smoothing the path|
+| `was_completed` | `bool` | If this smoothing was completed without collision or other issue|
 
 
 ### Feedback Message
