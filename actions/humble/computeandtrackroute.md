@@ -63,7 +63,8 @@ class Nav2ActionClient(Node):
         
     def send_goal(self):
         goal_msg = ComputeAndTrackRoute.Goal()
-        # Set appropriate fields for ComputeAndTrackRoute
+        goal_msg.start_id = 1
+        goal_msg.goal_id = 5
         
         self.action_client.wait_for_server()
         future = self.action_client.send_goal_async(
@@ -96,7 +97,8 @@ public:
     void send_goal()
     {
         auto goal_msg = ComputeAndTrackRouteAction::Goal();
-        // Set appropriate fields for ComputeAndTrackRoute
+        goal_msg.start_id = 1;
+        goal_msg.goal_id = 5;
         
         action_client_->wait_for_action_server();
         

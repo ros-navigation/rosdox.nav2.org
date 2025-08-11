@@ -56,7 +56,27 @@ class Nav2ActionClient(Node):
         
     def send_goal(self):
         goal_msg = FollowGPSWaypoints.Goal()
-        # Set appropriate fields for FollowGPSWaypoints
+        goal_msg.number_of_loops = 1
+        goal_msg.goal_index = 0
+        
+        # Create GPS waypoints (example coordinates)
+        from geographic_msgs.msg import GeoPose
+        from geometry_msgs.msg import Quaternion
+        from geographic_msgs.msg import GeoPoint
+        
+        waypoint1 = GeoPose()
+        waypoint1.position.latitude = 37.7749
+        waypoint1.position.longitude = -122.4194
+        waypoint1.position.altitude = 0.0
+        waypoint1.orientation.w = 1.0
+        
+        waypoint2 = GeoPose()
+        waypoint2.position.latitude = 37.7849
+        waypoint2.position.longitude = -122.4094
+        waypoint2.position.altitude = 0.0
+        waypoint2.orientation.w = 1.0
+        
+        goal_msg.gps_poses = [waypoint1, waypoint2]
         
         self.action_client.wait_for_server()
         future = self.action_client.send_goal_async(
@@ -89,7 +109,23 @@ public:
     void send_goal()
     {
         auto goal_msg = FollowGPSWaypointsAction::Goal();
-        // Set appropriate fields for FollowGPSWaypoints
+        goal_msg.number_of_loops = 1;
+        goal_msg.goal_index = 0;
+        
+        // Create GPS waypoints (example coordinates)
+        geographic_msgs::msg::GeoPose waypoint1, waypoint2;
+        
+        waypoint1.position.latitude = 37.7749;
+        waypoint1.position.longitude = -122.4194;
+        waypoint1.position.altitude = 0.0;
+        waypoint1.orientation.w = 1.0;
+        
+        waypoint2.position.latitude = 37.7849;
+        waypoint2.position.longitude = -122.4094;
+        waypoint2.position.altitude = 0.0;
+        waypoint2.orientation.w = 1.0;
+        
+        goal_msg.gps_poses = {waypoint1, waypoint2};
         
         action_client_->wait_for_action_server();
         

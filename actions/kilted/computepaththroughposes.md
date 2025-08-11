@@ -55,7 +55,27 @@ class Nav2ActionClient(Node):
         
     def send_goal(self):
         goal_msg = ComputePathThroughPoses.Goal()
-        # Set appropriate fields for ComputePathThroughPoses
+        goal_msg.planner_id = 'GridBased'
+        goal_msg.use_start = False
+        
+        # Create goal poses
+        from geometry_msgs.msg import PoseStamped
+        
+        goal1 = PoseStamped()
+        goal1.header.frame_id = 'map'
+        goal1.header.stamp = self.get_clock().now().to_msg()
+        goal1.pose.position.x = 2.0
+        goal1.pose.position.y = 1.0
+        goal1.pose.orientation.w = 1.0
+        
+        goal2 = PoseStamped()
+        goal2.header.frame_id = 'map'
+        goal2.header.stamp = self.get_clock().now().to_msg()
+        goal2.pose.position.x = 4.0
+        goal2.pose.position.y = 2.0
+        goal2.pose.orientation.w = 1.0
+        
+        goal_msg.goals = [goal1, goal2]
         
         self.action_client.wait_for_server()
         future = self.action_client.send_goal_async(
@@ -88,7 +108,25 @@ public:
     void send_goal()
     {
         auto goal_msg = ComputePathThroughPosesAction::Goal();
-        // Set appropriate fields for ComputePathThroughPoses
+        goal_msg.planner_id = "GridBased";
+        goal_msg.use_start = false;
+        
+        // Create goal poses
+        geometry_msgs::msg::PoseStamped goal1, goal2;
+        
+        goal1.header.frame_id = "map";
+        goal1.header.stamp = this->now();
+        goal1.pose.position.x = 2.0;
+        goal1.pose.position.y = 1.0;
+        goal1.pose.orientation.w = 1.0;
+        
+        goal2.header.frame_id = "map";
+        goal2.header.stamp = this->now();
+        goal2.pose.position.x = 4.0;
+        goal2.pose.position.y = 2.0;
+        goal2.pose.orientation.w = 1.0;
+        
+        goal_msg.goals = {goal1, goal2};
         
         action_client_->wait_for_action_server();
         
