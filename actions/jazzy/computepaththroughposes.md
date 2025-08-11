@@ -27,20 +27,9 @@ Compute an optimal path connecting multiple poses in sequence
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `NONE` | `uint16` | result definition Error codes Note: The expected priority order of the errors should match the message order |
-| `UNKNOWN` | `uint16` | Integer numeric value |
-| `INVALID_PLANNER` | `uint16` | Integer numeric value |
-| `TF_ERROR` | `uint16` | Integer numeric value |
-| `START_OUTSIDE_MAP` | `uint16` | Integer numeric value |
-| `GOAL_OUTSIDE_MAP` | `uint16` | Integer numeric value |
-| `START_OCCUPIED` | `uint16` | Integer numeric value |
-| `GOAL_OCCUPIED` | `uint16` | Integer numeric value |
-| `TIMEOUT` | `uint16` | Integer numeric value |
-| `NO_VALID_PATH` | `uint16` | Integer numeric value |
-| `NO_VIAPOINTS_GIVEN` | `uint16` | Integer numeric value |
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
 | `planning_time` | `builtin_interfaces/Duration` | Time spent in path planning phase |
-| `error_code` | `uint16` | Error code indicating the result status |
+| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, INVALID_PLANNER, TF_ERROR, START_OUTSIDE_MAP, GOAL_OUTSIDE_MAP, START_OCCUPIED, GOAL_OCCUPIED, TIMEOUT, NO_VALID_PATH, NO_VIAPOINTS_GIVEN|
 | `error_msg` | `string` | Text string parameter |
 
 

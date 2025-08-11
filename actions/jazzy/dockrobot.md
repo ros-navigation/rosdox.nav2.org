@@ -29,16 +29,8 @@ Autonomously dock robot to a charging station or docking platform
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `NONE` | `uint16` | result definition Error codes Note: The expected priority order of the errors should match the message order |
-| `DOCK_NOT_IN_DB` | `uint16` | Integer numeric value |
-| `DOCK_NOT_VALID` | `uint16` | Integer numeric value |
-| `FAILED_TO_STAGE` | `uint16` | Integer numeric value |
-| `FAILED_TO_DETECT_DOCK` | `uint16` | Integer numeric value |
-| `FAILED_TO_CONTROL` | `uint16` | Integer numeric value |
-| `FAILED_TO_CHARGE` | `uint16` | Integer numeric value |
-| `UNKNOWN` | `uint16` | Integer numeric value |
 | `success` | `bool` | docking success status |
-| `error_code` | `uint16` | Contextual error code, if any |
+| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, DOCK_NOT_IN_DB, DOCK_NOT_VALID, FAILED_TO_STAGE, FAILED_TO_DETECT_DOCK, FAILED_TO_CONTROL, FAILED_TO_CHARGE, UNKNOWN|
 | `num_retries` | `uint16` | Number of retries attempted |
 | `error_msg` | `string` | Text string parameter |
 
@@ -47,13 +39,7 @@ Autonomously dock robot to a charging station or docking platform
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `NONE` | `uint16` | Integer numeric value |
-| `NAV_TO_STAGING_POSE` | `uint16` | Integer numeric value |
-| `INITIAL_PERCEPTION` | `uint16` | Integer numeric value |
-| `CONTROLLING` | `uint16` | Integer numeric value |
-| `WAIT_FOR_CHARGE` | `uint16` | Integer numeric value |
-| `RETRY` | `uint16` | Integer numeric value |
-| `state` | `uint16` | Current docking state |
+| `state` | `uint16` | Current docking state. Possible values: NAV_TO_STAGING_POSE, INITIAL_PERCEPTION, CONTROLLING, WAIT_FOR_CHARGE, RETRY|
 | `docking_time` | `builtin_interfaces/Duration` | Docking time elapsed |
 | `num_retries` | `uint16` | Number of retries attempted |
 

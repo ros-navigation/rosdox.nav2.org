@@ -29,14 +29,6 @@ Compute a high-level route between waypoints using graph search
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `NONE` | `uint16` | result definition Error codes |
-| `UNKNOWN` | `uint16` | Integer numeric value |
-| `TF_ERROR` | `uint16` | Integer numeric value |
-| `NO_VALID_GRAPH` | `uint16` | Integer numeric value |
-| `INDETERMINANT_NODES_ON_GRAPH` | `uint16` | Integer numeric value |
-| `TIMEOUT` | `uint16` | Integer numeric value |
-| `NO_VALID_ROUTE` | `uint16` | Integer numeric value |
-| `INVALID_EDGE_SCORER_USE` | `uint16` | Integer numeric value |
 | `planning_time` | `builtin_interfaces/Duration` | Time spent in path planning phase |
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
 | `route` | `Route` | Computed route with waypoints and metadata |

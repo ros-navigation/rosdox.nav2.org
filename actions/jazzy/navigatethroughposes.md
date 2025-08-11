@@ -25,8 +25,7 @@ Navigate robot through a sequence of poses in order
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `NONE` | `uint16` | result definition Error codes Note: The expected priority order of the errors should match the message order |
-| `error_code` | `uint16` | Error code indicating the result status |
+| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE|
 | `error_msg` | `string` | Text string parameter |
 
 

@@ -25,12 +25,8 @@ Autonomously undock robot from a charging station or docking platform
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `NONE` | `uint16` | result definition Error codes Note: The expected priority order of the errors should match the message order |
-| `DOCK_NOT_VALID` | `uint16` | Integer numeric value |
-| `FAILED_TO_CONTROL` | `uint16` | Integer numeric value |
-| `UNKNOWN` | `uint16` | Integer numeric value |
 | `success` | `bool` | docking success status |
-| `error_code` | `uint16` | Contextual error code, if any |
+| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, DOCK_NOT_VALID, FAILED_TO_CONTROL, UNKNOWN|
 | `error_msg` | `string` | Text string parameter |
 
 

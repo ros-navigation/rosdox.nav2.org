@@ -27,17 +27,10 @@ Generate a smoother, kinematically feasible path from a discrete path
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `NONE` | `uint16` | result definition Error codes Note: The expected priority order of the errors should match the message order |
-| `UNKNOWN` | `uint16` | Integer numeric value |
-| `INVALID_SMOOTHER` | `uint16` | Integer numeric value |
-| `TIMEOUT` | `uint16` | Integer numeric value |
-| `SMOOTHED_PATH_IN_COLLISION` | `uint16` | Integer numeric value |
-| `FAILED_TO_SMOOTH_PATH` | `uint16` | Integer numeric value |
-| `INVALID_PATH` | `uint16` | Integer numeric value |
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
 | `smoothing_duration` | `builtin_interfaces/Duration` | Time duration value |
 | `was_completed` | `bool` | Boolean true/false flag |
-| `error_code` | `uint16` | Error code indicating the result status |
+| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, INVALID_SMOOTHER, TIMEOUT, SMOOTHED_PATH_IN_COLLISION, FAILED_TO_SMOOTH_PATH, INVALID_PATH|
 | `error_msg` | `string` | Text string parameter |
 
 

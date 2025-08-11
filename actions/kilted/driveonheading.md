@@ -27,14 +27,8 @@ Drive robot forward in a specific direction for a given distance
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `NONE` | `uint16` | result definition Error codes Note: The expected priority order of the error should match the message order |
-| `UNKNOWN` | `uint16` | Integer numeric value |
-| `TIMEOUT` | `uint16` | Integer numeric value |
-| `TF_ERROR` | `uint16` | Integer numeric value |
-| `COLLISION_AHEAD` | `uint16` | Integer numeric value |
-| `INVALID_INPUT` | `uint16` | Integer numeric value |
 | `total_elapsed_time` | `builtin_interfaces/Duration` | Total time taken to complete the action |
-| `error_code` | `uint16` | Error code indicating the result status |
+| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, TIMEOUT, TF_ERROR, COLLISION_AHEAD, INVALID_INPUT|
 | `error_msg` | `string` | Text string parameter |
 
 

@@ -26,13 +26,8 @@ Navigate robot through a series of waypoints with optional task execution at eac
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `NONE` | `uint16` | result definition Error codes Note: The expected priority order of the errors should match the message order |
-| `UNKNOWN` | `uint16` | Integer numeric value |
-| `TASK_EXECUTOR_FAILED` | `uint16` | Integer numeric value |
-| `NO_VALID_WAYPOINTS` | `uint16` | Integer numeric value |
-| `STOP_ON_MISSED_WAYPOINT` | `uint16` | Integer numeric value |
 | `missed_waypoints` | `WaypointStatus[]` | Parameter for the action (see Nav2 documentation) |
-| `error_code` | `uint16` | Error code indicating the result status |
+| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, TASK_EXECUTOR_FAILED, NO_VALID_WAYPOINTS, STOP_ON_MISSED_WAYPOINT|
 | `error_msg` | `string` | Text string parameter |
 
 

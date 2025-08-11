@@ -27,17 +27,8 @@ Execute path following using a specified controller with progress monitoring
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `NONE` | `uint16` | result definition Error codes Note: The expected priority order of the errors should match the message order |
-| `UNKNOWN` | `uint16` | Integer numeric value |
-| `INVALID_CONTROLLER` | `uint16` | Integer numeric value |
-| `TF_ERROR` | `uint16` | Integer numeric value |
-| `INVALID_PATH` | `uint16` | Integer numeric value |
-| `PATIENCE_EXCEEDED` | `uint16` | Integer numeric value |
-| `FAILED_TO_MAKE_PROGRESS` | `uint16` | Integer numeric value |
-| `NO_VALID_CONTROL` | `uint16` | Integer numeric value |
-| `CONTROLLER_TIMED_OUT` | `uint16` | Integer numeric value |
 | `result` | `std_msgs/Empty` | Empty result indicating successful completion |
-| `error_code` | `uint16` | Error code indicating the result status |
+| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, INVALID_CONTROLLER, TF_ERROR, INVALID_PATH, PATIENCE_EXCEEDED, FAILED_TO_MAKE_PROGRESS, NO_VALID_CONTROL, CONTROLLER_TIMED_OUT|
 | `error_msg` | `string` | Text string parameter |
 
 

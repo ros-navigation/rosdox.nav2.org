@@ -29,15 +29,6 @@ Compute and actively track a route with dynamic replanning
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `NONE` | `uint16` | result definition Error codes |
-| `UNKNOWN` | `uint16` | Integer numeric value |
-| `TF_ERROR` | `uint16` | Integer numeric value |
-| `NO_VALID_GRAPH` | `uint16` | Integer numeric value |
-| `INDETERMINANT_NODES_ON_GRAPH` | `uint16` | Integer numeric value |
-| `TIMEOUT` | `uint16` | Integer numeric value |
-| `NO_VALID_ROUTE` | `uint16` | Integer numeric value |
-| `OPERATION_FAILED` | `uint16` | Integer numeric value |
-| `INVALID_EDGE_SCORER_USE` | `uint16` | Integer numeric value |
 | `execution_duration` | `builtin_interfaces/Duration` | Time duration value |
 
 

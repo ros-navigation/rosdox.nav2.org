@@ -26,13 +26,8 @@ Navigate robot through GPS-based waypoints for outdoor navigation
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `NONE` | `uint16` | result definition Error codes Note: The expected priority order of the errors should match the message order |
-| `UNKNOWN` | `uint16` | Integer numeric value |
-| `TASK_EXECUTOR_FAILED` | `uint16` | Integer numeric value |
-| `NO_WAYPOINTS_GIVEN` | `uint16` | Integer numeric value |
-| `STOP_ON_MISSED_WAYPOINT` | `uint16` | Integer numeric value |
 | `missed_waypoints` | `WaypointStatus[]` | Parameter for the action (see Nav2 documentation) |
-| `error_code` | `int16` | Error code indicating the result status |
+| `error_code` | `int16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, TASK_EXECUTOR_FAILED, NO_WAYPOINTS_GIVEN, STOP_ON_MISSED_WAYPOINT|
 | `error_msg` | `string` | Text string parameter |
 
 

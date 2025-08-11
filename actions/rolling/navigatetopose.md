@@ -25,12 +25,7 @@ Navigate robot to a specific pose with obstacle avoidance and recovery behaviors
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `NONE` | `uint16` | result definition Error codes Note: The expected priority order of the errors should match the message order |
-| `UNKNOWN` | `uint16` | Integer numeric value |
-| `FAILED_TO_LOAD_BEHAVIOR_TREE` | `uint16` | Integer numeric value |
-| `TF_ERROR` | `uint16` | Integer numeric value |
-| `TIMEOUT` | `uint16` | Integer numeric value |
-| `error_code` | `uint16` | Error code indicating the result status |
+| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, FAILED_TO_LOAD_BEHAVIOR_TREE, TF_ERROR, TIMEOUT|
 | `error_msg` | `string` | Text string parameter |
 
 
