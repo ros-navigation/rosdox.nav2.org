@@ -10,4 +10,4 @@ Contributions welcome, but manual testing is required.
 
 Make sure new messages are asked to have the result enums be in the description for ``error_codes``.
 
-When updating with new action definitions, ask Claude to generate useage examples and extract the data from nav2_msgs to populate the descriptions. Look over the descriptions and tell it what to update them with if not sufficient.
+When updating with new action definitions, ask Claude to generate useage examples and extract the data from nav2_msgs to populate the descriptions. Look over the descriptions and tell it what to update them with if not sufficient. Make sure they're placed into the correct section of the Actions API page.
