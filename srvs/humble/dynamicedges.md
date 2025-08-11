@@ -41,11 +41,13 @@ from nav2_msgs.srv import DynamicEdges
 class DynamicEdgesClient(Node):
     def __init__(self):
         super().__init__('dynamicedges_client')
-        self.client = self.create_client(DynamicEdges, 'dynamicedges')
+        self.client = self.create_client(DynamicEdges, 'route_graph/dynamic_edges')
         
     def send_request(self):
         request = DynamicEdges.Request()
-        # Set request parameters here based on service definition
+        request.closed_edges = [1, 2, 5]  # Edge IDs to close
+        request.opened_edges = [3, 4]     # Edge IDs to open
+        request.adjust_edges = []          # No cost adjustments
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -78,13 +80,15 @@ class DynamicEdgesClient : public rclcpp::Node
 public:
     DynamicEdgesClient() : Node("dynamicedges_client")
     {
-        client_ = create_client<nav2_msgs::srv::DynamicEdges>("dynamicedges");
+        client_ = create_client<nav2_msgs::srv::DynamicEdges>("route_graph/dynamic_edges");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::DynamicEdges::Request>();
-        // Set request parameters here based on service definition
+        request->closed_edges = {1, 2, 5};  // Edge IDs to close
+        request->opened_edges = {3, 4};     // Edge IDs to open
+        request->adjust_edges = {};          // No cost adjustments
 
         client_->wait_for_service();
         

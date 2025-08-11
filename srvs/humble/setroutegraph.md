@@ -39,11 +39,11 @@ from nav2_msgs.srv import SetRouteGraph
 class SetRouteGraphClient(Node):
     def __init__(self):
         super().__init__('setroutegraph_client')
-        self.client = self.create_client(SetRouteGraph, 'setroutegraph')
+        self.client = self.create_client(SetRouteGraph, 'route_graph/set_route_graph')
         
     def send_request(self):
         request = SetRouteGraph.Request()
-        # Set request parameters here based on service definition
+        request.graph_filepath = "/path/to/route_graph.yaml"
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -76,13 +76,13 @@ class SetRouteGraphClient : public rclcpp::Node
 public:
     SetRouteGraphClient() : Node("setroutegraph_client")
     {
-        client_ = create_client<nav2_msgs::srv::SetRouteGraph>("setroutegraph");
+        client_ = create_client<nav2_msgs::srv::SetRouteGraph>("route_graph/set_route_graph");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::SetRouteGraph::Request>();
-        // Set request parameters here based on service definition
+        request->graph_filepath = "/path/to/route_graph.yaml";
 
         client_->wait_for_service();
         

@@ -35,15 +35,27 @@ Set the initial pose estimate for robot localization
 import rclpy
 from rclpy.node import Node
 from nav2_msgs.srv import SetInitialPose
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 
 class SetInitialPoseClient(Node):
     def __init__(self):
         super().__init__('setinitialpose_client')
-        self.client = self.create_client(SetInitialPose, 'setinitialpose')
+        self.client = self.create_client(SetInitialPose, 'amcl/set_initial_pose')
         
     def send_request(self):
         request = SetInitialPose.Request()
-        # Set request parameters here based on service definition
+        request.pose.header.frame_id = 'map'
+        request.pose.header.stamp = self.get_clock().now().to_msg()
+        request.pose.pose.pose.position.x = 0.0
+        request.pose.pose.pose.position.y = 0.0
+        request.pose.pose.pose.orientation.w = 1.0
+        # Set covariance matrix (6x6 = 36 elements)
+        request.pose.pose.covariance = [0.25, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                       0.0, 0.25, 0.0, 0.0, 0.0, 0.0,
+                                       0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                       0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                       0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                       0.0, 0.0, 0.0, 0.0, 0.0, 0.068]
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -70,19 +82,29 @@ def main():
 ```cpp
 #include "rclcpp/rclcpp.hpp"
 #include "nav2_msgs/srv/setinitialpose.hpp"
+#include "geometry_msgs/msg/pose_stamped.hpp"
+#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
 
 class SetInitialPoseClient : public rclcpp::Node
 {
 public:
     SetInitialPoseClient() : Node("setinitialpose_client")
     {
-        client_ = create_client<nav2_msgs::srv::SetInitialPose>("setinitialpose");
+        client_ = create_client<nav2_msgs::srv::SetInitialPose>("amcl/set_initial_pose");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::SetInitialPose::Request>();
-        // Set request parameters here based on service definition
+        request->pose.header.frame_id = "map";
+        request->pose.header.stamp = this->now();
+        request->pose.pose.pose.position.x = 0.0;
+        request->pose.pose.pose.position.y = 0.0;
+        request->pose.pose.pose.orientation.w = 1.0;
+        // Set covariance matrix
+        request->pose.pose.covariance[0] = 0.25;  // x variance
+        request->pose.pose.covariance[7] = 0.25;  // y variance
+        request->pose.pose.covariance[35] = 0.068; // yaw variance
 
         client_->wait_for_service();
         

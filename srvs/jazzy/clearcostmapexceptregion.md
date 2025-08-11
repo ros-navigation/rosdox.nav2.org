@@ -39,11 +39,11 @@ from nav2_msgs.srv import ClearCostmapExceptRegion
 class ClearCostmapExceptRegionClient(Node):
     def __init__(self):
         super().__init__('clearcostmapexceptregion_client')
-        self.client = self.create_client(ClearCostmapExceptRegion, 'clearcostmapexceptregion')
+        self.client = self.create_client(ClearCostmapExceptRegion, 'global_costmap/clear_except_global_costmap')
         
     def send_request(self):
         request = ClearCostmapExceptRegion.Request()
-        # Set request parameters here based on service definition
+        request.reset_distance = 2.0
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -76,13 +76,13 @@ class ClearCostmapExceptRegionClient : public rclcpp::Node
 public:
     ClearCostmapExceptRegionClient() : Node("clearcostmapexceptregion_client")
     {
-        client_ = create_client<nav2_msgs::srv::ClearCostmapExceptRegion>("clearcostmapexceptregion");
+        client_ = create_client<nav2_msgs::srv::ClearCostmapExceptRegion>("global_costmap/clear_except_global_costmap");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::ClearCostmapExceptRegion::Request>();
-        // Set request parameters here based on service definition
+        request->reset_distance = 2.0;
 
         client_->wait_for_service();
         

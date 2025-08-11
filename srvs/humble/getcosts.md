@@ -37,15 +37,32 @@ Retrieve costmap cost values at specified poses
 import rclpy
 from rclpy.node import Node
 from nav2_msgs.srv import GetCosts
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 
 class GetCostsClient(Node):
     def __init__(self):
         super().__init__('getcosts_client')
-        self.client = self.create_client(GetCosts, 'getcosts')
+        self.client = self.create_client(GetCosts, 'global_costmap/get_cost_global_costmap')
         
     def send_request(self):
         request = GetCosts.Request()
-        # Set request parameters here based on service definition
+        request.use_footprint = True
+        # Create example poses to query
+        pose1 = PoseStamped()
+        pose1.header.frame_id = 'map'
+        pose1.header.stamp = self.get_clock().now().to_msg()
+        pose1.pose.position.x = 1.0
+        pose1.pose.position.y = 2.0
+        pose1.pose.orientation.w = 1.0
+        
+        pose2 = PoseStamped()
+        pose2.header.frame_id = 'map'
+        pose2.header.stamp = self.get_clock().now().to_msg()
+        pose2.pose.position.x = 3.0
+        pose2.pose.position.y = 4.0
+        pose2.pose.orientation.w = 1.0
+        
+        request.poses = [pose1, pose2]
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -72,19 +89,36 @@ def main():
 ```cpp
 #include "rclcpp/rclcpp.hpp"
 #include "nav2_msgs/srv/getcosts.hpp"
+#include "geometry_msgs/msg/pose_stamped.hpp"
+#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
 
 class GetCostsClient : public rclcpp::Node
 {
 public:
     GetCostsClient() : Node("getcosts_client")
     {
-        client_ = create_client<nav2_msgs::srv::GetCosts>("getcosts");
+        client_ = create_client<nav2_msgs::srv::GetCosts>("global_costmap/get_cost_global_costmap");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::GetCosts::Request>();
-        // Set request parameters here based on service definition
+        request->use_footprint = true;
+        // Create example poses to query
+        geometry_msgs::msg::PoseStamped pose1, pose2;
+        pose1.header.frame_id = "map";
+        pose1.header.stamp = this->now();
+        pose1.pose.position.x = 1.0;
+        pose1.pose.position.y = 2.0;
+        pose1.pose.orientation.w = 1.0;
+        
+        pose2.header.frame_id = "map";
+        pose2.header.stamp = this->now();
+        pose2.pose.position.x = 3.0;
+        pose2.pose.position.y = 4.0;
+        pose2.pose.orientation.w = 1.0;
+        
+        request->poses = {pose1, pose2};
 
         client_->wait_for_service();
         

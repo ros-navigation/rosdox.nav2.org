@@ -158,6 +158,260 @@ service_definitions = {
 
 distributions = ["humble", "jazzy", "kilted", "rolling"]
 
+def get_service_topic(service_name):
+    """Map service names to their typical ROS topic names"""
+    topic_map = {
+        "clearcostmaparoundpose": "global_costmap/clear_around_global_costmap",
+        "clearcostmaparoundrobot": "global_costmap/clear_around_global_costmap", 
+        "clearcostmapexceptregion": "global_costmap/clear_except_global_costmap",
+        "clearentirecostmap": "global_costmap/clear_entirely_global_costmap",
+        "getcosts": "global_costmap/get_cost_global_costmap",
+        "getcostmap": "global_costmap/get_costmap",
+        "setroutegraph": "route_graph/set_route_graph",
+        "dynamicedges": "route_graph/dynamic_edges",
+        "loadmap": "map_server/load_map",
+        "savemap": "map_server/save_map",
+        "ispathvalid": "planner_server/is_path_valid",
+        "managelifecyclenodes": "lifecycle_manager/manage_nodes",
+        "reloaddockdatabase": "docking_server/reload_dock_database",
+        "setinitialpose": "amcl/set_initial_pose"
+    }
+    return topic_map.get(service_name, service_name)
+
+def get_python_imports(service_data):
+    """Get additional Python imports needed for the service"""
+    imports = ""
+    for field, field_type, _ in service_data.get("request", []):
+        if "geometry_msgs" in field_type:
+            imports += "\nfrom geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped"
+            break
+    for field, field_type, _ in service_data.get("request", []):
+        if "nav_msgs" in field_type:
+            imports += "\nfrom nav_msgs.msg import Path, OccupancyGrid"
+            break
+    return imports
+
+def get_cpp_includes(service_data):
+    """Get additional C++ includes needed for the service"""
+    includes = ""
+    for field, field_type, _ in service_data.get("request", []):
+        if "geometry_msgs" in field_type:
+            includes += '\n#include "geometry_msgs/msg/pose_stamped.hpp"'
+            includes += '\n#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"'
+            break
+    for field, field_type, _ in service_data.get("request", []):
+        if "nav_msgs" in field_type:
+            includes += '\n#include "nav_msgs/msg/path.hpp"'
+            includes += '\n#include "nav_msgs/msg/occupancy_grid.hpp"'
+            break
+    return includes
+
+def generate_python_request_code(service_data, service_name):
+    """Generate Python code to populate request fields"""
+    code_lines = []
+    
+    for field, field_type, _ in service_data.get("request", []):
+        if field == "pose" and "PoseStamped" in field_type:
+            code_lines.extend([
+                "request.pose.header.frame_id = 'map'",
+                "request.pose.header.stamp = self.get_clock().now().to_msg()",
+                "request.pose.pose.position.x = 2.0",
+                "request.pose.pose.position.y = 1.0",
+                "request.pose.pose.position.z = 0.0",
+                "request.pose.pose.orientation.w = 1.0"
+            ])
+        elif field == "pose" and "PoseWithCovarianceStamped" in field_type:
+            code_lines.extend([
+                "request.pose.header.frame_id = 'map'",
+                "request.pose.header.stamp = self.get_clock().now().to_msg()",
+                "request.pose.pose.pose.position.x = 0.0",
+                "request.pose.pose.pose.position.y = 0.0",
+                "request.pose.pose.pose.orientation.w = 1.0",
+                "# Set covariance matrix (6x6 = 36 elements)",
+                "request.pose.pose.covariance = [0.25, 0.0, 0.0, 0.0, 0.0, 0.0,",
+                "                               0.0, 0.25, 0.0, 0.0, 0.0, 0.0,",
+                "                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0,",
+                "                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0,",
+                "                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0,",
+                "                               0.0, 0.0, 0.0, 0.0, 0.0, 0.068]"
+            ])
+        elif field == "poses" and "PoseStamped[]" in field_type:
+            code_lines.extend([
+                "# Create example poses to query",
+                "pose1 = PoseStamped()",
+                "pose1.header.frame_id = 'map'",
+                "pose1.header.stamp = self.get_clock().now().to_msg()",
+                "pose1.pose.position.x = 1.0",
+                "pose1.pose.position.y = 2.0",
+                "pose1.pose.orientation.w = 1.0",
+                "",
+                "pose2 = PoseStamped()",
+                "pose2.header.frame_id = 'map'",
+                "pose2.header.stamp = self.get_clock().now().to_msg()",
+                "pose2.pose.position.x = 3.0",
+                "pose2.pose.position.y = 4.0",
+                "pose2.pose.orientation.w = 1.0",
+                "",
+                "request.poses = [pose1, pose2]"
+            ])
+        elif field == "use_footprint":
+            code_lines.append("request.use_footprint = True")
+        elif field == "reset_distance":
+            code_lines.append("request.reset_distance = 2.0")
+        elif field == "graph_filepath":
+            code_lines.append('request.graph_filepath = "/path/to/route_graph.yaml"')
+        elif field == "filepath":
+            code_lines.append('request.filepath = "/path/to/dock_database.yaml"')
+        elif field == "map_url":
+            code_lines.append('request.map_url = "file:///path/to/map.yaml"')
+        elif field == "map_topic":
+            code_lines.append('request.map_topic = "/map"')
+        elif field == "image_format":
+            code_lines.append('request.image_format = "pgm"')
+        elif field == "map_mode":
+            code_lines.append('request.map_mode = "trinary"')
+        elif field == "free_thresh":
+            code_lines.append("request.free_thresh = 0.25")
+        elif field == "occupied_thresh":
+            code_lines.append("request.occupied_thresh = 0.65")
+        elif field == "path":
+            code_lines.extend([
+                "# Create example path to validate",
+                "path = Path()",
+                "path.header.frame_id = 'map'",
+                "path.header.stamp = self.get_clock().now().to_msg()",
+                "# Add path poses...",
+                "request.path = path"
+            ])
+        elif field == "max_cost":
+            code_lines.append("request.max_cost = 200")
+        elif field == "consider_unknown_as_obstacle":
+            code_lines.append("request.consider_unknown_as_obstacle = False")
+        elif field == "command":
+            code_lines.extend([
+                "# Lifecycle commands: STARTUP=0, PAUSE=1, RESUME=2, RESET=3, SHUTDOWN=4",
+                "request.command = 0  # STARTUP"
+            ])
+        elif field == "closed_edges":
+            code_lines.append("request.closed_edges = [1, 2, 5]  # Edge IDs to close")
+        elif field == "opened_edges":
+            code_lines.append("request.opened_edges = [3, 4]     # Edge IDs to open")
+        elif field == "adjust_edges":
+            code_lines.append("request.adjust_edges = []          # No cost adjustments")
+        elif field == "specs":
+            code_lines.extend([
+                "# Specify costmap region to retrieve",
+                "request.specs.size_x = 100",
+                "request.specs.size_y = 100",
+                "request.specs.resolution = 0.05"
+            ])
+    
+    if not code_lines:
+        code_lines.append("# No request parameters needed")
+    
+    return "\n        ".join(code_lines)
+
+def generate_cpp_request_code(service_data, service_name):
+    """Generate C++ code to populate request fields"""
+    code_lines = []
+    
+    for field, field_type, _ in service_data.get("request", []):
+        if field == "pose" and "PoseStamped" in field_type:
+            code_lines.extend([
+                "request->pose.header.frame_id = \"map\";",
+                "request->pose.header.stamp = this->now();",
+                "request->pose.pose.position.x = 2.0;",
+                "request->pose.pose.position.y = 1.0;",
+                "request->pose.pose.position.z = 0.0;",
+                "request->pose.pose.orientation.w = 1.0;"
+            ])
+        elif field == "pose" and "PoseWithCovarianceStamped" in field_type:
+            code_lines.extend([
+                "request->pose.header.frame_id = \"map\";",
+                "request->pose.header.stamp = this->now();",
+                "request->pose.pose.pose.position.x = 0.0;",
+                "request->pose.pose.pose.position.y = 0.0;",
+                "request->pose.pose.pose.orientation.w = 1.0;",
+                "// Set covariance matrix",
+                "request->pose.pose.covariance[0] = 0.25;  // x variance",
+                "request->pose.pose.covariance[7] = 0.25;  // y variance", 
+                "request->pose.pose.covariance[35] = 0.068; // yaw variance"
+            ])
+        elif field == "poses" and "PoseStamped[]" in field_type:
+            code_lines.extend([
+                "// Create example poses to query",
+                "geometry_msgs::msg::PoseStamped pose1, pose2;",
+                "pose1.header.frame_id = \"map\";",
+                "pose1.header.stamp = this->now();",
+                "pose1.pose.position.x = 1.0;",
+                "pose1.pose.position.y = 2.0;",
+                "pose1.pose.orientation.w = 1.0;",
+                "",
+                "pose2.header.frame_id = \"map\";",
+                "pose2.header.stamp = this->now();",
+                "pose2.pose.position.x = 3.0;",
+                "pose2.pose.position.y = 4.0;",
+                "pose2.pose.orientation.w = 1.0;",
+                "",
+                "request->poses = {pose1, pose2};"
+            ])
+        elif field == "use_footprint":
+            code_lines.append("request->use_footprint = true;")
+        elif field == "reset_distance":
+            code_lines.append("request->reset_distance = 2.0;")
+        elif field == "graph_filepath":
+            code_lines.append('request->graph_filepath = "/path/to/route_graph.yaml";')
+        elif field == "filepath":
+            code_lines.append('request->filepath = "/path/to/dock_database.yaml";')
+        elif field == "map_url":
+            code_lines.append('request->map_url = "file:///path/to/map.yaml";')
+        elif field == "map_topic":
+            code_lines.append('request->map_topic = "/map";')
+        elif field == "image_format":
+            code_lines.append('request->image_format = "pgm";')
+        elif field == "map_mode":
+            code_lines.append('request->map_mode = "trinary";')
+        elif field == "free_thresh":
+            code_lines.append("request->free_thresh = 0.25;")
+        elif field == "occupied_thresh":
+            code_lines.append("request->occupied_thresh = 0.65;")
+        elif field == "path":
+            code_lines.extend([
+                "// Create example path to validate",
+                "nav_msgs::msg::Path path;",
+                "path.header.frame_id = \"map\";",
+                "path.header.stamp = this->now();",
+                "// Add path poses...",
+                "request->path = path;"
+            ])
+        elif field == "max_cost":
+            code_lines.append("request->max_cost = 200;")
+        elif field == "consider_unknown_as_obstacle":
+            code_lines.append("request->consider_unknown_as_obstacle = false;")
+        elif field == "command":
+            code_lines.extend([
+                "// Lifecycle commands: STARTUP=0, PAUSE=1, RESUME=2, RESET=3, SHUTDOWN=4",
+                "request->command = 0;  // STARTUP"
+            ])
+        elif field == "closed_edges":
+            code_lines.append("request->closed_edges = {1, 2, 5};  // Edge IDs to close")
+        elif field == "opened_edges":
+            code_lines.append("request->opened_edges = {3, 4};     // Edge IDs to open")
+        elif field == "adjust_edges":
+            code_lines.append("request->adjust_edges = {};          // No cost adjustments")
+        elif field == "specs":
+            code_lines.extend([
+                "// Specify costmap region to retrieve",
+                "request->specs.size_x = 100;",
+                "request->specs.size_y = 100;",
+                "request->specs.resolution = 0.05;"
+            ])
+    
+    if not code_lines:
+        code_lines.append("// No request parameters needed")
+    
+    return "\n        ".join(code_lines)
+
 def generate_service_page(service_name, service_data, distribution, category):
     """Generate a service documentation page"""
     
@@ -179,6 +433,10 @@ def generate_service_page(service_name, service_data, distribution, category):
     else:
         response_table = "| Field | Type | Description |\n|-------|------|-------------|\n| (none) | - | This service has no response fields |\n"
     
+    # Generate Python request population based on service
+    python_request_code = generate_python_request_code(service_data, service_name)
+    cpp_request_code = generate_cpp_request_code(service_data, service_name)
+    
     # Generate Python example
     service_class = service_data["title"]
     service_variable = service_name.lower()
@@ -186,16 +444,16 @@ def generate_service_page(service_name, service_data, distribution, category):
     python_example = f"""```python
 import rclpy
 from rclpy.node import Node
-from nav2_msgs.srv import {service_class}
+from nav2_msgs.srv import {service_class}{get_python_imports(service_data)}
 
 class {service_class}Client(Node):
     def __init__(self):
         super().__init__('{service_variable}_client')
-        self.client = self.create_client({service_class}, '{service_variable}')
+        self.client = self.create_client({service_class}, '{get_service_topic(service_name)}')
         
     def send_request(self):
         request = {service_class}.Request()
-        # Set request parameters here based on service definition
+        {python_request_code}
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -220,20 +478,20 @@ def main():
     # Generate C++ example
     cpp_example = f"""```cpp
 #include "rclcpp/rclcpp.hpp"
-#include "nav2_msgs/srv/{service_name}.hpp"
+#include "nav2_msgs/srv/{service_name}.hpp"{get_cpp_includes(service_data)}
 
 class {service_class}Client : public rclcpp::Node
 {{
 public:
     {service_class}Client() : Node("{service_variable}_client")
     {{
-        client_ = create_client<nav2_msgs::srv::{service_class}>("{service_variable}");
+        client_ = create_client<nav2_msgs::srv::{service_class}>("{get_service_topic(service_name)}");
     }}
 
     void send_request()
     {{
         auto request = std::make_shared<nav2_msgs::srv::{service_class}::Request>();
-        // Set request parameters here based on service definition
+        {cpp_request_code}
 
         client_->wait_for_service();
         

@@ -36,15 +36,22 @@ Clear costmap within a specified distance around a given pose
 import rclpy
 from rclpy.node import Node
 from nav2_msgs.srv import ClearCostmapAroundPose
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 
 class ClearCostmapAroundPoseClient(Node):
     def __init__(self):
         super().__init__('clearcostmaparoundpose_client')
-        self.client = self.create_client(ClearCostmapAroundPose, 'clearcostmaparoundpose')
+        self.client = self.create_client(ClearCostmapAroundPose, 'global_costmap/clear_around_global_costmap')
         
     def send_request(self):
         request = ClearCostmapAroundPose.Request()
-        # Set request parameters here based on service definition
+        request.pose.header.frame_id = 'map'
+        request.pose.header.stamp = self.get_clock().now().to_msg()
+        request.pose.pose.position.x = 2.0
+        request.pose.pose.position.y = 1.0
+        request.pose.pose.position.z = 0.0
+        request.pose.pose.orientation.w = 1.0
+        request.reset_distance = 2.0
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -71,19 +78,27 @@ def main():
 ```cpp
 #include "rclcpp/rclcpp.hpp"
 #include "nav2_msgs/srv/clearcostmaparoundpose.hpp"
+#include "geometry_msgs/msg/pose_stamped.hpp"
+#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
 
 class ClearCostmapAroundPoseClient : public rclcpp::Node
 {
 public:
     ClearCostmapAroundPoseClient() : Node("clearcostmaparoundpose_client")
     {
-        client_ = create_client<nav2_msgs::srv::ClearCostmapAroundPose>("clearcostmaparoundpose");
+        client_ = create_client<nav2_msgs::srv::ClearCostmapAroundPose>("global_costmap/clear_around_global_costmap");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::ClearCostmapAroundPose::Request>();
-        // Set request parameters here based on service definition
+        request->pose.header.frame_id = "map";
+        request->pose.header.stamp = this->now();
+        request->pose.pose.position.x = 2.0;
+        request->pose.pose.position.y = 1.0;
+        request->pose.pose.position.z = 0.0;
+        request->pose.pose.orientation.w = 1.0;
+        request->reset_distance = 2.0;
 
         client_->wait_for_service();
         

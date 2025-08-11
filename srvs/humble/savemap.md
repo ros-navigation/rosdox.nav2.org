@@ -44,11 +44,16 @@ from nav2_msgs.srv import SaveMap
 class SaveMapClient(Node):
     def __init__(self):
         super().__init__('savemap_client')
-        self.client = self.create_client(SaveMap, 'savemap')
+        self.client = self.create_client(SaveMap, 'map_server/save_map')
         
     def send_request(self):
         request = SaveMap.Request()
-        # Set request parameters here based on service definition
+        request.map_topic = "/map"
+        request.map_url = "file:///path/to/map.yaml"
+        request.image_format = "pgm"
+        request.map_mode = "trinary"
+        request.free_thresh = 0.25
+        request.occupied_thresh = 0.65
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -81,13 +86,18 @@ class SaveMapClient : public rclcpp::Node
 public:
     SaveMapClient() : Node("savemap_client")
     {
-        client_ = create_client<nav2_msgs::srv::SaveMap>("savemap");
+        client_ = create_client<nav2_msgs::srv::SaveMap>("map_server/save_map");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::SaveMap::Request>();
-        // Set request parameters here based on service definition
+        request->map_topic = "/map";
+        request->map_url = "file:///path/to/map.yaml";
+        request->image_format = "pgm";
+        request->map_mode = "trinary";
+        request->free_thresh = 0.25;
+        request->occupied_thresh = 0.65;
 
         client_->wait_for_service();
         

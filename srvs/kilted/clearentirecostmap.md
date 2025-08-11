@@ -39,11 +39,11 @@ from nav2_msgs.srv import ClearEntireCostmap
 class ClearEntireCostmapClient(Node):
     def __init__(self):
         super().__init__('clearentirecostmap_client')
-        self.client = self.create_client(ClearEntireCostmap, 'clearentirecostmap')
+        self.client = self.create_client(ClearEntireCostmap, 'global_costmap/clear_entirely_global_costmap')
         
     def send_request(self):
         request = ClearEntireCostmap.Request()
-        # Set request parameters here based on service definition
+        # No request parameters needed
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -76,13 +76,13 @@ class ClearEntireCostmapClient : public rclcpp::Node
 public:
     ClearEntireCostmapClient() : Node("clearentirecostmap_client")
     {
-        client_ = create_client<nav2_msgs::srv::ClearEntireCostmap>("clearentirecostmap");
+        client_ = create_client<nav2_msgs::srv::ClearEntireCostmap>("global_costmap/clear_entirely_global_costmap");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::ClearEntireCostmap::Request>();
-        // Set request parameters here based on service definition
+        // No request parameters needed
 
         client_->wait_for_service();
         

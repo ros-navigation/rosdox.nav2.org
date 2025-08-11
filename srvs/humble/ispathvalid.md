@@ -38,15 +38,23 @@ Validate whether a given path is collision-free and traversable
 import rclpy
 from rclpy.node import Node
 from nav2_msgs.srv import IsPathValid
+from nav_msgs.msg import Path, OccupancyGrid
 
 class IsPathValidClient(Node):
     def __init__(self):
         super().__init__('ispathvalid_client')
-        self.client = self.create_client(IsPathValid, 'ispathvalid')
+        self.client = self.create_client(IsPathValid, 'planner_server/is_path_valid')
         
     def send_request(self):
         request = IsPathValid.Request()
-        # Set request parameters here based on service definition
+        # Create example path to validate
+        path = Path()
+        path.header.frame_id = 'map'
+        path.header.stamp = self.get_clock().now().to_msg()
+        # Add path poses...
+        request.path = path
+        request.max_cost = 200
+        request.consider_unknown_as_obstacle = False
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -73,19 +81,28 @@ def main():
 ```cpp
 #include "rclcpp/rclcpp.hpp"
 #include "nav2_msgs/srv/ispathvalid.hpp"
+#include "nav_msgs/msg/path.hpp"
+#include "nav_msgs/msg/occupancy_grid.hpp"
 
 class IsPathValidClient : public rclcpp::Node
 {
 public:
     IsPathValidClient() : Node("ispathvalid_client")
     {
-        client_ = create_client<nav2_msgs::srv::IsPathValid>("ispathvalid");
+        client_ = create_client<nav2_msgs::srv::IsPathValid>("planner_server/is_path_valid");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::IsPathValid::Request>();
-        // Set request parameters here based on service definition
+        // Create example path to validate
+        nav_msgs::msg::Path path;
+        path.header.frame_id = "map";
+        path.header.stamp = this->now();
+        // Add path poses...
+        request->path = path;
+        request->max_cost = 200;
+        request->consider_unknown_as_obstacle = false;
 
         client_->wait_for_service();
         

@@ -40,11 +40,11 @@ from nav2_msgs.srv import LoadMap
 class LoadMapClient(Node):
     def __init__(self):
         super().__init__('loadmap_client')
-        self.client = self.create_client(LoadMap, 'loadmap')
+        self.client = self.create_client(LoadMap, 'map_server/load_map')
         
     def send_request(self):
         request = LoadMap.Request()
-        # Set request parameters here based on service definition
+        request.map_url = "file:///path/to/map.yaml"
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -77,13 +77,13 @@ class LoadMapClient : public rclcpp::Node
 public:
     LoadMapClient() : Node("loadmap_client")
     {
-        client_ = create_client<nav2_msgs::srv::LoadMap>("loadmap");
+        client_ = create_client<nav2_msgs::srv::LoadMap>("map_server/load_map");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::LoadMap::Request>();
-        // Set request parameters here based on service definition
+        request->map_url = "file:///path/to/map.yaml";
 
         client_->wait_for_service();
         

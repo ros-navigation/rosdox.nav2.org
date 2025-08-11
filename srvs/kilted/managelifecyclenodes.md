@@ -39,11 +39,12 @@ from nav2_msgs.srv import ManageLifecycleNodes
 class ManageLifecycleNodesClient(Node):
     def __init__(self):
         super().__init__('managelifecyclenodes_client')
-        self.client = self.create_client(ManageLifecycleNodes, 'managelifecyclenodes')
+        self.client = self.create_client(ManageLifecycleNodes, 'lifecycle_manager/manage_nodes')
         
     def send_request(self):
         request = ManageLifecycleNodes.Request()
-        # Set request parameters here based on service definition
+        # Lifecycle commands: STARTUP=0, PAUSE=1, RESUME=2, RESET=3, SHUTDOWN=4
+        request.command = 0  # STARTUP
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -76,13 +77,14 @@ class ManageLifecycleNodesClient : public rclcpp::Node
 public:
     ManageLifecycleNodesClient() : Node("managelifecyclenodes_client")
     {
-        client_ = create_client<nav2_msgs::srv::ManageLifecycleNodes>("managelifecyclenodes");
+        client_ = create_client<nav2_msgs::srv::ManageLifecycleNodes>("lifecycle_manager/manage_nodes");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::ManageLifecycleNodes::Request>();
-        // Set request parameters here based on service definition
+        // Lifecycle commands: STARTUP=0, PAUSE=1, RESUME=2, RESET=3, SHUTDOWN=4
+        request->command = 0;  // STARTUP
 
         client_->wait_for_service();
         

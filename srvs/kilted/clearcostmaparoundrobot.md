@@ -39,11 +39,11 @@ from nav2_msgs.srv import ClearCostmapAroundRobot
 class ClearCostmapAroundRobotClient(Node):
     def __init__(self):
         super().__init__('clearcostmaparoundrobot_client')
-        self.client = self.create_client(ClearCostmapAroundRobot, 'clearcostmaparoundrobot')
+        self.client = self.create_client(ClearCostmapAroundRobot, 'global_costmap/clear_around_global_costmap')
         
     def send_request(self):
         request = ClearCostmapAroundRobot.Request()
-        # Set request parameters here based on service definition
+        request.reset_distance = 2.0
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -76,13 +76,13 @@ class ClearCostmapAroundRobotClient : public rclcpp::Node
 public:
     ClearCostmapAroundRobotClient() : Node("clearcostmaparoundrobot_client")
     {
-        client_ = create_client<nav2_msgs::srv::ClearCostmapAroundRobot>("clearcostmaparoundrobot");
+        client_ = create_client<nav2_msgs::srv::ClearCostmapAroundRobot>("global_costmap/clear_around_global_costmap");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::ClearCostmapAroundRobot::Request>();
-        // Set request parameters here based on service definition
+        request->reset_distance = 2.0;
 
         client_->wait_for_service();
         

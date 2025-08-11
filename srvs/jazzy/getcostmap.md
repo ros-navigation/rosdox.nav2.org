@@ -39,11 +39,14 @@ from nav2_msgs.srv import GetCostmap
 class GetCostmapClient(Node):
     def __init__(self):
         super().__init__('getcostmap_client')
-        self.client = self.create_client(GetCostmap, 'getcostmap')
+        self.client = self.create_client(GetCostmap, 'global_costmap/get_costmap')
         
     def send_request(self):
         request = GetCostmap.Request()
-        # Set request parameters here based on service definition
+        # Specify costmap region to retrieve
+        request.specs.size_x = 100
+        request.specs.size_y = 100
+        request.specs.resolution = 0.05
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -76,13 +79,16 @@ class GetCostmapClient : public rclcpp::Node
 public:
     GetCostmapClient() : Node("getcostmap_client")
     {
-        client_ = create_client<nav2_msgs::srv::GetCostmap>("getcostmap");
+        client_ = create_client<nav2_msgs::srv::GetCostmap>("global_costmap/get_costmap");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::GetCostmap::Request>();
-        // Set request parameters here based on service definition
+        // Specify costmap region to retrieve
+        request->specs.size_x = 100;
+        request->specs.size_y = 100;
+        request->specs.resolution = 0.05;
 
         client_->wait_for_service();
         

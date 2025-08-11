@@ -39,11 +39,11 @@ from nav2_msgs.srv import ReloadDockDatabase
 class ReloadDockDatabaseClient(Node):
     def __init__(self):
         super().__init__('reloaddockdatabase_client')
-        self.client = self.create_client(ReloadDockDatabase, 'reloaddockdatabase')
+        self.client = self.create_client(ReloadDockDatabase, 'docking_server/reload_dock_database')
         
     def send_request(self):
         request = ReloadDockDatabase.Request()
-        # Set request parameters here based on service definition
+        request.filepath = "/path/to/dock_database.yaml"
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -76,13 +76,13 @@ class ReloadDockDatabaseClient : public rclcpp::Node
 public:
     ReloadDockDatabaseClient() : Node("reloaddockdatabase_client")
     {
-        client_ = create_client<nav2_msgs::srv::ReloadDockDatabase>("reloaddockdatabase");
+        client_ = create_client<nav2_msgs::srv::ReloadDockDatabase>("docking_server/reload_dock_database");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::ReloadDockDatabase::Request>();
-        // Set request parameters here based on service definition
+        request->filepath = "/path/to/dock_database.yaml";
 
         client_->wait_for_service();
         
