@@ -19,6 +19,9 @@ collections:
   action_docs:
     output: true
     permalink: /:collection/:name/
+  srv_docs:
+    output: true
+    permalink: /:collection/:name/
 
 exclude:
   - .github/
