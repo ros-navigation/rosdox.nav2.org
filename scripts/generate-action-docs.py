@@ -669,52 +669,199 @@ private:
             'path': 'Computed navigation path with poses and metadata',
             
             # Navigation parameters
-            'behavior_tree': 'Optional behavior tree XML to use for this navigation task',
-            'planner_id': 'Name of the planner plugin to use for path planning',
-            'controller_id': 'Name of the controller plugin to use for path following',
+            'behavior_tree': 'Path to custom behavior tree XML file to use for this navigation task. If empty, uses default navigation behavior tree with planning, following, and recovery behaviors',
+            'planner_id': 'Name of the specific planning algorithm to use (e.g., "GridBased", "NavfnPlanner"). If empty with single planner, uses default',
+            'controller_id': 'Name of the path following controller to use (e.g., "FollowPath", "RegulatedPurePursuit")',
             'goal_checker_id': 'Name of the goal checker plugin to use',
-            'use_start': 'Whether to use the start pose or current robot pose',
+            'use_start': 'Whether to use the provided start pose (true) or current robot position (false) as path planning origin',
             
             # Time and duration fields
             'navigation_time': 'Total time elapsed since navigation started',
             'estimated_time_remaining': 'Estimated time remaining to reach the goal',
-            'time_allowance': 'Maximum time allowed for this action to complete',
+            'time_allowance': 'Maximum time limit for completing the action before timing out',
             'max_staging_time': 'Maximum time to spend in staging before docking',
-            'time': 'Duration to wait or time parameter for the action',
+            'time': 'Duration to wait/pause robot motion before continuing',
             
             # Recovery and status fields
-            'number_of_recoveries': 'Number of recovery behaviors executed during navigation',
+            'number_of_recoveries': 'Count of recovery behaviors executed during navigation to overcome obstacles or failures',
             'distance_remaining': 'Approximate distance remaining to the goal',
+            'distance_traveled': 'Real-time feedback of distance moved from starting position',
             'result': 'Empty result indicating successful completion',
             
             # Movement parameters
-            'target_yaw': 'Target yaw angle to spin to (in radians)',
+            'target_yaw': 'Target rotation angle in radians to spin (positive=counterclockwise, negative=clockwise)',
             'target': 'Target position or velocity vector',
-            'speed': 'Speed for movement (m/s)',
+            'speed': 'Movement speed in meters per second for the specified motion',
+            'dist_to_travel': 'Distance in meters to travel in the specified direction',
+            'disable_collision_checks': 'Whether to skip obstacle detection during motion (false=check for collisions, true=ignore obstacles)',
             
             # Docking parameters
-            'dock_id': 'Unique identifier for the dock to use',
-            'dock_type': 'Type or model of the docking station',
-            'use_dock_id': 'Whether to use dock_id or auto-detect dock',
+            'dock_id': 'Identifier name of the docking station from the dock database to autonomously navigate to and dock with',
+            'dock_type': 'Type/model of the docking station (e.g., "nova_carter_dock") for proper docking/undocking sequence',
+            'use_dock_id': 'Whether to use dock database ID (true) or manually specified dock pose and type (false)',
+            'navigate_to_staging_pose': 'Whether to navigate to the staging pose before docking',
             
             # GPS and routing
             'route_end': 'Final destination for route planning',
             'route_start': 'Starting point for route planning (optional)',
             'route': 'Computed route with waypoints and metadata',
+            'number_of_loops': 'How many times to repeat the complete waypoint sequence (0=no looping)',
+            'goal_index': 'Starting waypoint index in the poses array (default 0 for beginning)',
             
             # Assisted teleop
             'command': 'Teleop command to be processed and executed safely',
             
-            # General result fields
-            'error_code': 'Error code indicating the result status',
+            # General result and error fields
+            'error_code': 'Numeric error code indicating specific failure reason (0=success, various codes for different failure types)',
+            'error_msg': 'Human-readable error message describing what went wrong during action execution',
             'total_elapsed_time': 'Total time taken to complete the action',
-            'planning_time': 'Time spent in path planning phase'
+            'planning_time': 'Time spent in path planning phase',
+            
+            # Error code constants
+            'NONE': 'Success status code indicating the action completed without errors',
+            'UNKNOWN': 'Generic error code for unexpected or unclassified failures',
+            'TIMEOUT': 'Error code indicating the action exceeded its maximum allowed time',
+            'TF_ERROR': 'Error code indicating a transform/localization failure',
+            'COLLISION_AHEAD': 'Error code indicating an obstacle was detected blocking the path',
+            'INVALID_INPUT': 'Error code indicating invalid parameters were provided',
+            'FAILED_TO_LOAD_BEHAVIOR_TREE': 'Error code indicating the specified behavior tree file could not be loaded',
+            'FAILED_TO_DETECT_DOCK': 'Error code indicating the docking station could not be detected or located',
+            'FAILED_TO_CONTROL': 'Error code indicating control system failure during docking maneuver',
+            'FAILED_TO_CHARGE': 'Error code indicating charging connection or validation failed',
+            'DOCK_NOT_IN_DB': 'Error code indicating the specified dock ID was not found in the dock database',
+            'DOCK_NOT_VALID': 'Error code indicating the dock pose or configuration is invalid',
+            'FAILED_TO_STAGE': 'Error code indicating failure to navigate to or position at the staging pose',
+            
+            # Feedback state constants
+            'NAV_TO_STAGING_POSE': 'Status indicating navigation to the docking staging position is in progress',
+            'INITIAL_PERCEPTION': 'Status indicating the robot is performing initial dock detection and perception',
+            'CONTROLLING': 'Status indicating the robot is under precise control for final docking approach',
+            'WAIT_FOR_CHARGE': 'Status indicating the robot is waiting for charging connection to be established',
+            'CHARGING': 'Status indicating the robot is successfully connected and charging',
+            'RETRY': 'Status indicating the docking process is retrying after a failed attempt',
+            
+            # Waypoint fields
+            'missed_waypoints': 'Array of waypoints that could not be reached due to obstacles or navigation failures',
+            
+            # Task executor error
+            'TASK_EXECUTOR_FAILED': 'Error code indicating a task executor plugin failed to execute at a waypoint',
+            
+            # Controller error codes
+            'INVALID_CONTROLLER': 'Error code indicating the specified controller plugin is invalid or not loaded',
+            'INVALID_PATH': 'Error code indicating the provided path is malformed or contains invalid data',
+            'PATIENCE_EXCEEDED': 'Error code indicating the controller exceeded its patience limit waiting for progress',
+            'FAILED_TO_MAKE_PROGRESS': 'Error code indicating the robot failed to make sufficient progress along the path',
+            'NO_VALID_CONTROL': 'Error code indicating the controller could not compute valid control commands',
+            'CONTROLLER_TIMED_OUT': 'Error code indicating the controller exceeded its maximum allowed execution time',
+            
+            # Planner error codes
+            'INVALID_PLANNER': 'Error code indicating the specified planner plugin is invalid or not loaded',
+            'START_OUTSIDE_MAP': 'Error code indicating the start position is outside the known map boundaries',
+            'GOAL_OUTSIDE_MAP': 'Error code indicating the goal position is outside the known map boundaries', 
+            'START_OCCUPIED': 'Error code indicating the start position is in an occupied/blocked area',
+            'GOAL_OCCUPIED': 'Error code indicating the goal position is in an occupied/blocked area',
+            'NO_VALID_PATH': 'Error code indicating no feasible path could be found between start and goal',
+            
+            # Smoother error codes
+            'INVALID_SMOOTHER': 'Error code indicating the specified path smoother plugin is invalid or not loaded',
+            'SMOOTHING_FAILED': 'Error code indicating the path smoothing process failed to improve the path',
+            'SMOOTHER_TIMED_OUT': 'Error code indicating the smoother exceeded its maximum allowed execution time',
+            'SMOOTHED_PATH_IN_COLLISION': 'Error code indicating the smoothed path would cause the robot to collide with obstacles',
+            'FAILED_TO_SMOOTH_PATH': 'Error code indicating the path smoothing algorithm failed to generate a valid smoothed path',
+            
+            # Route planner error codes
+            'INVALID_ROUTE_PLANNER': 'Error code indicating the specified route planner plugin is invalid or not loaded',
+            'NO_ROUTE_FOUND': 'Error code indicating no valid route could be found between waypoints',
+            'ROUTE_PLANNING_FAILED': 'Error code indicating the route planning algorithm failed',
+            'NO_VALID_GRAPH': 'Error code indicating the route graph is invalid or has no connectivity',
+            'INDETERMINANT_NODES_ON_GRAPH': 'Error code indicating graph nodes have ambiguous or undefined relationships',
+            'NO_VALID_ROUTE': 'Error code indicating no feasible route exists between the specified waypoints',
+            'INVALID_EDGE_SCORER_USE': 'Error code indicating the edge scorer plugin was used incorrectly',
+            
+            # GPS waypoint error codes
+            'INVALID_GPS': 'Error code indicating GPS coordinates are invalid or unavailable',
+            'GPS_UNRELIABLE': 'Error code indicating GPS signal quality is insufficient for navigation',
+            'NO_WAYPOINTS_GIVEN': 'Error code indicating no waypoints were provided in the request',
+            'STOP_ON_MISSED_WAYPOINT': 'Error code indicating the action stopped because a waypoint could not be reached',
+            
+            # Additional error codes
+            'INVALID_GOAL': 'Error code indicating the provided goal is invalid or malformed',
+            'INVALID_START': 'Error code indicating the provided start position is invalid',
+            'GOAL_TOLERANCE_VIOLATED': 'Error code indicating the robot could not reach the goal within tolerance',
+            'COMPUTATION_FAILED': 'Error code indicating a computational failure occurred during processing',
+            
+            # ID fields for waypoints and nodes
+            'start_id': 'Unique identifier for the starting waypoint in the route graph',
+            'goal_id': 'Unique identifier for the target waypoint in the route graph',
+            'gps_poses': 'Array of GPS-based poses defining outdoor navigation waypoints with latitude/longitude coordinates',
+            'goals': 'Array of target poses that the path should connect through in sequence',
+            'NO_VIAPOINTS_GIVEN': 'Error code indicating no intermediate waypoints were provided for path planning through poses',
+            
+            # Waypoint status and tracking
+            'waypoint_statuses': 'Array of status information for each waypoint including success/failure state and execution details',
+            'number_of_poses_remaining': 'Count of poses/waypoints remaining to be visited in the navigation sequence',
+            'last_node_id': 'Identifier of the last successfully reached node in the route graph during navigation',
+            'NO_VALID_WAYPOINTS': 'Error code indicating the provided waypoints are invalid or unreachable',
+            
+            # Operation status
+            'OPERATION_FAILED': 'Error code indicating a general operation failure occurred during execution',
+            'execution_duration': 'Total time taken for the route computation and tracking operation to complete',
+            'next_node_id': 'Identifier of the next node to be visited in the route graph during navigation',
+            'current_edge_id': 'Identifier of the current edge being traversed in the route graph',
+            'operations_triggered': 'List of navigation operations or behaviors that have been triggered during route execution',
+            'rerouted': 'Flag indicating whether the route has been dynamically recalculated due to obstacles or changes',
+            
+            # Path smoothing fields
+            'smoother_id': 'Name of the path smoothing algorithm plugin to use',
+            'max_smoothing_duration': 'Maximum time allowed for the path smoothing algorithm to compute and refine the path',
+            'check_for_collisions': 'Whether to perform collision checking on the smoothed path to ensure safety',
+            'smoothing_duration': 'Actual time taken by the smoothing algorithm to process and optimize the path in seconds',
+            'was_completed': 'Whether the smoothing operation finished successfully within the allocated time and computational limits',
+            
+            # Path following fields  
+            'progress_checker_id': 'Name of the progress monitoring plugin to use for tracking path following advancement',
+            'distance_to_goal': 'Current distance from the robot to the final goal position in meters, updated continuously during navigation',
+            
+            # Spin behavior fields
+            'angular_distance_traveled': 'Total angular distance the robot has rotated during the spin action in radians (cumulative measurement)',
+            
+            # Wait behavior fields  
+            'time_left': 'Remaining wait time before the wait action completes, in seconds (counts down to zero)',
+            
+            # Docking fields
+            'dock_type': 'Type of docking station or charging platform to dock with (e.g., "nova_carter_dock", "charging_dock")',
+            'use_dock_id': 'Whether to use the dock_id field to identify the dock from a database, or use the dock_pose field for direct positioning',
+            
+            # Other common fields  
+            'success': 'Boolean flag indicating whether the operation completed successfully',
+            'num_retries': 'Count of retry attempts made during the action execution',
+            'current_waypoint': 'Index of the current waypoint being pursued in a sequence'
         }
     
     def _get_field_description(self, field: ActionField) -> str:
         """Get description for a field, using mapping if no comment exists."""
-        if field.comment and field.comment.strip() and field.comment.strip() not in ['goal definition', 'result definition', 'feedback definition']:
-            return field.comment
+        if field.comment and field.comment.strip():
+            comment = field.comment.strip()
+            # Handle specific prefixed patterns by removing the prefix first
+            if comment.startswith('goal definition. '):
+                cleaned_comment = comment.replace('goal definition. ', '')
+                if cleaned_comment.strip():
+                    return cleaned_comment
+            elif comment.startswith('result definition. '):
+                cleaned_comment = comment.replace('result definition. ', '')
+                if cleaned_comment.strip():
+                    return cleaned_comment
+            elif comment.startswith('feedback definition. '):
+                cleaned_comment = comment.replace('feedback definition. ', '')  
+                if cleaned_comment.strip():
+                    return cleaned_comment
+            
+            # Skip generic section headers and other prefixed comments
+            if comment not in ['goal definition', 'result definition', 'feedback definition'] and \
+               not comment.startswith('goal definition') and \
+               not comment.startswith('result definition') and \
+               not comment.startswith('feedback definition'):
+                return comment
         
         # Try to find a description based on field name
         if field.field_name in self.field_descriptions:
@@ -724,19 +871,19 @@ private:
         if 'PoseStamped' in field.type_name:
             return 'Pose with header information (frame_id and timestamp)'
         elif 'Duration' in field.type_name:
-            return 'Time duration value'
+            return 'Duration parameter - specifies time limits for action completion, timeout controls, or reports elapsed/remaining time for performance monitoring and safety'
         elif 'Empty' in field.type_name:
             return 'Empty message (no data fields)'
         elif field.type_name in ['string', 'std_msgs/String']:
-            return 'Text string parameter'
+            return 'String identifier - used to specify plugin names (planner_id, controller_id), behavior tree files, dock identifiers, or configuration keys for runtime algorithm selection'
         elif field.type_name in ['float32', 'float64']:
-            return 'Floating point numeric value'
+            return 'Float parameter - represents physical measurements like distances (meters), velocities (m/s), angles (radians), or progress values for precise motion control and feedback'
         elif field.type_name in ['int16', 'int32', 'int64', 'uint16', 'uint32', 'uint64']:
-            return 'Integer numeric value'
+            return 'Integer parameter - represents counts, indices, or identifiers for navigation elements like waypoint numbers, node IDs, or status codes'
         elif field.type_name == 'bool':
-            return 'Boolean true/false flag'
+            return 'Boolean toggle - controls optional behaviors like collision checking, coordinate frame usage (current vs provided pose), or feature enablement (staging poses, dock ID usage)'
         
-        return "Parameter for the action (see Nav2 documentation)"
+        return "Parameter for the action - enables runtime configuration of navigation behavior, plugin selection, safety controls, progress monitoring, and performance tuning (see specific action documentation for parameter details)"
 
 def main():
     parser = argparse.ArgumentParser(description='Generate Nav2 Action API documentation')

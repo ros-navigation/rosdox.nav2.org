@@ -649,6 +649,36 @@ h2 {
 }
 
 /* Message table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+table th {
+  background: var(--nav2-blue);
+  color: #414141;
+  padding: 0.75rem;
+  text-align: left;
+  border: 1px solid #ddd;
+  font-weight: 600;
+}
+
+table td {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  vertical-align: top;
+}
+
+table tr:nth-child(even) {
+  background: #ffffff;
+}
+
+table tr:nth-child(odd) {
+  background: #f9f9f9;
+}
+
+/* Keep action-section specific styling for backwards compatibility */
 .action-section table {
   width: 100%;
   border-collapse: collapse;
@@ -684,6 +714,35 @@ h2 {
   border-radius: 3px;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.9rem;
+}
+
+/* General code styling */
+code {
+  background: #f1f1f1;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9rem;
+}
+
+pre {
+  background: #0d1117;
+  color: #c9d1d9;
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  border: 1px solid #30363d;
+  margin: 1rem 0;
+}
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
 /* Code examples styling */
