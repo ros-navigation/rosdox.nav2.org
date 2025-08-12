@@ -24,14 +24,14 @@ Navigate robot through a series of waypoints with optional task execution at eac
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `missed_waypoints` | `int32[]` | The statuses of waypoints if missed|
+| `missed_waypoints` | `int32[]` | Array of waypoints that could not be reached due to obstacles or navigation failures |
 
 
 ### Feedback Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `current_waypoint` | `uint32` | Current waypoint being executed|
+| `current_waypoint` | `uint32` | Index of the current waypoint being pursued in a sequence |
 
 
 
@@ -120,6 +120,6 @@ private:
 
 ## Related Actions
 
-- [All Navigation Actions](/humble/actions/index.html#navigation)
-- [Action API Overview](/humble/actions/index.html)
+- [All Navigation Actions](/actions/humble/index.html#navigation)
+- [Action API Overview](/actions/humble/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)

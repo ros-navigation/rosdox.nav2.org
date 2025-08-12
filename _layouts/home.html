@@ -22,10 +22,15 @@ layout: default
       <div class="status {{ dist.status | downcase }}">{{ dist.status }}</div>
       <p><strong>Description:</strong> {{ dist.description }}</p>
       <div class="card-actions">
-        <a href="/nav2-{{ dist.slug }}/html/index.html" class="btn-primary">C++ API Docs</a>
-        <a href="/{{ dist.slug }}/actions/" class="action-api-btn">Action APIs</a>
-        <a href="/{{ dist.slug }}/srvs/" class="action-api-btn">Srvs APIs</a>
-        <a href="/nav2-{{ dist.slug }}/html/annotated.html" class="btn-secondary">Class List</a>
+        <div class="action-row">
+          <a href="/nav2-{{ dist.slug }}/html/index.html" class="btn-primary">C++ API Docs</a>
+          <a href="/nav2-{{ dist.slug }}/html/annotated.html" class="btn-secondary">Class List</a>
+        </div>
+        <div class="action-row">
+          <a href="/{{ dist.slug }}/actions/" class="action-api-btn">Action APIs</a>
+          <a href="/{{ dist.slug }}/srvs/" class="action-api-btn">Srvs APIs</a>
+          <a href="/msgs/{{ dist.slug }}/" class="action-api-btn">Msg APIs</a>
+        </div>
       </div>
     </div>
     {% endfor %}

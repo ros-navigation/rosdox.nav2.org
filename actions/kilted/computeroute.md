@@ -17,9 +17,9 @@ Compute a high-level route between waypoints using graph search
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `start_id` | `uint16` | ID of start node to use on the graph|
+| `start_id` | `uint16` | Unique identifier for the starting waypoint in the route graph |
 | `start` | `geometry_msgs/PoseStamped` | Starting pose for path planning |
-| `goal_id` | `uint16` | ID of goal node to use on the graph|
+| `goal_id` | `uint16` | Unique identifier for the target waypoint in the route graph |
 | `goal` | `geometry_msgs/PoseStamped` | Target goal pose for path planning |
 | `use_start` | `bool` | Whether to use the start field or find the start pose in TF |
 | `use_poses` | `bool` | Whether to use the poses or the IDs fields for request |
@@ -29,11 +29,19 @@ Compute a high-level route between waypoints using graph search
 
 | Field | Type | Description |
 |-------|------|-------------|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
+| `TF_ERROR` | `uint16` | Error code indicating a transform/localization failure |
+| `NO_VALID_GRAPH` | `uint16` | Error code indicating the route graph is invalid or has no connectivity |
+| `INDETERMINANT_NODES_ON_GRAPH` | `uint16` | Error code indicating graph nodes have ambiguous or undefined relationships |
+| `TIMEOUT` | `uint16` | Error code indicating the action exceeded its maximum allowed time |
+| `NO_VALID_ROUTE` | `uint16` | Error code indicating no feasible route exists between the specified waypoints |
+| `INVALID_EDGE_SCORER_USE` | `uint16` | Error code indicating the edge scorer plugin was used incorrectly |
 | `planning_time` | `builtin_interfaces/Duration` | Time spent in path planning phase |
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
 | `route` | `Route` | Computed route with waypoints and metadata |
-| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, TF_ERROR, NO_VALID_GRAPH, INDETERMINANT_NODES_ON_GRAPH, TIMEOUT, NO_VALID_ROUTE, INVALID_EDGE_SCORER_USE|
-| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
+| `error_code` | `uint16` | Numeric error code indicating specific failure reason (0=success, various codes for different failure types) |
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
 
 
 ### Feedback Message
@@ -58,8 +66,25 @@ class Nav2ActionClient(Node):
         
     def send_goal(self):
         goal_msg = ComputeRoute.Goal()
-        goal_msg.start_id = 1
-        goal_msg.goal_id = 8
+        from nav_msgs.msg import Path
+        from geometry_msgs.msg import PoseStamped
+        
+        # Define start point
+        start = PoseStamped()
+        start.header.frame_id = 'map'
+        start.pose.position.x = 0.0
+        start.pose.position.y = 0.0
+        start.pose.orientation.w = 1.0
+        
+        # Define goal point
+        goal = PoseStamped()
+        goal.header.frame_id = 'map'
+        goal.pose.position.x = 10.0
+        goal.pose.position.y = 5.0
+        goal.pose.orientation.w = 1.0
+        
+        goal_msg.start = start
+        goal_msg.goal = goal
         
         self.action_client.wait_for_server()
         future = self.action_client.send_goal_async(
@@ -92,8 +117,21 @@ public:
     void send_goal()
     {
         auto goal_msg = ComputeRouteAction::Goal();
-        goal_msg.start_id = 1;
-        goal_msg.goal_id = 8;
+        // Define start and goal points
+        geometry_msgs::msg::PoseStamped start, goal;
+        
+        start.header.frame_id = "map";
+        start.pose.position.x = 0.0;
+        start.pose.position.y = 0.0;
+        start.pose.orientation.w = 1.0;
+        
+        goal.header.frame_id = "map";
+        goal.pose.position.x = 10.0;
+        goal.pose.position.y = 5.0;
+        goal.pose.orientation.w = 1.0;
+        
+        goal_msg.start = start;
+        goal_msg.goal = goal;
         
         action_client_->wait_for_action_server();
         
@@ -118,6 +156,6 @@ private:
 
 ## Related Actions
 
-- [All Planning Actions](/kilted/actions/index.html#planning)
-- [Action API Overview](/kilted/actions/index.html)
+- [All Planning Actions](/actions/kilted/index.html#planning)
+- [Action API Overview](/actions/kilted/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

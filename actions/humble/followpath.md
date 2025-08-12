@@ -18,7 +18,7 @@ Execute path following using a specified controller with progress monitoring
 | Field | Type | Description |
 |-------|------|-------------|
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
-| `controller_id` | `string` | Name of the controller plugin to use for path following |
+| `controller_id` | `string` | Name of the path following controller to use (e.g., "FollowPath", "RegulatedPurePursuit") |
 | `goal_checker_id` | `string` | Name of the goal checker plugin to use |
 
 
@@ -33,8 +33,8 @@ Execute path following using a specified controller with progress monitoring
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `distance_to_goal` | `float32` | Distance to the goal|
-| `speed` | `float32` | Speed for movement (m/s) |
+| `distance_to_goal` | `float32` | Current distance from the robot to the final goal position in meters, updated continuously during navigation |
+| `speed` | `float32` | Movement speed in meters per second for the specified motion |
 
 
 
@@ -119,6 +119,6 @@ private:
 
 ## Related Actions
 
-- [All Controller Actions](/humble/actions/index.html#controller)
-- [Action API Overview](/humble/actions/index.html)
+- [All Controller Actions](/actions/humble/index.html#controller)
+- [Action API Overview](/actions/humble/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)

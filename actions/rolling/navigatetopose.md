@@ -18,15 +18,20 @@ Navigate robot to a specific pose with obstacle avoidance and recovery behaviors
 | Field | Type | Description |
 |-------|------|-------------|
 | `pose` | `geometry_msgs/PoseStamped` | Target pose for navigation in the specified frame |
-| `behavior_tree` | `string` | Optional behavior tree XML to use for this navigation task |
+| `behavior_tree` | `string` | Path to custom behavior tree XML file to use for this navigation task. If empty, uses default navigation behavior tree with planning, following, and recovery behaviors |
 
 
 ### Result Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, FAILED_TO_LOAD_BEHAVIOR_TREE, TF_ERROR, TIMEOUT|
-| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
+| `FAILED_TO_LOAD_BEHAVIOR_TREE` | `uint16` | Error code indicating the specified behavior tree file could not be loaded |
+| `TF_ERROR` | `uint16` | Error code indicating a transform/localization failure |
+| `TIMEOUT` | `uint16` | Error code indicating the action exceeded its maximum allowed time |
+| `error_code` | `uint16` | Numeric error code indicating specific failure reason (0=success, various codes for different failure types) |
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
 
 
 ### Feedback Message
@@ -36,7 +41,7 @@ Navigate robot to a specific pose with obstacle avoidance and recovery behaviors
 | `current_pose` | `geometry_msgs/PoseStamped` | Current robot pose during navigation |
 | `navigation_time` | `builtin_interfaces/Duration` | Total time elapsed since navigation started |
 | `estimated_time_remaining` | `builtin_interfaces/Duration` | Estimated time remaining to reach the goal |
-| `number_of_recoveries` | `int16` | Number of recovery behaviors executed during navigation |
+| `number_of_recoveries` | `int16` | Count of recovery behaviors executed during navigation to overcome obstacles or failures |
 | `distance_remaining` | `float32` | Approximate distance remaining to the goal |
 
 
@@ -124,6 +129,6 @@ private:
 
 ## Related Actions
 
-- [All Navigation Actions](/rolling/actions/index.html#navigation)
-- [Action API Overview](/rolling/actions/index.html)
+- [All Navigation Actions](/actions/rolling/index.html#navigation)
+- [Action API Overview](/actions/rolling/index.html)
 - [Nav2 C++ API Documentation](/rolling/html/index.html)

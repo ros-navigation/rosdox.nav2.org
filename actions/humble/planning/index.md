@@ -52,4 +52,4 @@ Compute an optimal path from current position to a target pose
 ---
 
 
-[Back to All Actions](/humble/actions/index.html)
+[Back to All Actions](/actions/humble/index.html)

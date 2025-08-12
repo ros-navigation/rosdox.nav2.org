@@ -18,26 +18,35 @@ Execute path following using a specified controller with progress monitoring
 | Field | Type | Description |
 |-------|------|-------------|
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
-| `controller_id` | `string` | Name of the controller plugin to use for path following |
+| `controller_id` | `string` | Name of the path following controller to use (e.g., "FollowPath", "RegulatedPurePursuit") |
 | `goal_checker_id` | `string` | Name of the goal checker plugin to use |
-| `progress_checker_id` | `string` | Progress checker plugin ID to use|
+| `progress_checker_id` | `string` | Name of the progress monitoring plugin to use for tracking path following advancement |
 
 
 ### Result Message
 
 | Field | Type | Description |
 |-------|------|-------------|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
+| `INVALID_CONTROLLER` | `uint16` | Error code indicating the specified controller plugin is invalid or not loaded |
+| `TF_ERROR` | `uint16` | Error code indicating a transform/localization failure |
+| `INVALID_PATH` | `uint16` | Error code indicating the provided path is malformed or contains invalid data |
+| `PATIENCE_EXCEEDED` | `uint16` | Error code indicating the controller exceeded its patience limit waiting for progress |
+| `FAILED_TO_MAKE_PROGRESS` | `uint16` | Error code indicating the robot failed to make sufficient progress along the path |
+| `NO_VALID_CONTROL` | `uint16` | Error code indicating the controller could not compute valid control commands |
+| `CONTROLLER_TIMED_OUT` | `uint16` | Error code indicating the controller exceeded its maximum allowed execution time |
 | `result` | `std_msgs/Empty` | Empty result indicating successful completion |
-| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, INVALID_CONTROLLER, TF_ERROR, INVALID_PATH, PATIENCE_EXCEEDED, FAILED_TO_MAKE_PROGRESS, NO_VALID_CONTROL, CONTROLLER_TIMED_OUT|
-| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
+| `error_code` | `uint16` | Numeric error code indicating specific failure reason (0=success, various codes for different failure types) |
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
 
 
 ### Feedback Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `distance_to_goal` | `float32` | Distance to the goal|
-| `speed` | `float32` | Speed for movement (m/s) |
+| `distance_to_goal` | `float32` | Current distance from the robot to the final goal position in meters, updated continuously during navigation |
+| `speed` | `float32` | Movement speed in meters per second for the specified motion |
 
 
 
@@ -122,6 +131,6 @@ private:
 
 ## Related Actions
 
-- [All Controller Actions](/kilted/actions/index.html#controller)
-- [Action API Overview](/kilted/actions/index.html)
+- [All Controller Actions](/actions/kilted/index.html#controller)
+- [Action API Overview](/actions/kilted/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

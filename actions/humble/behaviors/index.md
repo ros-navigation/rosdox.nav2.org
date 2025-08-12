@@ -52,4 +52,4 @@ Provide assisted teleoperation with collision avoidance and safety checks
 ---
 
 
-[Back to All Actions](/humble/actions/index.html)
+[Back to All Actions](/actions/humble/index.html)

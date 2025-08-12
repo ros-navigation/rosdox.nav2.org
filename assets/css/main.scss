@@ -307,6 +307,25 @@ h2 {
   gap: 0.75rem;
   margin-top: 1rem;
   flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.action-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.action-row .btn-primary,
+.action-row .btn-secondary,
+.action-row .action-api-btn {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
 }
 
 .btn-primary, .btn-secondary {

@@ -17,25 +17,30 @@ Rotate robot in place to a target yaw angle with collision checking
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `target_yaw` | `float32` | Target yaw angle to spin to (in radians) |
-| `time_allowance` | `builtin_interfaces/Duration` | Maximum time allowed for this action to complete |
-| `disable_collision_checks` | `bool` | Boolean true/false flag |
+| `target_yaw` | `float32` | Target rotation angle in radians to spin (positive=counterclockwise, negative=clockwise) |
+| `time_allowance` | `builtin_interfaces/Duration` | Maximum time limit for completing the action before timing out |
+| `disable_collision_checks` | `bool` | Whether to skip obstacle detection during motion (false=check for collisions, true=ignore obstacles) |
 
 
 ### Result Message
 
 | Field | Type | Description |
 |-------|------|-------------|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
+| `TIMEOUT` | `uint16` | Error code indicating the action exceeded its maximum allowed time |
+| `TF_ERROR` | `uint16` | Error code indicating a transform/localization failure |
+| `COLLISION_AHEAD` | `uint16` | Error code indicating an obstacle was detected blocking the path |
 | `total_elapsed_time` | `builtin_interfaces/Duration` | Total time taken to complete the action |
-| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, TIMEOUT, TF_ERROR, COLLISION_AHEAD|
-| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
+| `error_code` | `uint16` | Numeric error code indicating specific failure reason (0=success, various codes for different failure types) |
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
 
 
 ### Feedback Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `angular_distance_traveled` | `float32` | Angular distance so far spun|
+| `angular_distance_traveled` | `float32` | Total angular distance the robot has rotated during the spin action in radians (cumulative measurement) |
 
 
 
@@ -116,6 +121,6 @@ private:
 
 ## Related Actions
 
-- [All Behaviors Actions](/kilted/actions/index.html#behaviors)
-- [Action API Overview](/kilted/actions/index.html)
+- [All Behaviors Actions](/actions/kilted/index.html#behaviors)
+- [Action API Overview](/actions/kilted/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

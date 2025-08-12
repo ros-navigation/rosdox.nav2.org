@@ -28,4 +28,4 @@ Autonomously undock robot from a charging station or docking platform
 ---
 
 
-[Back to All Actions](/kilted/actions/index.html)
+[Back to All Actions](/actions/kilted/index.html)

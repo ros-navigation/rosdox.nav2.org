@@ -44,4 +44,4 @@ Navigate robot through a sequence of poses in order
 ---
 
 
-[Back to All Actions](/kilted/actions/index.html)
+[Back to All Actions](/actions/kilted/index.html)

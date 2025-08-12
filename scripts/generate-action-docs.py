@@ -271,7 +271,7 @@ class ActionDocGenerator:
         content = f"""---
 layout: default
 title: "Nav2 Action APIs - {self.distribution.title()}"
-permalink: /{self.distribution}/actions/
+permalink: /actions/{self.distribution}/
 ---
 
 # Nav2 Action APIs - {self.distribution.title()}
@@ -325,7 +325,7 @@ This page documents the ROS Action APIs available in Nav2 for the {self.distribu
 *Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}*"""
         
         # Write overview file to the correct location
-        overview_dir = self.output_dir / self.distribution / "actions"
+        overview_dir = self.output_dir  # This is already actions/humble
         overview_dir.mkdir(parents=True, exist_ok=True)
         
         with open(overview_dir / "index.md", 'w') as f:
@@ -385,12 +385,12 @@ permalink: /actions/{self.distribution}/{action.name.lower()}.html
 """
         
         # Add links to related actions in same category
-        content += f"- [All {action.category.title()} Actions](/{self.distribution}/actions/index.html#{action.category})\n"
-        content += f"- [Action API Overview](/{self.distribution}/actions/index.html)\n"
+        content += f"- [All {action.category.title()} Actions](/actions/{self.distribution}/index.html#{action.category})\n"
+        content += f"- [Action API Overview](/actions/{self.distribution}/index.html)\n"
         content += f"- [Nav2 C++ API Documentation](/{self.distribution}/html/index.html)\n"
         
         # Write action file
-        action_dir = self.output_dir / "actions" / self.distribution
+        action_dir = self.output_dir  # This is already actions/humble
         action_dir.mkdir(parents=True, exist_ok=True)
         
         action_file = action_dir / f"{action.name.lower()}.md"
@@ -442,11 +442,11 @@ This page lists all {category_title.lower()} actions available in Nav2 for the {
         
         content += f"""
 
-[Back to All Actions](/{self.distribution}/actions/index.html)
+[Back to All Actions](/actions/{self.distribution}/index.html)
 """
         
         # Write category file
-        category_dir = self.output_dir / "actions" / self.distribution / category
+        category_dir = self.output_dir / category  # output_dir is already actions/humble
         category_dir.mkdir(parents=True, exist_ok=True)
         
         with open(category_dir / "index.md", 'w') as f:

@@ -17,14 +17,15 @@ Clear entire costmap except for a specified rectangular region
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `reset_distance` | `float32` | Distance defining the rectangular region to preserve |
+| `reset_distance` | `float32` | Clears the costmap except a rectangular region specified by reset_distance |
 
 
 ### Response Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `response` | `std_msgs/Empty` | Empty response indicating completion |
+| `response` | `std_msgs/Empty` | Response message or data |
+
 
 
 ## Usage Examples
@@ -38,12 +39,12 @@ from nav2_msgs.srv import ClearCostmapExceptRegion
 
 class ClearCostmapExceptRegionClient(Node):
     def __init__(self):
-        super().__init__('clearcostmapexceptregion_client')
-        self.client = self.create_client(ClearCostmapExceptRegion, 'global_costmap/clear_except_global_costmap')
+        super().__init__('clear_costmap_except_region_client')
+        self.client = self.create_client(ClearCostmapExceptRegion, 'clear_costmap_except_region')
         
     def send_request(self):
         request = ClearCostmapExceptRegion.Request()
-        request.reset_distance = 2.0
+        request.reset_distance = 0.0
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -57,9 +58,9 @@ def main():
     rclpy.spin_until_future_complete(client, future)
     
     if future.result():
-        client.get_logger().info('Clear all costmap cells except within a rectangular region completed')
+        client.get_logger().info('Service call completed')
     else:
-        client.get_logger().error('Failed to clear all costmap cells except within a rectangular region')
+        client.get_logger().error('Service call failed')
         
     client.destroy_node()
     rclpy.shutdown()
@@ -69,20 +70,20 @@ def main():
 
 ```cpp
 #include "rclcpp/rclcpp.hpp"
-#include "nav2_msgs/srv/clearcostmapexceptregion.hpp"
+#include "nav2_msgs/srv/clear_costmap_except_region.hpp"
 
 class ClearCostmapExceptRegionClient : public rclcpp::Node
 {
 public:
-    ClearCostmapExceptRegionClient() : Node("clearcostmapexceptregion_client")
+    ClearCostmapExceptRegionClient() : Node("clear_costmap_except_region_client")
     {
-        client_ = create_client<nav2_msgs::srv::ClearCostmapExceptRegion>("global_costmap/clear_except_global_costmap");
+        client_ = create_client<nav2_msgs::srv::ClearCostmapExceptRegion>("clear_costmap_except_region");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::ClearCostmapExceptRegion::Request>();
-        request->reset_distance = 2.0;
+        request->reset_distance = 0.0;
 
         client_->wait_for_service();
         
@@ -90,32 +91,21 @@ public:
         if (rclcpp::spin_until_future_complete(shared_from_this(), result_future) ==
             rclcpp::FutureReturnCode::SUCCESS)
         {
-            RCLCPP_INFO(get_logger(), "Clear all costmap cells except within a rectangular region completed");
+            RCLCPP_INFO(get_logger(), "Service call completed");
         }
         else
         {
-            RCLCPP_ERROR(get_logger(), "Failed to clear all costmap cells except within a rectangular region");
+            RCLCPP_ERROR(get_logger(), "Service call failed");
         }
     }
 
 private:
     rclcpp::Client<nav2_msgs::srv::ClearCostmapExceptRegion>::SharedPtr client_;
 };
-
-int main(int argc, char ** argv)
-{
-    rclcpp::init(argc, argv);
-    auto client = std::make_shared<ClearCostmapExceptRegionClient>();
-    
-    client->send_request();
-    
-    rclcpp::shutdown();
-    return 0;
-}
 ```
 
 ## Related Services
 
-- [All Costmap Services](/humble/srvs/index.html#costmap-services)
-- [Service API Overview](/humble/srvs/index.html)
+- [All Costmap Services](/srvs/humble/index.html#costmap-services)
+- [Service API Overview](/srvs/humble/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)

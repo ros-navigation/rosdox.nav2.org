@@ -17,8 +17,8 @@ Navigate robot through a series of waypoints with optional task execution at eac
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `number_of_loops` | `uint32` | Number of loops if the waypoints should be repeated|
-| `goal_index` | `uint32` | The goal index to start following waypoints from, if not the start|
+| `number_of_loops` | `uint32` | How many times to repeat the complete waypoint sequence (0=no looping) |
+| `goal_index` | `uint32` | Starting waypoint index in the poses array (default 0 for beginning) |
 | `poses` | `geometry_msgs/PoseStamped[]` | Array of poses defining waypoints or path |
 
 
@@ -26,16 +26,19 @@ Navigate robot through a series of waypoints with optional task execution at eac
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `missed_waypoints` | `MissedWaypoint[]` | The statuses of waypoints if missed|
-| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, TASK_EXECUTOR_FAILED|
-| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
+| `TASK_EXECUTOR_FAILED` | `uint16` | Error code indicating a task executor plugin failed to execute at a waypoint |
+| `missed_waypoints` | `MissedWaypoint[]` | Array of waypoints that could not be reached due to obstacles or navigation failures |
+| `error_code` | `uint16` | Numeric error code indicating specific failure reason (0=success, various codes for different failure types) |
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
 
 
 ### Feedback Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `current_waypoint` | `uint32` | Current waypoint being executed|
+| `current_waypoint` | `uint32` | Index of the current waypoint being pursued in a sequence |
 
 
 
@@ -124,6 +127,6 @@ private:
 
 ## Related Actions
 
-- [All Navigation Actions](/jazzy/actions/index.html#navigation)
-- [Action API Overview](/jazzy/actions/index.html)
+- [All Navigation Actions](/actions/jazzy/index.html#navigation)
+- [Action API Overview](/actions/jazzy/index.html)
 - [Nav2 C++ API Documentation](/jazzy/html/index.html)

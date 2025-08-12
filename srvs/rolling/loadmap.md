@@ -17,15 +17,21 @@ Load a map from a specified URL or file path
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `map_url` | `string` | URL or file path to the map (file:///path/to/map.yaml or package://pkg/map.yaml) |
+| `map_url` | `string` | URL of map resource Can be an absolute path to a file: file:///path/to/maps/floor1.yaml Or, relative to a ROS package: package://my_ros_package/maps/floor2.yaml |
 
 
 ### Response Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `map` | `nav_msgs/OccupancyGrid` | The loaded map data |
-| `result` | `uint8` | Result code (0=SUCCESS, 1=MAP_DOES_NOT_EXIST, etc.) |
+| `RESULT_SUCCESS` = `0` | `uint8` | Result code definitions |
+| `RESULT_MAP_DOES_NOT_EXIST` = `1` | `uint8` | Service parameter - see Nav2 documentation for specific usage details |
+| `RESULT_INVALID_MAP_DATA` = `2` | `uint8` | Service parameter - see Nav2 documentation for specific usage details |
+| `RESULT_INVALID_MAP_METADATA` = `3` | `uint8` | Service parameter - see Nav2 documentation for specific usage details |
+| `RESULT_UNDEFINED_FAILURE` = `255` | `uint8` | Service parameter - see Nav2 documentation for specific usage details |
+| `map` | `nav_msgs/OccupancyGrid` | Returned map is only valid if result equals RESULT_SUCCESS |
+| `result` | `uint8` | Result code or status of the operation |
+
 
 
 ## Usage Examples
@@ -39,12 +45,12 @@ from nav2_msgs.srv import LoadMap
 
 class LoadMapClient(Node):
     def __init__(self):
-        super().__init__('loadmap_client')
-        self.client = self.create_client(LoadMap, 'map_server/load_map')
+        super().__init__('load_map_client')
+        self.client = self.create_client(LoadMap, 'load_map')
         
     def send_request(self):
         request = LoadMap.Request()
-        request.map_url = "file:///path/to/map.yaml"
+        request.map_url = 'example_value'
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -58,9 +64,9 @@ def main():
     rclpy.spin_until_future_complete(client, future)
     
     if future.result():
-        client.get_logger().info('Load a map from file completed')
+        client.get_logger().info('Service call completed')
     else:
-        client.get_logger().error('Failed to load a map from file')
+        client.get_logger().error('Service call failed')
         
     client.destroy_node()
     rclpy.shutdown()
@@ -70,20 +76,20 @@ def main():
 
 ```cpp
 #include "rclcpp/rclcpp.hpp"
-#include "nav2_msgs/srv/loadmap.hpp"
+#include "nav2_msgs/srv/load_map.hpp"
 
 class LoadMapClient : public rclcpp::Node
 {
 public:
-    LoadMapClient() : Node("loadmap_client")
+    LoadMapClient() : Node("load_map_client")
     {
-        client_ = create_client<nav2_msgs::srv::LoadMap>("map_server/load_map");
+        client_ = create_client<nav2_msgs::srv::LoadMap>("load_map");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::LoadMap::Request>();
-        request->map_url = "file:///path/to/map.yaml";
+        request->map_url = "example_value";
 
         client_->wait_for_service();
         
@@ -91,32 +97,21 @@ public:
         if (rclcpp::spin_until_future_complete(shared_from_this(), result_future) ==
             rclcpp::FutureReturnCode::SUCCESS)
         {
-            RCLCPP_INFO(get_logger(), "Load a map from file completed");
+            RCLCPP_INFO(get_logger(), "Service call completed");
         }
         else
         {
-            RCLCPP_ERROR(get_logger(), "Failed to load a map from file");
+            RCLCPP_ERROR(get_logger(), "Service call failed");
         }
     }
 
 private:
     rclcpp::Client<nav2_msgs::srv::LoadMap>::SharedPtr client_;
 };
-
-int main(int argc, char ** argv)
-{
-    rclcpp::init(argc, argv);
-    auto client = std::make_shared<LoadMapClient>();
-    
-    client->send_request();
-    
-    rclcpp::shutdown();
-    return 0;
-}
 ```
 
 ## Related Services
 
-- [All Map Services](/rolling/srvs/index.html#map-services)
-- [Service API Overview](/rolling/srvs/index.html)
+- [All Map Services](/srvs/rolling/index.html#map-services)
+- [Service API Overview](/srvs/rolling/index.html)
 - [Nav2 C++ API Documentation](/rolling/html/index.html)

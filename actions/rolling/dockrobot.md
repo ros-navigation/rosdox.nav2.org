@@ -29,17 +29,32 @@ Autonomously dock robot to a charging station or docking platform
 
 | Field | Type | Description |
 |-------|------|-------------|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `DOCK_NOT_IN_DB` | `uint16` | Error code indicating the specified dock ID was not found in the dock database |
+| `DOCK_NOT_VALID` | `uint16` | Error code indicating the dock pose or configuration is invalid |
+| `FAILED_TO_STAGE` | `uint16` | Error code indicating failure to navigate to or position at the staging pose |
+| `FAILED_TO_DETECT_DOCK` | `uint16` | Error code indicating the docking station could not be detected or located |
+| `FAILED_TO_CONTROL` | `uint16` | Error code indicating control system failure during docking maneuver |
+| `FAILED_TO_CHARGE` | `uint16` | Error code indicating charging connection or validation failed |
+| `TIMEOUT` | `uint16` | Error code indicating the action exceeded its maximum allowed time |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
 | `success` | `bool` | docking success status |
-| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, DOCK_NOT_IN_DB, DOCK_NOT_VALID, FAILED_TO_STAGE, FAILED_TO_DETECT_DOCK, FAILED_TO_CONTROL, FAILED_TO_CHARGE, TIMEOUT, UNKNOWN|
+| `error_code` | `uint16` | Contextual error code, if any |
 | `num_retries` | `uint16` | Number of retries attempted |
-| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
 
 
 ### Feedback Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `state` | `uint16` | Current docking state. Possible values: NAV_TO_STAGING_POSE, INITIAL_PERCEPTION, CONTROLLING, WAIT_FOR_CHARGE, RETRY|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `NAV_TO_STAGING_POSE` | `uint16` | Status indicating navigation to the docking staging position is in progress |
+| `INITIAL_PERCEPTION` | `uint16` | Status indicating the robot is performing initial dock detection and perception |
+| `CONTROLLING` | `uint16` | Status indicating the robot is under precise control for final docking approach |
+| `WAIT_FOR_CHARGE` | `uint16` | Status indicating the robot is waiting for charging connection to be established |
+| `RETRY` | `uint16` | Status indicating the docking process is retrying after a failed attempt |
+| `state` | `uint16` | Current docking state |
 | `docking_time` | `builtin_interfaces/Duration` | Docking time elapsed |
 | `num_retries` | `uint16` | Number of retries attempted |
 
@@ -126,6 +141,6 @@ private:
 
 ## Related Actions
 
-- [All Autodocking Actions](/rolling/actions/index.html#autodocking)
-- [Action API Overview](/rolling/actions/index.html)
+- [All Autodocking Actions](/actions/rolling/index.html#autodocking)
+- [Action API Overview](/actions/rolling/index.html)
 - [Nav2 C++ API Documentation](/rolling/html/index.html)

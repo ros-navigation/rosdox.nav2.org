@@ -116,6 +116,6 @@ int main(int argc, char ** argv)
 
 ## Related Services
 
-- [All Nav2 Route Services](/jazzy/srvs/index.html#nav2-route-services)
-- [Service API Overview](/jazzy/srvs/index.html)
+- [All Nav2 Route Services](/srvs/jazzy/index.html#nav2-route-services)
+- [Service API Overview](/srvs/jazzy/index.html)
 - [Nav2 C++ API Documentation](/jazzy/html/index.html)

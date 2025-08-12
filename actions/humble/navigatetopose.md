@@ -18,7 +18,7 @@ Navigate robot to a specific pose with obstacle avoidance and recovery behaviors
 | Field | Type | Description |
 |-------|------|-------------|
 | `pose` | `geometry_msgs/PoseStamped` | Target pose for navigation in the specified frame |
-| `behavior_tree` | `string` | Optional behavior tree XML to use for this navigation task |
+| `behavior_tree` | `string` | Path to custom behavior tree XML file to use for this navigation task. If empty, uses default navigation behavior tree with planning, following, and recovery behaviors |
 
 
 ### Result Message
@@ -35,7 +35,7 @@ Navigate robot to a specific pose with obstacle avoidance and recovery behaviors
 | `current_pose` | `geometry_msgs/PoseStamped` | Current robot pose during navigation |
 | `navigation_time` | `builtin_interfaces/Duration` | Total time elapsed since navigation started |
 | `estimated_time_remaining` | `builtin_interfaces/Duration` | Estimated time remaining to reach the goal |
-| `number_of_recoveries` | `int16` | Number of recovery behaviors executed during navigation |
+| `number_of_recoveries` | `int16` | Count of recovery behaviors executed during navigation to overcome obstacles or failures |
 | `distance_remaining` | `float32` | Approximate distance remaining to the goal |
 
 
@@ -123,6 +123,6 @@ private:
 
 ## Related Actions
 
-- [All Navigation Actions](/humble/actions/index.html#navigation)
-- [Action API Overview](/humble/actions/index.html)
+- [All Navigation Actions](/actions/humble/index.html#navigation)
+- [Action API Overview](/actions/humble/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)

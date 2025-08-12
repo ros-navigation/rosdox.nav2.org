@@ -152,6 +152,6 @@ int main(int argc, char ** argv)
 
 ## Related Services
 
-- [All Costmap Services](/humble/srvs/index.html#costmap-services)
-- [Service API Overview](/humble/srvs/index.html)
+- [All Costmap Services](/srvs/humble/index.html#costmap-services)
+- [Service API Overview](/srvs/humble/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)

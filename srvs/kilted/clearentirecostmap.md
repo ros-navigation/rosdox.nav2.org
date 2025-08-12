@@ -17,14 +17,15 @@ Clear the entire costmap, resetting all cells to free space
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `request` | `std_msgs/Empty` | Empty request |
+| `request` | `std_msgs/Empty` | Clears all layers on the costmap |
 
 
 ### Response Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `response` | `std_msgs/Empty` | Empty response indicating completion |
+| `response` | `std_msgs/Empty` | Response message or data |
+
 
 
 ## Usage Examples
@@ -38,12 +39,12 @@ from nav2_msgs.srv import ClearEntireCostmap
 
 class ClearEntireCostmapClient(Node):
     def __init__(self):
-        super().__init__('clearentirecostmap_client')
-        self.client = self.create_client(ClearEntireCostmap, 'global_costmap/clear_entirely_global_costmap')
+        super().__init__('clear_entire_costmap_client')
+        self.client = self.create_client(ClearEntireCostmap, 'clear_entire_costmap')
         
     def send_request(self):
         request = ClearEntireCostmap.Request()
-        # No request parameters needed
+        # Set request.request as needed
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -57,9 +58,9 @@ def main():
     rclpy.spin_until_future_complete(client, future)
     
     if future.result():
-        client.get_logger().info('Clear the entire costmap completed')
+        client.get_logger().info('Service call completed')
     else:
-        client.get_logger().error('Failed to clear the entire costmap')
+        client.get_logger().error('Service call failed')
         
     client.destroy_node()
     rclpy.shutdown()
@@ -69,20 +70,20 @@ def main():
 
 ```cpp
 #include "rclcpp/rclcpp.hpp"
-#include "nav2_msgs/srv/clearentirecostmap.hpp"
+#include "nav2_msgs/srv/clear_entire_costmap.hpp"
 
 class ClearEntireCostmapClient : public rclcpp::Node
 {
 public:
-    ClearEntireCostmapClient() : Node("clearentirecostmap_client")
+    ClearEntireCostmapClient() : Node("clear_entire_costmap_client")
     {
-        client_ = create_client<nav2_msgs::srv::ClearEntireCostmap>("global_costmap/clear_entirely_global_costmap");
+        client_ = create_client<nav2_msgs::srv::ClearEntireCostmap>("clear_entire_costmap");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::ClearEntireCostmap::Request>();
-        // No request parameters needed
+        // Set request->request as needed
 
         client_->wait_for_service();
         
@@ -90,32 +91,21 @@ public:
         if (rclcpp::spin_until_future_complete(shared_from_this(), result_future) ==
             rclcpp::FutureReturnCode::SUCCESS)
         {
-            RCLCPP_INFO(get_logger(), "Clear the entire costmap completed");
+            RCLCPP_INFO(get_logger(), "Service call completed");
         }
         else
         {
-            RCLCPP_ERROR(get_logger(), "Failed to clear the entire costmap");
+            RCLCPP_ERROR(get_logger(), "Service call failed");
         }
     }
 
 private:
     rclcpp::Client<nav2_msgs::srv::ClearEntireCostmap>::SharedPtr client_;
 };
-
-int main(int argc, char ** argv)
-{
-    rclcpp::init(argc, argv);
-    auto client = std::make_shared<ClearEntireCostmapClient>();
-    
-    client->send_request();
-    
-    rclcpp::shutdown();
-    return 0;
-}
 ```
 
 ## Related Services
 
-- [All Costmap Services](/kilted/srvs/index.html#costmap-services)
-- [Service API Overview](/kilted/srvs/index.html)
+- [All Costmap Services](/srvs/kilted/index.html#costmap-services)
+- [Service API Overview](/srvs/kilted/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

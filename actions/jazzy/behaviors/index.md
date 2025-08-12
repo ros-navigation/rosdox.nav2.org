@@ -52,4 +52,4 @@ Provide assisted teleoperation with collision avoidance and safety checks
 ---
 
 
-[Back to All Actions](/jazzy/actions/index.html)
+[Back to All Actions](/actions/jazzy/index.html)

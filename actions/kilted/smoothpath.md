@@ -18,20 +18,27 @@ Generate a smoother, kinematically feasible path from a discrete path
 | Field | Type | Description |
 |-------|------|-------------|
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
-| `smoother_id` | `string` | ID of Smoother Plugin to utilize|
-| `max_smoothing_duration` | `builtin_interfaces/Duration` | The maximum time allowed to smooth|
-| `check_for_collisions` | `bool` | Whether or not to check for collisions on the smoothed path|
+| `smoother_id` | `string` | Name of the path smoothing algorithm plugin to use |
+| `max_smoothing_duration` | `builtin_interfaces/Duration` | Maximum time allowed for the path smoothing algorithm to compute and refine the path |
+| `check_for_collisions` | `bool` | Whether to perform collision checking on the smoothed path to ensure safety |
 
 
 ### Result Message
 
 | Field | Type | Description |
 |-------|------|-------------|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
+| `INVALID_SMOOTHER` | `uint16` | Error code indicating the specified path smoother plugin is invalid or not loaded |
+| `TIMEOUT` | `uint16` | Error code indicating the action exceeded its maximum allowed time |
+| `SMOOTHED_PATH_IN_COLLISION` | `uint16` | Error code indicating the smoothed path would cause the robot to collide with obstacles |
+| `FAILED_TO_SMOOTH_PATH` | `uint16` | Error code indicating the path smoothing algorithm failed to generate a valid smoothed path |
+| `INVALID_PATH` | `uint16` | Error code indicating the provided path is malformed or contains invalid data |
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
-| `smoothing_duration` | `builtin_interfaces/Duration` | Total time spent smoothing the path|
-| `was_completed` | `bool` | If this smoothing was completed without collision or other issue|
-| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, INVALID_SMOOTHER, TIMEOUT, SMOOTHED_PATH_IN_COLLISION, FAILED_TO_SMOOTH_PATH, INVALID_PATH|
-| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
+| `smoothing_duration` | `builtin_interfaces/Duration` | Actual time taken by the smoothing algorithm to process and optimize the path in seconds |
+| `was_completed` | `bool` | Whether the smoothing operation finished successfully within the allocated time and computational limits |
+| `error_code` | `uint16` | Numeric error code indicating specific failure reason (0=success, various codes for different failure types) |
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
 
 
 ### Feedback Message
@@ -56,26 +63,26 @@ class Nav2ActionClient(Node):
         
     def send_goal(self):
         goal_msg = SmoothPath.Goal()
-        goal_msg.smoother_id = 'ConstrainedSmoother'
-        goal_msg.max_smoothing_duration = Duration(seconds=5.0)
-        goal_msg.check_for_collisions = True
-        
-        # Create a sample path to smooth
         from nav_msgs.msg import Path
         from geometry_msgs.msg import PoseStamped
         
-        goal_msg.path = Path()
-        goal_msg.path.header.frame_id = 'map'
-        goal_msg.path.header.stamp = self.get_clock().now().to_msg()
+        # Create path to smooth
+        path = Path()
+        path.header.frame_id = 'map'
+        path.header.stamp = self.get_clock().now().to_msg()
         
-        # Add some poses to the path
+        # Add waypoints to path
         for i in range(5):
             pose = PoseStamped()
             pose.header.frame_id = 'map'
             pose.pose.position.x = float(i)
             pose.pose.position.y = 0.0
             pose.pose.orientation.w = 1.0
-            goal_msg.path.poses.append(pose)
+            path.poses.append(pose)
+        
+        goal_msg.path = path
+        goal_msg.smoother_id = 'simple_smoother'
+        goal_msg.max_smoothing_duration = Duration(seconds=5.0)
         
         self.action_client.wait_for_server()
         future = self.action_client.send_goal_async(
@@ -108,23 +115,24 @@ public:
     void send_goal()
     {
         auto goal_msg = SmoothPathAction::Goal();
-        goal_msg.smoother_id = "ConstrainedSmoother";
-        goal_msg.max_smoothing_duration = rclcpp::Duration::from_seconds(5.0);
-        goal_msg.check_for_collisions = true;
+        // Create path to smooth
+        nav_msgs::msg::Path path;
+        path.header.frame_id = "map";
+        path.header.stamp = this->now();
         
-        // Create a sample path to smooth
-        goal_msg.path.header.frame_id = "map";
-        goal_msg.path.header.stamp = this->now();
-        
-        // Add some poses to the path
-        for (int i = 0; i < 5; ++i) {
+        // Add waypoints to path
+        for (int i = 0; i < 5; i++) {
             geometry_msgs::msg::PoseStamped pose;
             pose.header.frame_id = "map";
             pose.pose.position.x = static_cast<double>(i);
             pose.pose.position.y = 0.0;
             pose.pose.orientation.w = 1.0;
-            goal_msg.path.poses.push_back(pose);
+            path.poses.push_back(pose);
         }
+        
+        goal_msg.path = path;
+        goal_msg.smoother_id = "simple_smoother";
+        goal_msg.max_smoothing_duration = rclcpp::Duration::from_seconds(5.0);
         
         action_client_->wait_for_action_server();
         
@@ -149,6 +157,6 @@ private:
 
 ## Related Actions
 
-- [All Planning Actions](/kilted/actions/index.html#planning)
-- [Action API Overview](/kilted/actions/index.html)
+- [All Planning Actions](/actions/kilted/index.html#planning)
+- [Action API Overview](/actions/kilted/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

@@ -28,4 +28,4 @@ Autonomously undock robot from a charging station or docking platform
 ---
 
 
-[Back to All Actions](/jazzy/actions/index.html)
+[Back to All Actions](/actions/jazzy/index.html)

@@ -18,16 +18,21 @@ Navigate robot through a sequence of poses in order
 | Field | Type | Description |
 |-------|------|-------------|
 | `poses` | `nav_msgs/Goals` | Array of poses defining waypoints or path |
-| `behavior_tree` | `string` | Optional behavior tree XML to use for this navigation task |
+| `behavior_tree` | `string` | Path to custom behavior tree XML file to use for this navigation task. If empty, uses default navigation behavior tree with planning, following, and recovery behaviors |
 
 
 ### Result Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, FAILED_TO_LOAD_BEHAVIOR_TREE, TF_ERROR, TIMEOUT|
-| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
-| `waypoint_statuses` | `WaypointStatus[]` | Status of each waypoint to be navigated through|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
+| `FAILED_TO_LOAD_BEHAVIOR_TREE` | `uint16` | Error code indicating the specified behavior tree file could not be loaded |
+| `TF_ERROR` | `uint16` | Error code indicating a transform/localization failure |
+| `TIMEOUT` | `uint16` | Error code indicating the action exceeded its maximum allowed time |
+| `error_code` | `uint16` | Numeric error code indicating specific failure reason (0=success, various codes for different failure types) |
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
+| `waypoint_statuses` | `WaypointStatus[]` | Array of status information for each waypoint including success/failure state and execution details |
 
 
 ### Feedback Message
@@ -37,10 +42,10 @@ Navigate robot through a sequence of poses in order
 | `current_pose` | `geometry_msgs/PoseStamped` | Current robot pose during navigation |
 | `navigation_time` | `builtin_interfaces/Duration` | Total time elapsed since navigation started |
 | `estimated_time_remaining` | `builtin_interfaces/Duration` | Estimated time remaining to reach the goal |
-| `number_of_recoveries` | `int16` | Number of recovery behaviors executed during navigation |
+| `number_of_recoveries` | `int16` | Count of recovery behaviors executed during navigation to overcome obstacles or failures |
 | `distance_remaining` | `float32` | Approximate distance remaining to the goal |
-| `number_of_poses_remaining` | `int16` | Number of goals left in the goal set to execute|
-| `waypoint_statuses` | `WaypointStatus[]` | Status of each waypoint to be navigated through|
+| `number_of_poses_remaining` | `int16` | Count of poses/waypoints remaining to be visited in the navigation sequence |
+| `waypoint_statuses` | `WaypointStatus[]` | Array of status information for each waypoint including success/failure state and execution details |
 
 
 
@@ -130,6 +135,6 @@ private:
 
 ## Related Actions
 
-- [All Navigation Actions](/kilted/actions/index.html#navigation)
-- [Action API Overview](/kilted/actions/index.html)
+- [All Navigation Actions](/actions/kilted/index.html#navigation)
+- [Action API Overview](/actions/kilted/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

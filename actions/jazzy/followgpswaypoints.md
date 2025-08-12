@@ -17,25 +17,28 @@ Navigate robot through GPS-based waypoints for outdoor navigation
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `number_of_loops` | `uint32` | Number of loops if the waypoints should be repeated|
-| `goal_index` | `uint32` | The goal index to start following waypoints from, if not the start|
-| `gps_poses` | `geographic_msgs/GeoPose[]` | Poses in GPS coordinates to follow|
+| `number_of_loops` | `uint32` | How many times to repeat the complete waypoint sequence (0=no looping) |
+| `goal_index` | `uint32` | Starting waypoint index in the poses array (default 0 for beginning) |
+| `gps_poses` | `geographic_msgs/GeoPose[]` | Array of GPS-based poses defining outdoor navigation waypoints with latitude/longitude coordinates |
 
 
 ### Result Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `missed_waypoints` | `MissedWaypoint[]` | The statuses of waypoints if missed|
-| `error_code` | `int16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, TASK_EXECUTOR_FAILED|
-| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
+| `TASK_EXECUTOR_FAILED` | `uint16` | Error code indicating a task executor plugin failed to execute at a waypoint |
+| `missed_waypoints` | `MissedWaypoint[]` | Array of waypoints that could not be reached due to obstacles or navigation failures |
+| `error_code` | `int16` | Numeric error code indicating specific failure reason (0=success, various codes for different failure types) |
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
 
 
 ### Feedback Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `current_waypoint` | `uint32` | Current waypoint being executed|
+| `current_waypoint` | `uint32` | feedback |
 
 
 
@@ -56,27 +59,26 @@ class Nav2ActionClient(Node):
         
     def send_goal(self):
         goal_msg = FollowGPSWaypoints.Goal()
+        from geographic_msgs.msg import GeoPose
+        from geometry_msgs.msg import Point
+        from geometry_msgs.msg import Quaternion
+        
+        # Create GPS waypoints
+        gps_pose1 = GeoPose()
+        gps_pose1.position.latitude = 37.4419    # Example latitude 
+        gps_pose1.position.longitude = -122.1430 # Example longitude
+        gps_pose1.position.altitude = 0.0
+        gps_pose1.orientation.w = 1.0
+        
+        gps_pose2 = GeoPose()
+        gps_pose2.position.latitude = 37.4420
+        gps_pose2.position.longitude = -122.1431
+        gps_pose2.position.altitude = 0.0
+        gps_pose2.orientation.w = 1.0
+        
+        goal_msg.gps_poses = [gps_pose1, gps_pose2]
         goal_msg.number_of_loops = 1
         goal_msg.goal_index = 0
-        
-        # Create GPS waypoints (example coordinates)
-        from geographic_msgs.msg import GeoPose
-        from geometry_msgs.msg import Quaternion
-        from geographic_msgs.msg import GeoPoint
-        
-        waypoint1 = GeoPose()
-        waypoint1.position.latitude = 37.7749
-        waypoint1.position.longitude = -122.4194
-        waypoint1.position.altitude = 0.0
-        waypoint1.orientation.w = 1.0
-        
-        waypoint2 = GeoPose()
-        waypoint2.position.latitude = 37.7849
-        waypoint2.position.longitude = -122.4094
-        waypoint2.position.altitude = 0.0
-        waypoint2.orientation.w = 1.0
-        
-        goal_msg.gps_poses = [waypoint1, waypoint2]
         
         self.action_client.wait_for_server()
         future = self.action_client.send_goal_async(
@@ -109,23 +111,22 @@ public:
     void send_goal()
     {
         auto goal_msg = FollowGPSWaypointsAction::Goal();
+        // Create GPS waypoints
+        geographic_msgs::msg::GeoPose gps_pose1, gps_pose2;
+        
+        gps_pose1.position.latitude = 37.4419;    // Example latitude
+        gps_pose1.position.longitude = -122.1430; // Example longitude
+        gps_pose1.position.altitude = 0.0;
+        gps_pose1.orientation.w = 1.0;
+        
+        gps_pose2.position.latitude = 37.4420;
+        gps_pose2.position.longitude = -122.1431;
+        gps_pose2.position.altitude = 0.0;
+        gps_pose2.orientation.w = 1.0;
+        
+        goal_msg.gps_poses = {gps_pose1, gps_pose2};
         goal_msg.number_of_loops = 1;
         goal_msg.goal_index = 0;
-        
-        // Create GPS waypoints (example coordinates)
-        geographic_msgs::msg::GeoPose waypoint1, waypoint2;
-        
-        waypoint1.position.latitude = 37.7749;
-        waypoint1.position.longitude = -122.4194;
-        waypoint1.position.altitude = 0.0;
-        waypoint1.orientation.w = 1.0;
-        
-        waypoint2.position.latitude = 37.7849;
-        waypoint2.position.longitude = -122.4094;
-        waypoint2.position.altitude = 0.0;
-        waypoint2.orientation.w = 1.0;
-        
-        goal_msg.gps_poses = {waypoint1, waypoint2};
         
         action_client_->wait_for_action_server();
         
@@ -150,6 +151,6 @@ private:
 
 ## Related Actions
 
-- [All Navigation Actions](/jazzy/actions/index.html#navigation)
-- [Action API Overview](/jazzy/actions/index.html)
+- [All Navigation Actions](/actions/jazzy/index.html#navigation)
+- [Action API Overview](/actions/jazzy/index.html)
 - [Nav2 C++ API Documentation](/jazzy/html/index.html)

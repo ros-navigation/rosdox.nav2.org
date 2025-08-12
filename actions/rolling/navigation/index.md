@@ -44,4 +44,4 @@ Navigate robot through a sequence of poses in order
 ---
 
 
-[Back to All Actions](/rolling/actions/index.html)
+[Back to All Actions](/actions/rolling/index.html)

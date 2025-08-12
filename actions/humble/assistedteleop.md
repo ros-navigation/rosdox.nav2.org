@@ -17,7 +17,7 @@ Provide assisted teleoperation with collision avoidance and safety checks
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `time_allowance` | `builtin_interfaces/Duration` | Maximum time allowed for this action to complete |
+| `time_allowance` | `builtin_interfaces/Duration` | Maximum time limit for completing the action before timing out |
 
 
 ### Result Message
@@ -52,7 +52,7 @@ class Nav2ActionClient(Node):
         
     def send_goal(self):
         goal_msg = AssistedTeleop.Goal()
-        # Set appropriate fields for AssistedTeleop
+        goal_msg.time_allowance = Duration(seconds=60.0)
         
         self.action_client.wait_for_server()
         future = self.action_client.send_goal_async(
@@ -85,7 +85,7 @@ public:
     void send_goal()
     {
         auto goal_msg = AssistedTeleopAction::Goal();
-        // Set appropriate fields for AssistedTeleop
+        goal_msg.time_allowance = rclcpp::Duration::from_seconds(60.0);
         
         action_client_->wait_for_action_server();
         
@@ -110,6 +110,6 @@ private:
 
 ## Related Actions
 
-- [All Behaviors Actions](/humble/actions/index.html#behaviors)
-- [Action API Overview](/humble/actions/index.html)
+- [All Behaviors Actions](/actions/humble/index.html#behaviors)
+- [Action API Overview](/actions/humble/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)

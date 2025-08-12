@@ -17,14 +17,15 @@ Clear costmap within a specified distance around the robot's current position
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `reset_distance` | `float32` | Distance radius in meters within which to clear costmap cells around robot |
+| `reset_distance` | `float32` | Clears the costmap within a distance |
 
 
 ### Response Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `response` | `std_msgs/Empty` | Empty response indicating completion |
+| `response` | `std_msgs/Empty` | Response message or data |
+
 
 
 ## Usage Examples
@@ -38,12 +39,12 @@ from nav2_msgs.srv import ClearCostmapAroundRobot
 
 class ClearCostmapAroundRobotClient(Node):
     def __init__(self):
-        super().__init__('clearcostmaparoundrobot_client')
-        self.client = self.create_client(ClearCostmapAroundRobot, 'global_costmap/clear_around_global_costmap')
+        super().__init__('clear_costmap_around_robot_client')
+        self.client = self.create_client(ClearCostmapAroundRobot, 'clear_costmap_around_robot')
         
     def send_request(self):
         request = ClearCostmapAroundRobot.Request()
-        request.reset_distance = 2.0
+        request.reset_distance = 0.0
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -57,9 +58,9 @@ def main():
     rclpy.spin_until_future_complete(client, future)
     
     if future.result():
-        client.get_logger().info('Clear costmap around robot's current position completed')
+        client.get_logger().info('Service call completed')
     else:
-        client.get_logger().error('Failed to clear costmap around robot's current position')
+        client.get_logger().error('Service call failed')
         
     client.destroy_node()
     rclpy.shutdown()
@@ -69,20 +70,20 @@ def main():
 
 ```cpp
 #include "rclcpp/rclcpp.hpp"
-#include "nav2_msgs/srv/clearcostmaparoundrobot.hpp"
+#include "nav2_msgs/srv/clear_costmap_around_robot.hpp"
 
 class ClearCostmapAroundRobotClient : public rclcpp::Node
 {
 public:
-    ClearCostmapAroundRobotClient() : Node("clearcostmaparoundrobot_client")
+    ClearCostmapAroundRobotClient() : Node("clear_costmap_around_robot_client")
     {
-        client_ = create_client<nav2_msgs::srv::ClearCostmapAroundRobot>("global_costmap/clear_around_global_costmap");
+        client_ = create_client<nav2_msgs::srv::ClearCostmapAroundRobot>("clear_costmap_around_robot");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::ClearCostmapAroundRobot::Request>();
-        request->reset_distance = 2.0;
+        request->reset_distance = 0.0;
 
         client_->wait_for_service();
         
@@ -90,32 +91,21 @@ public:
         if (rclcpp::spin_until_future_complete(shared_from_this(), result_future) ==
             rclcpp::FutureReturnCode::SUCCESS)
         {
-            RCLCPP_INFO(get_logger(), "Clear costmap around robot's current position completed");
+            RCLCPP_INFO(get_logger(), "Service call completed");
         }
         else
         {
-            RCLCPP_ERROR(get_logger(), "Failed to clear costmap around robot's current position");
+            RCLCPP_ERROR(get_logger(), "Service call failed");
         }
     }
 
 private:
     rclcpp::Client<nav2_msgs::srv::ClearCostmapAroundRobot>::SharedPtr client_;
 };
-
-int main(int argc, char ** argv)
-{
-    rclcpp::init(argc, argv);
-    auto client = std::make_shared<ClearCostmapAroundRobotClient>();
-    
-    client->send_request();
-    
-    rclcpp::shutdown();
-    return 0;
-}
 ```
 
 ## Related Services
 
-- [All Costmap Services](/kilted/srvs/index.html#costmap-services)
-- [Service API Overview](/kilted/srvs/index.html)
+- [All Costmap Services](/srvs/kilted/index.html#costmap-services)
+- [Service API Overview](/srvs/kilted/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

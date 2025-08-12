@@ -17,9 +17,9 @@ Compute an optimal path connecting multiple poses in sequence
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `goals` | `geometry_msgs/PoseStamped[]` | Vector of goals to achieve|
+| `goals` | `geometry_msgs/PoseStamped[]` | Array of target poses that the path should connect through in sequence |
 | `start` | `geometry_msgs/PoseStamped` | Starting pose for path planning |
-| `planner_id` | `string` | Name of the planner plugin to use for path planning |
+| `planner_id` | `string` | Name of the specific planning algorithm to use (e.g., "GridBased", "NavfnPlanner"). If empty with single planner, uses default |
 | `use_start` | `bool` | If false, use current robot pose as path start, if true, use start above instead |
 
 
@@ -53,27 +53,28 @@ class Nav2ActionClient(Node):
         
     def send_goal(self):
         goal_msg = ComputePathThroughPoses.Goal()
-        goal_msg.planner_id = 'GridBased'
-        goal_msg.use_start = False
-        
-        # Create goal poses
+        from nav_msgs.msg import Goals
         from geometry_msgs.msg import PoseStamped
         
-        goal1 = PoseStamped()
-        goal1.header.frame_id = 'map'
-        goal1.header.stamp = self.get_clock().now().to_msg()
-        goal1.pose.position.x = 2.0
-        goal1.pose.position.y = 1.0
-        goal1.pose.orientation.w = 1.0
+        # Create goals to connect
+        goals = Goals()
         
-        goal2 = PoseStamped()
-        goal2.header.frame_id = 'map'
-        goal2.header.stamp = self.get_clock().now().to_msg()
-        goal2.pose.position.x = 4.0
-        goal2.pose.position.y = 2.0
-        goal2.pose.orientation.w = 1.0
+        pose1 = PoseStamped()
+        pose1.header.frame_id = 'map'
+        pose1.pose.position.x = 1.0
+        pose1.pose.position.y = 1.0
+        pose1.pose.orientation.w = 1.0
         
-        goal_msg.goals = [goal1, goal2]
+        pose2 = PoseStamped()
+        pose2.header.frame_id = 'map'
+        pose2.pose.position.x = 3.0
+        pose2.pose.position.y = 2.0
+        pose2.pose.orientation.w = 1.0
+        
+        goals.poses = [pose1, pose2]
+        goal_msg.goals = goals
+        goal_msg.planner_id = 'GridBased'
+        goal_msg.use_start = False
         
         self.action_client.wait_for_server()
         future = self.action_client.send_goal_async(
@@ -106,25 +107,24 @@ public:
     void send_goal()
     {
         auto goal_msg = ComputePathThroughPosesAction::Goal();
+        // Create goals to connect
+        nav_msgs::msg::Goals goals;
+        geometry_msgs::msg::PoseStamped pose1, pose2;
+        
+        pose1.header.frame_id = "map";
+        pose1.pose.position.x = 1.0;
+        pose1.pose.position.y = 1.0;
+        pose1.pose.orientation.w = 1.0;
+        
+        pose2.header.frame_id = "map";
+        pose2.pose.position.x = 3.0;
+        pose2.pose.position.y = 2.0;
+        pose2.pose.orientation.w = 1.0;
+        
+        goals.poses = {pose1, pose2};
+        goal_msg.goals = goals;
         goal_msg.planner_id = "GridBased";
         goal_msg.use_start = false;
-        
-        // Create goal poses
-        geometry_msgs::msg::PoseStamped goal1, goal2;
-        
-        goal1.header.frame_id = "map";
-        goal1.header.stamp = this->now();
-        goal1.pose.position.x = 2.0;
-        goal1.pose.position.y = 1.0;
-        goal1.pose.orientation.w = 1.0;
-        
-        goal2.header.frame_id = "map";
-        goal2.header.stamp = this->now();
-        goal2.pose.position.x = 4.0;
-        goal2.pose.position.y = 2.0;
-        goal2.pose.orientation.w = 1.0;
-        
-        goal_msg.goals = {goal1, goal2};
         
         action_client_->wait_for_action_server();
         
@@ -149,6 +149,6 @@ private:
 
 ## Related Actions
 
-- [All Planning Actions](/humble/actions/index.html#planning)
-- [Action API Overview](/humble/actions/index.html)
+- [All Planning Actions](/actions/humble/index.html#planning)
+- [Action API Overview](/actions/humble/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)

@@ -132,6 +132,6 @@ int main(int argc, char ** argv)
 
 ## Related Services
 
-- [All Costmap Services](/kilted/srvs/index.html#costmap-services)
-- [Service API Overview](/kilted/srvs/index.html)
+- [All Costmap Services](/srvs/kilted/index.html#costmap-services)
+- [Service API Overview](/srvs/kilted/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

@@ -18,7 +18,7 @@ Navigate robot through a sequence of poses in order
 | Field | Type | Description |
 |-------|------|-------------|
 | `poses` | `geometry_msgs/PoseStamped[]` | Array of poses defining waypoints or path |
-| `behavior_tree` | `string` | Optional behavior tree XML to use for this navigation task |
+| `behavior_tree` | `string` | Path to custom behavior tree XML file to use for this navigation task. If empty, uses default navigation behavior tree with planning, following, and recovery behaviors |
 
 
 ### Result Message
@@ -35,9 +35,9 @@ Navigate robot through a sequence of poses in order
 | `current_pose` | `geometry_msgs/PoseStamped` | Current robot pose during navigation |
 | `navigation_time` | `builtin_interfaces/Duration` | Total time elapsed since navigation started |
 | `estimated_time_remaining` | `builtin_interfaces/Duration` | Estimated time remaining to reach the goal |
-| `number_of_recoveries` | `int16` | Number of recovery behaviors executed during navigation |
+| `number_of_recoveries` | `int16` | Count of recovery behaviors executed during navigation to overcome obstacles or failures |
 | `distance_remaining` | `float32` | Approximate distance remaining to the goal |
-| `number_of_poses_remaining` | `int16` | Number of goals left in the goal set to execute|
+| `number_of_poses_remaining` | `int16` | Count of poses/waypoints remaining to be visited in the navigation sequence |
 
 
 
@@ -127,6 +127,6 @@ private:
 
 ## Related Actions
 
-- [All Navigation Actions](/humble/actions/index.html#navigation)
-- [Action API Overview](/humble/actions/index.html)
+- [All Navigation Actions](/actions/humble/index.html#navigation)
+- [Action API Overview](/actions/humble/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)

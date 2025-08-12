@@ -18,25 +18,31 @@ Drive robot forward in a specific direction for a given distance
 | Field | Type | Description |
 |-------|------|-------------|
 | `target` | `geometry_msgs/Point` | Target position or velocity vector |
-| `speed` | `float32` | Speed for movement (m/s) |
-| `time_allowance` | `builtin_interfaces/Duration` | Maximum time allowed for this action to complete |
-| `disable_collision_checks` | `bool` | Boolean true/false flag |
+| `speed` | `float32` | Movement speed in meters per second for the specified motion |
+| `time_allowance` | `builtin_interfaces/Duration` | Maximum time limit for completing the action before timing out |
+| `disable_collision_checks` | `bool` | Whether to skip obstacle detection during motion (false=check for collisions, true=ignore obstacles) |
 
 
 ### Result Message
 
 | Field | Type | Description |
 |-------|------|-------------|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
+| `TIMEOUT` | `uint16` | Error code indicating the action exceeded its maximum allowed time |
+| `TF_ERROR` | `uint16` | Error code indicating a transform/localization failure |
+| `COLLISION_AHEAD` | `uint16` | Error code indicating an obstacle was detected blocking the path |
+| `INVALID_INPUT` | `uint16` | Error code indicating invalid parameters were provided |
 | `total_elapsed_time` | `builtin_interfaces/Duration` | Total time taken to complete the action |
-| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, TIMEOUT, TF_ERROR, COLLISION_AHEAD, INVALID_INPUT|
-| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
+| `error_code` | `uint16` | Numeric error code indicating specific failure reason (0=success, various codes for different failure types) |
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
 
 
 ### Feedback Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `distance_traveled` | `float32` | Distance traveled so far|
+| `distance_traveled` | `float32` | Real-time feedback of distance moved from starting position |
 
 
 
@@ -123,6 +129,6 @@ private:
 
 ## Related Actions
 
-- [All Behaviors Actions](/kilted/actions/index.html#behaviors)
-- [Action API Overview](/kilted/actions/index.html)
+- [All Behaviors Actions](/actions/kilted/index.html#behaviors)
+- [Action API Overview](/actions/kilted/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

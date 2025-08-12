@@ -7,7 +7,7 @@ permalink: /srvs/kilted/setroutegraph.html
 # SetRouteGraph Service
 
 **Package:** `nav2_msgs`  
-**Category:** Nav2 Route Services
+**Category:** Route Services
 
 Load a new route graph from a specified file path
 
@@ -17,14 +17,15 @@ Load a new route graph from a specified file path
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `graph_filepath` | `string` | Path to the graph file to load |
+| `graph_filepath` | `string` | Path to route graph file |
 
 
 ### Response Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `success` | `bool` | Whether the graph was loaded successfully |
+| `success` | `bool` | Whether the operation completed successfully |
+
 
 
 ## Usage Examples
@@ -38,12 +39,12 @@ from nav2_msgs.srv import SetRouteGraph
 
 class SetRouteGraphClient(Node):
     def __init__(self):
-        super().__init__('setroutegraph_client')
-        self.client = self.create_client(SetRouteGraph, 'route_graph/set_route_graph')
+        super().__init__('set_route_graph_client')
+        self.client = self.create_client(SetRouteGraph, 'set_route_graph')
         
     def send_request(self):
         request = SetRouteGraph.Request()
-        request.graph_filepath = "/path/to/route_graph.yaml"
+        request.graph_filepath = '/path/to/file'
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -57,9 +58,9 @@ def main():
     rclpy.spin_until_future_complete(client, future)
     
     if future.result():
-        client.get_logger().info('Load a new route graph completed')
+        client.get_logger().info('Service call completed')
     else:
-        client.get_logger().error('Failed to load a new route graph')
+        client.get_logger().error('Service call failed')
         
     client.destroy_node()
     rclpy.shutdown()
@@ -69,20 +70,20 @@ def main():
 
 ```cpp
 #include "rclcpp/rclcpp.hpp"
-#include "nav2_msgs/srv/setroutegraph.hpp"
+#include "nav2_msgs/srv/set_route_graph.hpp"
 
 class SetRouteGraphClient : public rclcpp::Node
 {
 public:
-    SetRouteGraphClient() : Node("setroutegraph_client")
+    SetRouteGraphClient() : Node("set_route_graph_client")
     {
-        client_ = create_client<nav2_msgs::srv::SetRouteGraph>("route_graph/set_route_graph");
+        client_ = create_client<nav2_msgs::srv::SetRouteGraph>("set_route_graph");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::SetRouteGraph::Request>();
-        request->graph_filepath = "/path/to/route_graph.yaml";
+        request->graph_filepath = "/path/to/file";
 
         client_->wait_for_service();
         
@@ -90,32 +91,21 @@ public:
         if (rclcpp::spin_until_future_complete(shared_from_this(), result_future) ==
             rclcpp::FutureReturnCode::SUCCESS)
         {
-            RCLCPP_INFO(get_logger(), "Load a new route graph completed");
+            RCLCPP_INFO(get_logger(), "Service call completed");
         }
         else
         {
-            RCLCPP_ERROR(get_logger(), "Failed to load a new route graph");
+            RCLCPP_ERROR(get_logger(), "Service call failed");
         }
     }
 
 private:
     rclcpp::Client<nav2_msgs::srv::SetRouteGraph>::SharedPtr client_;
 };
-
-int main(int argc, char ** argv)
-{
-    rclcpp::init(argc, argv);
-    auto client = std::make_shared<SetRouteGraphClient>();
-    
-    client->send_request();
-    
-    rclcpp::shutdown();
-    return 0;
-}
 ```
 
 ## Related Services
 
-- [All Nav2 Route Services](/kilted/srvs/index.html#nav2-route-services)
-- [Service API Overview](/kilted/srvs/index.html)
+- [All Route Services](/srvs/kilted/index.html#route-services)
+- [Service API Overview](/srvs/kilted/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

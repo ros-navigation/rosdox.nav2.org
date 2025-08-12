@@ -44,4 +44,4 @@ Navigate robot through a sequence of poses in order
 ---
 
 
-[Back to All Actions](/jazzy/actions/index.html)
+[Back to All Actions](/actions/jazzy/index.html)

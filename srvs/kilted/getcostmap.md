@@ -17,14 +17,15 @@ Retrieve the entire costmap as an occupancy grid
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `specs` | `nav2_msgs/CostmapMetaData` | Specifications for the requested costmap |
+| `specs` | `nav2_msgs/CostmapMetaData` | Get the costmap Specifications for the requested costmap |
 
 
 ### Response Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `map` | `nav2_msgs/Costmap` | The requested costmap data |
+| `map` | `nav2_msgs/Costmap` | Map data as occupancy grid |
+
 
 
 ## Usage Examples
@@ -38,15 +39,12 @@ from nav2_msgs.srv import GetCostmap
 
 class GetCostmapClient(Node):
     def __init__(self):
-        super().__init__('getcostmap_client')
-        self.client = self.create_client(GetCostmap, 'global_costmap/get_costmap')
+        super().__init__('get_costmap_client')
+        self.client = self.create_client(GetCostmap, 'get_costmap')
         
     def send_request(self):
         request = GetCostmap.Request()
-        # Specify costmap region to retrieve
-        request.specs.size_x = 100
-        request.specs.size_y = 100
-        request.specs.resolution = 0.05
+        # Set request.specs as needed
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -60,9 +58,9 @@ def main():
     rclpy.spin_until_future_complete(client, future)
     
     if future.result():
-        client.get_logger().info('Retrieve the complete costmap completed')
+        client.get_logger().info('Service call completed')
     else:
-        client.get_logger().error('Failed to retrieve the complete costmap')
+        client.get_logger().error('Service call failed')
         
     client.destroy_node()
     rclpy.shutdown()
@@ -72,23 +70,20 @@ def main():
 
 ```cpp
 #include "rclcpp/rclcpp.hpp"
-#include "nav2_msgs/srv/getcostmap.hpp"
+#include "nav2_msgs/srv/get_costmap.hpp"
 
 class GetCostmapClient : public rclcpp::Node
 {
 public:
-    GetCostmapClient() : Node("getcostmap_client")
+    GetCostmapClient() : Node("get_costmap_client")
     {
-        client_ = create_client<nav2_msgs::srv::GetCostmap>("global_costmap/get_costmap");
+        client_ = create_client<nav2_msgs::srv::GetCostmap>("get_costmap");
     }
 
     void send_request()
     {
         auto request = std::make_shared<nav2_msgs::srv::GetCostmap::Request>();
-        // Specify costmap region to retrieve
-        request->specs.size_x = 100;
-        request->specs.size_y = 100;
-        request->specs.resolution = 0.05;
+        // Set request->specs as needed
 
         client_->wait_for_service();
         
@@ -96,32 +91,21 @@ public:
         if (rclcpp::spin_until_future_complete(shared_from_this(), result_future) ==
             rclcpp::FutureReturnCode::SUCCESS)
         {
-            RCLCPP_INFO(get_logger(), "Retrieve the complete costmap completed");
+            RCLCPP_INFO(get_logger(), "Service call completed");
         }
         else
         {
-            RCLCPP_ERROR(get_logger(), "Failed to retrieve the complete costmap");
+            RCLCPP_ERROR(get_logger(), "Service call failed");
         }
     }
 
 private:
     rclcpp::Client<nav2_msgs::srv::GetCostmap>::SharedPtr client_;
 };
-
-int main(int argc, char ** argv)
-{
-    rclcpp::init(argc, argv);
-    auto client = std::make_shared<GetCostmapClient>();
-    
-    client->send_request();
-    
-    rclcpp::shutdown();
-    return 0;
-}
 ```
 
 ## Related Services
 
-- [All Costmap Services](/kilted/srvs/index.html#costmap-services)
-- [Service API Overview](/kilted/srvs/index.html)
+- [All Costmap Services](/srvs/kilted/index.html#costmap-services)
+- [Service API Overview](/srvs/kilted/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

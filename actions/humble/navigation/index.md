@@ -36,4 +36,4 @@ Navigate robot through a sequence of poses in order
 ---
 
 
-[Back to All Actions](/humble/actions/index.html)
+[Back to All Actions](/actions/humble/index.html)

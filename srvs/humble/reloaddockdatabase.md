@@ -116,6 +116,6 @@ int main(int argc, char ** argv)
 
 ## Related Services
 
-- [All Other Services](/humble/srvs/index.html#other-services)
-- [Service API Overview](/humble/srvs/index.html)
+- [All Other Services](/srvs/humble/index.html#other-services)
+- [Service API Overview](/srvs/humble/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)

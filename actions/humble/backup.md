@@ -18,8 +18,8 @@ Move robot backwards a specified distance with obstacle detection
 | Field | Type | Description |
 |-------|------|-------------|
 | `target` | `geometry_msgs/Point` | Target position or velocity vector |
-| `speed` | `float32` | Speed for movement (m/s) |
-| `time_allowance` | `builtin_interfaces/Duration` | Maximum time allowed for this action to complete |
+| `speed` | `float32` | Movement speed in meters per second for the specified motion |
+| `time_allowance` | `builtin_interfaces/Duration` | Maximum time limit for completing the action before timing out |
 
 
 ### Result Message
@@ -33,7 +33,7 @@ Move robot backwards a specified distance with obstacle detection
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `distance_traveled` | `float32` | Distance traveled so far|
+| `distance_traveled` | `float32` | Real-time feedback of distance moved from starting position |
 
 
 
@@ -120,6 +120,6 @@ private:
 
 ## Related Actions
 
-- [All Behaviors Actions](/humble/actions/index.html#behaviors)
-- [Action API Overview](/humble/actions/index.html)
+- [All Behaviors Actions](/actions/humble/index.html#behaviors)
+- [Action API Overview](/actions/humble/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)

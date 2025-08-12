@@ -17,9 +17,9 @@ Compute an optimal path connecting multiple poses in sequence
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `goals` | `nav_msgs/Goals` | Vector of goals to achieve|
+| `goals` | `nav_msgs/Goals` | Array of target poses that the path should connect through in sequence |
 | `start` | `geometry_msgs/PoseStamped` | Starting pose for path planning |
-| `planner_id` | `string` | Name of the planner plugin to use for path planning |
+| `planner_id` | `string` | Name of the specific planning algorithm to use (e.g., "GridBased", "NavfnPlanner"). If empty with single planner, uses default |
 | `use_start` | `bool` | If false, use current robot pose as path start, if true, use start above instead |
 
 
@@ -27,10 +27,21 @@ Compute an optimal path connecting multiple poses in sequence
 
 | Field | Type | Description |
 |-------|------|-------------|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
+| `INVALID_PLANNER` | `uint16` | Error code indicating the specified planner plugin is invalid or not loaded |
+| `TF_ERROR` | `uint16` | Error code indicating a transform/localization failure |
+| `START_OUTSIDE_MAP` | `uint16` | Error code indicating the start position is outside the known map boundaries |
+| `GOAL_OUTSIDE_MAP` | `uint16` | Error code indicating the goal position is outside the known map boundaries |
+| `START_OCCUPIED` | `uint16` | Error code indicating the start position is in an occupied/blocked area |
+| `GOAL_OCCUPIED` | `uint16` | Error code indicating the goal position is in an occupied/blocked area |
+| `TIMEOUT` | `uint16` | Error code indicating the action exceeded its maximum allowed time |
+| `NO_VALID_PATH` | `uint16` | Error code indicating no feasible path could be found between start and goal |
+| `NO_VIAPOINTS_GIVEN` | `uint16` | Error code indicating no intermediate waypoints were provided for path planning through poses |
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
 | `planning_time` | `builtin_interfaces/Duration` | Time spent in path planning phase |
-| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, INVALID_PLANNER, TF_ERROR, START_OUTSIDE_MAP, GOAL_OUTSIDE_MAP, START_OCCUPIED, GOAL_OCCUPIED, TIMEOUT, NO_VALID_PATH, NO_VIAPOINTS_GIVEN|
-| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
+| `error_code` | `uint16` | Numeric error code indicating specific failure reason (0=success, various codes for different failure types) |
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
 
 
 ### Feedback Message
@@ -55,27 +66,28 @@ class Nav2ActionClient(Node):
         
     def send_goal(self):
         goal_msg = ComputePathThroughPoses.Goal()
-        goal_msg.planner_id = 'GridBased'
-        goal_msg.use_start = False
-        
-        # Create goal poses
+        from nav_msgs.msg import Goals
         from geometry_msgs.msg import PoseStamped
         
-        goal1 = PoseStamped()
-        goal1.header.frame_id = 'map'
-        goal1.header.stamp = self.get_clock().now().to_msg()
-        goal1.pose.position.x = 2.0
-        goal1.pose.position.y = 1.0
-        goal1.pose.orientation.w = 1.0
+        # Create goals to connect
+        goals = Goals()
         
-        goal2 = PoseStamped()
-        goal2.header.frame_id = 'map'
-        goal2.header.stamp = self.get_clock().now().to_msg()
-        goal2.pose.position.x = 4.0
-        goal2.pose.position.y = 2.0
-        goal2.pose.orientation.w = 1.0
+        pose1 = PoseStamped()
+        pose1.header.frame_id = 'map'
+        pose1.pose.position.x = 1.0
+        pose1.pose.position.y = 1.0
+        pose1.pose.orientation.w = 1.0
         
-        goal_msg.goals = [goal1, goal2]
+        pose2 = PoseStamped()
+        pose2.header.frame_id = 'map'
+        pose2.pose.position.x = 3.0
+        pose2.pose.position.y = 2.0
+        pose2.pose.orientation.w = 1.0
+        
+        goals.poses = [pose1, pose2]
+        goal_msg.goals = goals
+        goal_msg.planner_id = 'GridBased'
+        goal_msg.use_start = False
         
         self.action_client.wait_for_server()
         future = self.action_client.send_goal_async(
@@ -108,25 +120,24 @@ public:
     void send_goal()
     {
         auto goal_msg = ComputePathThroughPosesAction::Goal();
+        // Create goals to connect
+        nav_msgs::msg::Goals goals;
+        geometry_msgs::msg::PoseStamped pose1, pose2;
+        
+        pose1.header.frame_id = "map";
+        pose1.pose.position.x = 1.0;
+        pose1.pose.position.y = 1.0;
+        pose1.pose.orientation.w = 1.0;
+        
+        pose2.header.frame_id = "map";
+        pose2.pose.position.x = 3.0;
+        pose2.pose.position.y = 2.0;
+        pose2.pose.orientation.w = 1.0;
+        
+        goals.poses = {pose1, pose2};
+        goal_msg.goals = goals;
         goal_msg.planner_id = "GridBased";
         goal_msg.use_start = false;
-        
-        // Create goal poses
-        geometry_msgs::msg::PoseStamped goal1, goal2;
-        
-        goal1.header.frame_id = "map";
-        goal1.header.stamp = this->now();
-        goal1.pose.position.x = 2.0;
-        goal1.pose.position.y = 1.0;
-        goal1.pose.orientation.w = 1.0;
-        
-        goal2.header.frame_id = "map";
-        goal2.header.stamp = this->now();
-        goal2.pose.position.x = 4.0;
-        goal2.pose.position.y = 2.0;
-        goal2.pose.orientation.w = 1.0;
-        
-        goal_msg.goals = {goal1, goal2};
         
         action_client_->wait_for_action_server();
         
@@ -151,6 +162,6 @@ private:
 
 ## Related Actions
 
-- [All Planning Actions](/kilted/actions/index.html#planning)
-- [Action API Overview](/kilted/actions/index.html)
+- [All Planning Actions](/actions/kilted/index.html#planning)
+- [Action API Overview](/actions/kilted/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

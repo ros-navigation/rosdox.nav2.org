@@ -19,7 +19,7 @@ Compute an optimal path from current position to a target pose
 |-------|------|-------------|
 | `goal` | `geometry_msgs/PoseStamped` | Target goal pose for path planning |
 | `start` | `geometry_msgs/PoseStamped` | Starting pose for path planning |
-| `planner_id` | `string` | Name of the planner plugin to use for path planning |
+| `planner_id` | `string` | Name of the specific planning algorithm to use (e.g., "GridBased", "NavfnPlanner"). If empty with single planner, uses default |
 | `use_start` | `bool` | If false, use current robot pose as path start, if true, use start above instead |
 
 
@@ -27,10 +27,20 @@ Compute an optimal path from current position to a target pose
 
 | Field | Type | Description |
 |-------|------|-------------|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
+| `INVALID_PLANNER` | `uint16` | Error code indicating the specified planner plugin is invalid or not loaded |
+| `TF_ERROR` | `uint16` | Error code indicating a transform/localization failure |
+| `START_OUTSIDE_MAP` | `uint16` | Error code indicating the start position is outside the known map boundaries |
+| `GOAL_OUTSIDE_MAP` | `uint16` | Error code indicating the goal position is outside the known map boundaries |
+| `START_OCCUPIED` | `uint16` | Error code indicating the start position is in an occupied/blocked area |
+| `GOAL_OCCUPIED` | `uint16` | Error code indicating the goal position is in an occupied/blocked area |
+| `TIMEOUT` | `uint16` | Error code indicating the action exceeded its maximum allowed time |
+| `NO_VALID_PATH` | `uint16` | Error code indicating no feasible path could be found between start and goal |
 | `path` | `nav_msgs/Path` | Computed navigation path with poses and metadata |
 | `planning_time` | `builtin_interfaces/Duration` | Time spent in path planning phase |
-| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, INVALID_PLANNER, TF_ERROR, START_OUTSIDE_MAP, GOAL_OUTSIDE_MAP, START_OCCUPIED, GOAL_OCCUPIED, TIMEOUT, NO_VALID_PATH|
-| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
+| `error_code` | `uint16` | Numeric error code indicating specific failure reason (0=success, various codes for different failure types) |
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
 
 
 ### Feedback Message
@@ -123,6 +133,6 @@ private:
 
 ## Related Actions
 
-- [All Planning Actions](/jazzy/actions/index.html#planning)
-- [Action API Overview](/jazzy/actions/index.html)
+- [All Planning Actions](/actions/jazzy/index.html#planning)
+- [Action API Overview](/actions/jazzy/index.html)
 - [Nav2 C++ API Documentation](/jazzy/html/index.html)

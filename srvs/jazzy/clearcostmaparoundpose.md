@@ -17,15 +17,16 @@ Clear costmap within a specified distance around a given pose
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `pose` | `geometry_msgs/PoseStamped` | Target pose around which to clear the costmap |
-| `reset_distance` | `float64` | Distance radius in meters within which to clear costmap cells |
+| `pose` | `geometry_msgs/PoseStamped` | Clears the costmap within a distance around a given pose |
+| `reset_distance` | `float64` | Distance parameter for clearing operations |
 
 
 ### Response Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `response` | `std_msgs/Empty` | Empty response indicating completion |
+| `response` | `std_msgs/Empty` | Response message or data |
+
 
 
 ## Usage Examples
@@ -36,22 +37,19 @@ Clear costmap within a specified distance around a given pose
 import rclpy
 from rclpy.node import Node
 from nav2_msgs.srv import ClearCostmapAroundPose
-from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 
 class ClearCostmapAroundPoseClient(Node):
     def __init__(self):
-        super().__init__('clearcostmaparoundpose_client')
-        self.client = self.create_client(ClearCostmapAroundPose, 'global_costmap/clear_around_global_costmap')
+        super().__init__('clear_costmap_around_pose_client')
+        self.client = self.create_client(ClearCostmapAroundPose, 'clear_costmap_around_pose')
         
     def send_request(self):
         request = ClearCostmapAroundPose.Request()
         request.pose.header.frame_id = 'map'
         request.pose.header.stamp = self.get_clock().now().to_msg()
-        request.pose.pose.position.x = 2.0
-        request.pose.pose.position.y = 1.0
-        request.pose.pose.position.z = 0.0
+        request.pose.pose.position.x = 0.0
         request.pose.pose.orientation.w = 1.0
-        request.reset_distance = 2.0
+        request.reset_distance = 0.0
         
         self.client.wait_for_service()
         future = self.client.call_async(request)
@@ -65,9 +63,9 @@ def main():
     rclpy.spin_until_future_complete(client, future)
     
     if future.result():
-        client.get_logger().info('Clear costmap around a specific pose completed')
+        client.get_logger().info('Service call completed')
     else:
-        client.get_logger().error('Failed to clear costmap around a specific pose')
+        client.get_logger().error('Service call failed')
         
     client.destroy_node()
     rclpy.shutdown()
@@ -77,16 +75,14 @@ def main():
 
 ```cpp
 #include "rclcpp/rclcpp.hpp"
-#include "nav2_msgs/srv/clearcostmaparoundpose.hpp"
-#include "geometry_msgs/msg/pose_stamped.hpp"
-#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
+#include "nav2_msgs/srv/clear_costmap_around_pose.hpp"
 
 class ClearCostmapAroundPoseClient : public rclcpp::Node
 {
 public:
-    ClearCostmapAroundPoseClient() : Node("clearcostmaparoundpose_client")
+    ClearCostmapAroundPoseClient() : Node("clear_costmap_around_pose_client")
     {
-        client_ = create_client<nav2_msgs::srv::ClearCostmapAroundPose>("global_costmap/clear_around_global_costmap");
+        client_ = create_client<nav2_msgs::srv::ClearCostmapAroundPose>("clear_costmap_around_pose");
     }
 
     void send_request()
@@ -94,11 +90,9 @@ public:
         auto request = std::make_shared<nav2_msgs::srv::ClearCostmapAroundPose::Request>();
         request->pose.header.frame_id = "map";
         request->pose.header.stamp = this->now();
-        request->pose.pose.position.x = 2.0;
-        request->pose.pose.position.y = 1.0;
-        request->pose.pose.position.z = 0.0;
+        request->pose.pose.position.x = 0.0;
         request->pose.pose.orientation.w = 1.0;
-        request->reset_distance = 2.0;
+        request->reset_distance = 0.0;
 
         client_->wait_for_service();
         
@@ -106,32 +100,21 @@ public:
         if (rclcpp::spin_until_future_complete(shared_from_this(), result_future) ==
             rclcpp::FutureReturnCode::SUCCESS)
         {
-            RCLCPP_INFO(get_logger(), "Clear costmap around a specific pose completed");
+            RCLCPP_INFO(get_logger(), "Service call completed");
         }
         else
         {
-            RCLCPP_ERROR(get_logger(), "Failed to clear costmap around a specific pose");
+            RCLCPP_ERROR(get_logger(), "Service call failed");
         }
     }
 
 private:
     rclcpp::Client<nav2_msgs::srv::ClearCostmapAroundPose>::SharedPtr client_;
 };
-
-int main(int argc, char ** argv)
-{
-    rclcpp::init(argc, argv);
-    auto client = std::make_shared<ClearCostmapAroundPoseClient>();
-    
-    client->send_request();
-    
-    rclcpp::shutdown();
-    return 0;
-}
 ```
 
 ## Related Services
 
-- [All Costmap Services](/jazzy/srvs/index.html#costmap-services)
-- [Service API Overview](/jazzy/srvs/index.html)
+- [All Costmap Services](/srvs/jazzy/index.html#costmap-services)
+- [Service API Overview](/srvs/jazzy/index.html)
 - [Nav2 C++ API Documentation](/jazzy/html/index.html)

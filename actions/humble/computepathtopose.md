@@ -19,7 +19,7 @@ Compute an optimal path from current position to a target pose
 |-------|------|-------------|
 | `goal` | `geometry_msgs/PoseStamped` | Target goal pose for path planning |
 | `start` | `geometry_msgs/PoseStamped` | Starting pose for path planning |
-| `planner_id` | `string` | Name of the planner plugin to use for path planning |
+| `planner_id` | `string` | Name of the specific planning algorithm to use (e.g., "GridBased", "NavfnPlanner"). If empty with single planner, uses default |
 | `use_start` | `bool` | If false, use current robot pose as path start, if true, use start above instead |
 
 
@@ -121,6 +121,6 @@ private:
 
 ## Related Actions
 
-- [All Planning Actions](/humble/actions/index.html#planning)
-- [Action API Overview](/humble/actions/index.html)
+- [All Planning Actions](/actions/humble/index.html#planning)
+- [Action API Overview](/actions/humble/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)

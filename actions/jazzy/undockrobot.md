@@ -17,7 +17,7 @@ Autonomously undock robot from a charging station or docking platform
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `dock_type` | `string` | If initialized on a dock so the server doesn't know what type of dock its on, you must specify what dock it is to know where to stage for undocking. If only one type of dock plugin is present, it is not necessary to set. If not set & server instance was used to dock, server will use current dock information from last docking request. |
+| `dock_type` | `string` | Type of docking station or charging platform to dock with (e.g., "nova_carter_dock", "charging_dock") |
 | `max_undocking_time` | `float32` | Maximum time to undock |
 
 
@@ -25,9 +25,13 @@ Autonomously undock robot from a charging station or docking platform
 
 | Field | Type | Description |
 |-------|------|-------------|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `DOCK_NOT_VALID` | `uint16` | Error code indicating the dock pose or configuration is invalid |
+| `FAILED_TO_CONTROL` | `uint16` | Error code indicating control system failure during docking maneuver |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
 | `success` | `bool` | docking success status |
-| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, DOCK_NOT_VALID, FAILED_TO_CONTROL, UNKNOWN|
-| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
+| `error_code` | `uint16` | Contextual error code, if any |
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
 
 
 ### Feedback Message
@@ -110,6 +114,6 @@ private:
 
 ## Related Actions
 
-- [All Autodocking Actions](/jazzy/actions/index.html#autodocking)
-- [Action API Overview](/jazzy/actions/index.html)
+- [All Autodocking Actions](/actions/jazzy/index.html#autodocking)
+- [Action API Overview](/actions/jazzy/index.html)
 - [Nav2 C++ API Documentation](/jazzy/html/index.html)

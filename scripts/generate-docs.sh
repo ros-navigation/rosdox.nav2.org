@@ -338,22 +338,67 @@ generate_nav2_action_docs() {
     fi
 }
 
-# Function to generate Nav2 service documentation (once for all distributions)
-generate_nav2_service_docs_all() {
-    log "Generating Nav2 Service API documentation for all distributions..."
+# Function to generate Nav2 message documentation
+generate_nav2_message_docs() {
+    local distribution=$1
+    local nav2_source_dir="$2"
+    local output_dir="$DOCS_OUTPUT_DIR"
+    
+    log "Generating Nav2 Message API documentation for $distribution..."
+    log "Nav2 source: $nav2_source_dir"
+    
+    # Verify source directory exists
+    if [ ! -d "$nav2_source_dir" ]; then
+        error "Nav2 directory not found: $nav2_source_dir"
+        return 1
+    fi
     
     # Check if Python script exists
-    if [ ! -f "$SCRIPT_DIR/generate-srv-docs.py" ]; then
-        warn "Service documentation generator not found, skipping service docs"
+    if [ ! -f "$SCRIPT_DIR/generate-msg-docs.py" ]; then
+        warn "Message documentation generator not found, skipping message docs"
+        return 0
+    fi
+    
+    # Generate message documentation using Python script
+    if python3 "$SCRIPT_DIR/generate-msg-docs.py" \
+        --distribution "$distribution" \
+        --source-dir "$nav2_source_dir" \
+        --output-dir "$output_dir"; then
+        log "Message API documentation generated for $distribution"
+    else
+        warn "Failed to generate message documentation for $distribution"
+    fi
+}
+
+# Function to generate Nav2 service documentation (per distribution)
+generate_nav2_service_docs() {
+    local distribution=$1
+    local nav2_source_dir="$2"
+    local output_dir="$DOCS_OUTPUT_DIR"
+    
+    log "Generating Nav2 Service API documentation for $distribution..."
+    log "Nav2 source: $nav2_source_dir"
+    
+    # Verify source directory exists
+    if [ ! -d "$nav2_source_dir" ]; then
+        error "Nav2 directory not found: $nav2_source_dir"
+        return 1
+    fi
+    
+    # Check if Python script exists
+    if [ ! -f "$SCRIPT_DIR/generate-srv-docs-dynamic.py" ]; then
+        warn "Dynamic service documentation generator not found, skipping service docs"
         return 0
     fi
     
     # Generate service documentation using Python script
-    cd "$REPO_ROOT" || { error "Failed to cd to repo root"; return 1; }
-    if python3 "$SCRIPT_DIR/generate-srv-docs.py"; then
-        log "Service API documentation generated for all distributions"
+    if python3 "$SCRIPT_DIR/generate-srv-docs-dynamic.py" \
+        --distribution "$distribution" \
+        --source-dir "$nav2_source_dir" \
+        --output-dir "$output_dir"; then
+        log "Service API documentation generated for $distribution"
     else
-        warn "Failed to generate service documentation"
+        warn "Failed to generate service documentation for $distribution"
     fi
 }
 
@@ -550,6 +595,12 @@ main() {
                 # Generate Nav2 Action API documentation
                 generate_nav2_action_docs "$distribution" "$nav2_source_dir"
                 
+                # Generate Nav2 Message API documentation
+                generate_nav2_message_docs "$distribution" "$nav2_source_dir"
+                
+                # Generate Nav2 Service API documentation
+                generate_nav2_service_docs "$distribution" "$nav2_source_dir"
+                
                 log "Completed Nav2 $distribution distribution"
             else
                 error "Setup returned invalid Nav2 source directory for $distribution"
@@ -564,9 +615,7 @@ main() {
         echo
     done
     
-    # Generate Nav2 Service API documentation for all distributions
-    log "=== Generating Nav2 Service API Documentation ==="
-    generate_nav2_service_docs_all
+    # All distribution-specific documentation generated in the loop above
     
     # Cleanup work directory
     log "Cleaning up work directory..."

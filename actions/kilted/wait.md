@@ -17,7 +17,7 @@ Pause robot operation for a specified duration or until condition is met
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `time` | `builtin_interfaces/Duration` | Duration to wait or time parameter for the action |
+| `time` | `builtin_interfaces/Duration` | Duration to wait/pause robot motion before continuing |
 
 
 ### Result Message
@@ -25,15 +25,18 @@ Pause robot operation for a specified duration or until condition is met
 | Field | Type | Description |
 |-------|------|-------------|
 | `total_elapsed_time` | `builtin_interfaces/Duration` | Total time taken to complete the action |
-| `error_code` | `uint16` | Error code indicating the result status. Possible values: NONE, UNKNOWN, TIMEOUT|
-| `error_msg` | `string` | Human readable error message that corresponds to the error code, when set|
+| `error_code` | `uint16` | Numeric error code indicating specific failure reason (0=success, various codes for different failure types) |
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
+| `TIMEOUT` | `uint16` | Error code indicating the action exceeded its maximum allowed time |
 
 
 ### Feedback Message
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `time_left` | `builtin_interfaces/Duration` | Time left to wait|
+| `time_left` | `builtin_interfaces/Duration` | Remaining wait time before the wait action completes, in seconds (counts down to zero) |
 
 
 
@@ -112,6 +115,6 @@ private:
 
 ## Related Actions
 
-- [All Behaviors Actions](/kilted/actions/index.html#behaviors)
-- [Action API Overview](/kilted/actions/index.html)
+- [All Behaviors Actions](/actions/kilted/index.html#behaviors)
+- [Action API Overview](/actions/kilted/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

@@ -17,8 +17,8 @@ Rotate robot in place to a target yaw angle with collision checking
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `target_yaw` | `float32` | Target yaw angle to spin to (in radians) |
-| `time_allowance` | `builtin_interfaces/Duration` | Maximum time allowed for this action to complete |
+| `target_yaw` | `float32` | Target rotation angle in radians to spin (positive=counterclockwise, negative=clockwise) |
+| `time_allowance` | `builtin_interfaces/Duration` | Maximum time limit for completing the action before timing out |
 
 
 ### Result Message
@@ -32,7 +32,7 @@ Rotate robot in place to a target yaw angle with collision checking
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `angular_distance_traveled` | `float32` | Angular distance so far spun|
+| `angular_distance_traveled` | `float32` | Total angular distance the robot has rotated during the spin action in radians (cumulative measurement) |
 
 
 
@@ -113,6 +113,6 @@ private:
 
 ## Related Actions
 
-- [All Behaviors Actions](/humble/actions/index.html#behaviors)
-- [Action API Overview](/humble/actions/index.html)
+- [All Behaviors Actions](/actions/humble/index.html#behaviors)
+- [Action API Overview](/actions/humble/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)
