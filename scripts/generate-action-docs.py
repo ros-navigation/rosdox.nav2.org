@@ -588,7 +588,117 @@ private:
         goal_msg.target.x = 2.0
         goal_msg.target.y = 0.0
         goal_msg.target.z = 0.0
-        goal_msg.time_allowance = Duration(seconds=10.0)'''
+        goal_msg.time_allowance = Duration(seconds=10.0)''',
+        
+            'FollowGPSWaypoints': '''from geographic_msgs.msg import GeoPose
+        from geometry_msgs.msg import Point
+        from geometry_msgs.msg import Quaternion
+        
+        # Create GPS waypoints
+        gps_pose1 = GeoPose()
+        gps_pose1.position.latitude = 37.4419    # Example latitude 
+        gps_pose1.position.longitude = -122.1430 # Example longitude
+        gps_pose1.position.altitude = 0.0
+        gps_pose1.orientation.w = 1.0
+        
+        gps_pose2 = GeoPose()
+        gps_pose2.position.latitude = 37.4420
+        gps_pose2.position.longitude = -122.1431
+        gps_pose2.position.altitude = 0.0
+        gps_pose2.orientation.w = 1.0
+        
+        goal_msg.gps_poses = [gps_pose1, gps_pose2]
+        goal_msg.number_of_loops = 1
+        goal_msg.goal_index = 0''',
+        
+            'AssistedTeleop': '''goal_msg.time_allowance = Duration(seconds=60.0)''',
+            
+            'ComputePathThroughPoses': '''from nav_msgs.msg import Goals
+        from geometry_msgs.msg import PoseStamped
+        
+        # Create goals to connect
+        goals = Goals()
+        
+        pose1 = PoseStamped()
+        pose1.header.frame_id = 'map'
+        pose1.pose.position.x = 1.0
+        pose1.pose.position.y = 1.0
+        pose1.pose.orientation.w = 1.0
+        
+        pose2 = PoseStamped()
+        pose2.header.frame_id = 'map'
+        pose2.pose.position.x = 3.0
+        pose2.pose.position.y = 2.0
+        pose2.pose.orientation.w = 1.0
+        
+        goals.poses = [pose1, pose2]
+        goal_msg.goals = goals
+        goal_msg.planner_id = 'GridBased'
+        goal_msg.use_start = False''',
+        
+            'ComputeAndTrackRoute': '''from nav_msgs.msg import Path
+        from geometry_msgs.msg import PoseStamped
+        
+        # Create route as path
+        path = Path()
+        path.header.frame_id = 'map'
+        path.header.stamp = self.get_clock().now().to_msg()
+        
+        waypoint1 = PoseStamped()
+        waypoint1.header.frame_id = 'map'
+        waypoint1.pose.position.x = 1.0
+        waypoint1.pose.position.y = 1.0
+        waypoint1.pose.orientation.w = 1.0
+        
+        waypoint2 = PoseStamped()
+        waypoint2.header.frame_id = 'map'
+        waypoint2.pose.position.x = 5.0
+        waypoint2.pose.position.y = 3.0
+        waypoint2.pose.orientation.w = 1.0
+        
+        path.poses = [waypoint1, waypoint2]
+        goal_msg.route = path''',
+        
+            'ComputeRoute': '''from nav_msgs.msg import Path
+        from geometry_msgs.msg import PoseStamped
+        
+        # Define start point
+        start = PoseStamped()
+        start.header.frame_id = 'map'
+        start.pose.position.x = 0.0
+        start.pose.position.y = 0.0
+        start.pose.orientation.w = 1.0
+        
+        # Define goal point
+        goal = PoseStamped()
+        goal.header.frame_id = 'map'
+        goal.pose.position.x = 10.0
+        goal.pose.position.y = 5.0
+        goal.pose.orientation.w = 1.0
+        
+        goal_msg.start = start
+        goal_msg.goal = goal''',
+        
+            'SmoothPath': '''from nav_msgs.msg import Path
+        from geometry_msgs.msg import PoseStamped
+        
+        # Create path to smooth
+        path = Path()
+        path.header.frame_id = 'map'
+        path.header.stamp = self.get_clock().now().to_msg()
+        
+        # Add waypoints to path
+        for i in range(5):
+            pose = PoseStamped()
+            pose.header.frame_id = 'map'
+            pose.pose.position.x = float(i)
+            pose.pose.position.y = 0.0
+            pose.pose.orientation.w = 1.0
+            path.poses.append(pose)
+        
+        goal_msg.path = path
+        goal_msg.smoother_id = 'simple_smoother'
+        goal_msg.max_smoothing_duration = Duration(seconds=5.0)'''
         }
         
         return examples.get(action_name, 
@@ -651,7 +761,99 @@ private:
         goal_msg.target.x = 2.0;
         goal_msg.target.y = 0.0;
         goal_msg.target.z = 0.0;
-        goal_msg.time_allowance = rclcpp::Duration::from_seconds(10.0);'''
+        goal_msg.time_allowance = rclcpp::Duration::from_seconds(10.0);''',
+        
+            'FollowGPSWaypoints': '''// Create GPS waypoints
+        geographic_msgs::msg::GeoPose gps_pose1, gps_pose2;
+        
+        gps_pose1.position.latitude = 37.4419;    // Example latitude
+        gps_pose1.position.longitude = -122.1430; // Example longitude
+        gps_pose1.position.altitude = 0.0;
+        gps_pose1.orientation.w = 1.0;
+        
+        gps_pose2.position.latitude = 37.4420;
+        gps_pose2.position.longitude = -122.1431;
+        gps_pose2.position.altitude = 0.0;
+        gps_pose2.orientation.w = 1.0;
+        
+        goal_msg.gps_poses = {gps_pose1, gps_pose2};
+        goal_msg.number_of_loops = 1;
+        goal_msg.goal_index = 0;''',
+        
+            'AssistedTeleop': '''goal_msg.time_allowance = rclcpp::Duration::from_seconds(60.0);''',
+            
+            'ComputePathThroughPoses': '''// Create goals to connect
+        nav_msgs::msg::Goals goals;
+        geometry_msgs::msg::PoseStamped pose1, pose2;
+        
+        pose1.header.frame_id = "map";
+        pose1.pose.position.x = 1.0;
+        pose1.pose.position.y = 1.0;
+        pose1.pose.orientation.w = 1.0;
+        
+        pose2.header.frame_id = "map";
+        pose2.pose.position.x = 3.0;
+        pose2.pose.position.y = 2.0;
+        pose2.pose.orientation.w = 1.0;
+        
+        goals.poses = {pose1, pose2};
+        goal_msg.goals = goals;
+        goal_msg.planner_id = "GridBased";
+        goal_msg.use_start = false;''',
+        
+            'ComputeAndTrackRoute': '''// Create route as path
+        nav_msgs::msg::Path path;
+        path.header.frame_id = "map";
+        path.header.stamp = this->now();
+        
+        geometry_msgs::msg::PoseStamped waypoint1, waypoint2;
+        waypoint1.header.frame_id = "map";
+        waypoint1.pose.position.x = 1.0;
+        waypoint1.pose.position.y = 1.0;
+        waypoint1.pose.orientation.w = 1.0;
+        
+        waypoint2.header.frame_id = "map";
+        waypoint2.pose.position.x = 5.0;
+        waypoint2.pose.position.y = 3.0;
+        waypoint2.pose.orientation.w = 1.0;
+        
+        path.poses = {waypoint1, waypoint2};
+        goal_msg.route = path;''',
+        
+            'ComputeRoute': '''// Define start and goal points
+        geometry_msgs::msg::PoseStamped start, goal;
+        
+        start.header.frame_id = "map";
+        start.pose.position.x = 0.0;
+        start.pose.position.y = 0.0;
+        start.pose.orientation.w = 1.0;
+        
+        goal.header.frame_id = "map";
+        goal.pose.position.x = 10.0;
+        goal.pose.position.y = 5.0;
+        goal.pose.orientation.w = 1.0;
+        
+        goal_msg.start = start;
+        goal_msg.goal = goal;''',
+        
+            'SmoothPath': '''// Create path to smooth
+        nav_msgs::msg::Path path;
+        path.header.frame_id = "map";
+        path.header.stamp = this->now();
+        
+        // Add waypoints to path
+        for (int i = 0; i < 5; i++) {
+            geometry_msgs::msg::PoseStamped pose;
+            pose.header.frame_id = "map";
+            pose.pose.position.x = static_cast<double>(i);
+            pose.pose.position.y = 0.0;
+            pose.pose.orientation.w = 1.0;
+            path.poses.push_back(pose);
+        }
+        
+        goal_msg.path = path;
+        goal_msg.smoother_id = "simple_smoother";
+        goal_msg.max_smoothing_duration = rclcpp::Duration::from_seconds(5.0);'''
         }
         
         return examples.get(action_name, 
