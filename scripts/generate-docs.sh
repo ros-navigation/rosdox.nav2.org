@@ -338,6 +338,25 @@ generate_nav2_action_docs() {
     fi
 }
 
+# Function to generate Nav2 service documentation (once for all distributions)
+generate_nav2_service_docs_all() {
+    log "Generating Nav2 Service API documentation for all distributions..."
+    
+    # Check if Python script exists
+    if [ ! -f "$SCRIPT_DIR/generate-srv-docs.py" ]; then
+        warn "Service documentation generator not found, skipping service docs"
+        return 0
+    fi
+    
+    # Generate service documentation using Python script
+    cd "$REPO_ROOT" || { error "Failed to cd to repo root"; return 1; }
+    if python3 "$SCRIPT_DIR/generate-srv-docs.py"; then
+        log "Service API documentation generated for all distributions"
+    else
+        warn "Failed to generate service documentation"
+    fi
+}
+
 # Function to generate Nav2 doxygen documentation
 generate_nav2_doxygen() {
     local distribution=$1
@@ -544,6 +563,10 @@ main() {
         
         echo
     done
+    
+    # Generate Nav2 Service API documentation for all distributions
+    log "=== Generating Nav2 Service API Documentation ==="
+    generate_nav2_service_docs_all
     
     # Cleanup work directory
     log "Cleaning up work directory..."
