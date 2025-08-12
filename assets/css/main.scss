@@ -571,7 +571,17 @@ h2 {
   margin: 2rem 0;
 }
 
-.action-card {
+/* Service API Documentation Styles */
+
+.service-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.action-card, .service-card {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 1.5rem;
@@ -583,29 +593,29 @@ h2 {
   max-width: 400px;
 }
 
-.action-card:hover {
+.action-card:hover, .service-card:hover {
   box-shadow: 0 8px 16px rgba(71, 198, 238, 0.15);
   transform: translateY(-2px);
   border-left-color: #2596be;
 }
 
-.action-card h4 {
+.action-card h4, .service-card h4 {
   margin-top: 0;
   margin-bottom: 0.5rem;
   color: var(--nav2-blue);
 }
 
-.action-card h4 a {
+.action-card h4 a, .service-card h4 a {
   text-decoration: none;
   color: var(--nav2-blue);
   font-weight: 600;
 }
 
-.action-card h4 a:hover {
+.action-card h4 a:hover, .service-card h4 a:hover {
   color: var(--nav2-accent);
 }
 
-.action-package {
+.action-package, .service-package {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.85rem;
   color: var(--text-secondary);
@@ -617,7 +627,7 @@ h2 {
   border: 1px solid #c9d1d9;
 }
 
-.action-description {
+.action-description, .service-description {
   color: var(--text-primary);
   font-size: 0.95rem;
   line-height: 1.5;
@@ -794,13 +804,13 @@ pre code {
   text-decoration: none;
 }
 
-/* Responsive design for action documentation */
+/* Responsive design for action and service documentation */
 @media (max-width: 768px) {
-  .action-grid {
+  .action-grid, .service-grid {
     justify-content: center;
   }
   
-  .action-card {
+  .action-card, .service-card {
     flex: 1 1 280px;
     max-width: 100%;
   }
