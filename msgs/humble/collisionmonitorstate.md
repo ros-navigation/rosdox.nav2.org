@@ -24,54 +24,6 @@ Monitoring state for collision avoidance systems
 
 
 
-## Usage Examples
-
-### Python
-
-```python
-import rclpy
-from rclpy.node import Node
-from nav2_msgs.msg import CollisionMonitorState
-
-class CollisionMonitorStatePublisher(Node):
-    def __init__(self):
-        super().__init__('collisionmonitorstate_publisher')
-        self.publisher = self.create_publisher(CollisionMonitorState, 'collisionmonitorstate', 10)
-        
-    def publish_message(self):
-        msg = CollisionMonitorState()
-        # Set msg.action_type as needed
-        msg.polygon_name = 'example_value'
-        self.publisher.publish(msg)
-```
-
-### C++
-
-```cpp
-#include "rclcpp/rclcpp.hpp"
-#include "nav2_msgs/msg/collision_monitor_state.hpp"
-
-class CollisionMonitorStatePublisher : public rclcpp::Node
-{
-public:
-    CollisionMonitorStatePublisher() : Node("collisionmonitorstate_publisher")
-    {
-        publisher_ = create_publisher<nav2_msgs::msg::CollisionMonitorState>("collisionmonitorstate", 10);
-    }
-
-    void publish_message()
-    {
-        auto msg = nav2_msgs::msg::CollisionMonitorState();
-        // Set msg.action_type as needed
-        msg.polygon_name = "example_value";
-        publisher_->publish(msg);
-    }
-
-private:
-    rclcpp::Publisher<nav2_msgs::msg::CollisionMonitorState>::SharedPtr publisher_;
-};
-```
-
 ## Related Messages
 
 - [All Collision Messages](/humble/msgs/index.html#collision-messages)
