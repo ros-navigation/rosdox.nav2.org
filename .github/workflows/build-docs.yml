@@ -63,7 +63,7 @@ jobs:
       - name: Build Jekyll site
         run: |
           echo "Building Jekyll site..."
-          bundle exec jekyll build --verbose
+          JEKYLL_ENV=production bundle exec jekyll build --verbose
           echo "Jekyll build completed"
       
       - name: Setup Pages
