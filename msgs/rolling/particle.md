@@ -20,6 +20,54 @@ Single particle hypothesis with pose and weight for particle filter localization
 
 
 
+## Usage Examples
+
+### Python
+
+```python
+import rclpy
+from rclpy.node import Node
+from nav2_msgs.msg import Particle
+
+class ParticlePublisher(Node):
+    def __init__(self):
+        super().__init__('particle_publisher')
+        self.publisher = self.create_publisher(Particle, 'particle', 10)
+        
+    def publish_message(self):
+        msg = Particle()
+        # Set msg.pose as needed
+        msg.weight = 0.0
+        self.publisher.publish(msg)
+```
+
+### C++
+
+```cpp
+#include "rclcpp/rclcpp.hpp"
+#include "nav2_msgs/msg/particle.hpp"
+
+class ParticlePublisher : public rclcpp::Node
+{
+public:
+    ParticlePublisher() : Node("particle_publisher")
+    {
+        publisher_ = create_publisher<nav2_msgs::msg::Particle>("particle", 10);
+    }
+
+    void publish_message()
+    {
+        auto msg = nav2_msgs::msg::Particle();
+        // Set msg.pose as needed
+        msg.weight = 0.0;
+        publisher_->publish(msg);
+    }
+
+private:
+    rclcpp::Publisher<nav2_msgs::msg::Particle>::SharedPtr publisher_;
+};
+```
+
 ## Related Messages
 
 - [All Localization Messages](/rolling/msgs/index.html#localization-messages)

@@ -113,6 +113,6 @@ private:
 
 ## Related Services
 
-- [All Lifecycle Services](/srvs/kilted/index.html#lifecycle-services)
-- [Service API Overview](/srvs/kilted/index.html)
+- [All Lifecycle Services](/kilted/srvs/index.html#lifecycle-services)
+- [Service API Overview](/kilted/srvs/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

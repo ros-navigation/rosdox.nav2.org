@@ -103,6 +103,6 @@ private:
 
 ## Related Services
 
-- [All Localization Services](/srvs/rolling/index.html#localization-services)
-- [Service API Overview](/srvs/rolling/index.html)
+- [All Localization Services](/rolling/srvs/index.html#localization-services)
+- [Service API Overview](/rolling/srvs/index.html)
 - [Nav2 C++ API Documentation](/rolling/html/index.html)

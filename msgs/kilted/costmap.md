@@ -9,45 +9,72 @@ permalink: /msgs/kilted/costmap.html
 **Package:** `nav2_msgs`  
 **Category:** Costmap Messages
 
-2D grid map representation with cost values for navigation planning
+Occupancy grid representation for navigation planning with cost values
 
 ## Message Definition
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `header` | `std_msgs/Header` | Standard ROS header with timestamp and frame information |
-| `metadata` | `CostmapMetaData` | Metadata about the costmap structure and properties |
-| `data` | `uint8[]` | Cost data in row-major order, starting with (0,0) |
+| `header` | `std_msgs/Header` | This represents a 2-D grid map, in which each cell has an associated cost |
+| `metadata` | `CostmapMetaData` | MetaData for the map |
+| `data` | `uint8[]` | The cost data, in row-major order, starting with (0,0). |
+
+
+
+## Usage Examples
+
+### Python
+
+```python
+import rclpy
+from rclpy.node import Node
+from nav2_msgs.msg import Costmap
+
+class CostmapPublisher(Node):
+    def __init__(self):
+        super().__init__('costmap_publisher')
+        self.publisher = self.create_publisher(Costmap, 'costmap', 10)
+        
+    def publish_message(self):
+        msg = Costmap()
+        msg.header.frame_id = 'map'
+        msg.header.stamp = self.get_clock().now().to_msg()
+        # Set msg.metadata as needed
+        msg.data = []  # Fill array as needed
+        self.publisher.publish(msg)
+```
+
+### C++
+
+```cpp
+#include "rclcpp/rclcpp.hpp"
+#include "nav2_msgs/msg/costmap.hpp"
+
+class CostmapPublisher : public rclcpp::Node
+{
+public:
+    CostmapPublisher() : Node("costmap_publisher")
+    {
+        publisher_ = create_publisher<nav2_msgs::msg::Costmap>("costmap", 10);
+    }
+
+    void publish_message()
+    {
+        auto msg = nav2_msgs::msg::Costmap();
+        msg.header.frame_id = "map";
+        msg.header.stamp = this->now();
+        // Set msg.metadata as needed
+        // Fill msg.data array as needed
+        publisher_->publish(msg);
+    }
+
+private:
+    rclcpp::Publisher<nav2_msgs::msg::Costmap>::SharedPtr publisher_;
+};
+```
 
 ## Related Messages
 
-- [CostmapMetaData](/msgs/kilted/costmapmetadata.html) - Metadata structure used in this message
-- [CostmapUpdate](/msgs/kilted/costmapupdate.html) - Incremental updates to costmap data
-- [All Costmap Messages](/msgs/kilted/index.html#costmap-messages)
-
-## Usage Context
-
-The Costmap message is fundamental to Nav2's navigation system, representing the robot's understanding of the environment for path planning and obstacle avoidance. It's used by:
-
-### Planners
-- **Global planners** use costmaps to find optimal paths from start to goal
-- **Local planners** use costmaps for real-time obstacle avoidance
-
-### Costmap Layers
-Different costmap layers contribute to the final cost values:
-- **Static layer** - Permanent obstacles from map data
-- **Obstacle layer** - Dynamic obstacles from sensor data
-- **Inflation layer** - Inflated costs around obstacles
-- **Speed filter layer** - Speed-based cost modifications
-
-### Navigation Stack Integration
-- Published by costmap_2d nodes (global_costmap, local_costmap)
-- Consumed by planners, controllers, and behaviors
-- Used for visualization in RViz and other tools
-
-### Performance Considerations
-- Large costmaps can be bandwidth-intensive
-- Consider using [CostmapUpdate](/msgs/kilted/costmapupdate.html) for incremental changes
-- Resolution affects both accuracy and computational cost
-
-[Back to Message APIs](/msgs/kilted/)
+- [All Costmap Messages](/kilted/msgs/index.html#costmap-messages)
+- [Message API Overview](/kilted/msgs/index.html)
+- [Nav2 C++ API Documentation](/kilted/html/index.html)

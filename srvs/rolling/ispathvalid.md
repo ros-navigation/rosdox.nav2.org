@@ -113,6 +113,6 @@ private:
 
 ## Related Services
 
-- [All Validation Services](/srvs/rolling/index.html#validation-services)
-- [Service API Overview](/srvs/rolling/index.html)
+- [All Validation Services](/rolling/srvs/index.html#validation-services)
+- [Service API Overview](/rolling/srvs/index.html)
 - [Nav2 C++ API Documentation](/rolling/html/index.html)

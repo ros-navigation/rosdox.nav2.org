@@ -113,6 +113,6 @@ private:
 
 ## Related Services
 
-- [All Validation Services](/srvs/kilted/index.html#validation-services)
-- [Service API Overview](/srvs/kilted/index.html)
+- [All Validation Services](/kilted/srvs/index.html#validation-services)
+- [Service API Overview](/kilted/srvs/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

@@ -9,38 +9,76 @@ permalink: /msgs/kilted/behaviortreestatuschange.html
 **Package:** `nav2_msgs`  
 **Category:** Behavior Tree Messages
 
-Status change events from behavior tree node execution
+Status change events from behavior tree nodes
 
 ## Message Definition
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `timestamp` | `builtin_interfaces/Time` | Internal behavior tree event timestamp (wall clock time) |
-| `node_name` | `string` | Name of the behavior tree node |
-| `uid` | `uint16` | Unique identifier for this node |
-| `previous_status` | `string` | Previous node status (IDLE, RUNNING, SUCCESS, or FAILURE) |
-| `current_status` | `string` | Current node status (IDLE, RUNNING, SUCCESS, or FAILURE) |
+| `timestamp` | `builtin_interfaces/Time` | internal behavior tree event timestamp. Typically this is wall clock time |
+| `node_name` | `string` | String value or identifier |
+| `uid` | `uint16` | unique ID for this node |
+| `previous_status` | `string` | IDLE, RUNNING, SUCCESS or FAILURE |
+| `current_status` | `string` | IDLE, RUNNING, SUCCESS or FAILURE |
+
+
+
+## Usage Examples
+
+### Python
+
+```python
+import rclpy
+from rclpy.node import Node
+from nav2_msgs.msg import BehaviorTreeStatusChange
+
+class BehaviorTreeStatusChangePublisher(Node):
+    def __init__(self):
+        super().__init__('behaviortreestatuschange_publisher')
+        self.publisher = self.create_publisher(BehaviorTreeStatusChange, 'behaviortreestatuschange', 10)
+        
+    def publish_message(self):
+        msg = BehaviorTreeStatusChange()
+        # Set msg.timestamp as needed
+        msg.node_name = 'example_value'
+        msg.uid = 0
+        msg.previous_status = 'example_value'
+        msg.current_status = 'example_value'
+        self.publisher.publish(msg)
+```
+
+### C++
+
+```cpp
+#include "rclcpp/rclcpp.hpp"
+#include "nav2_msgs/msg/behavior_tree_status_change.hpp"
+
+class BehaviorTreeStatusChangePublisher : public rclcpp::Node
+{
+public:
+    BehaviorTreeStatusChangePublisher() : Node("behaviortreestatuschange_publisher")
+    {
+        publisher_ = create_publisher<nav2_msgs::msg::BehaviorTreeStatusChange>("behaviortreestatuschange", 10);
+    }
+
+    void publish_message()
+    {
+        auto msg = nav2_msgs::msg::BehaviorTreeStatusChange();
+        // Set msg.timestamp as needed
+        msg.node_name = "example_value";
+        msg.uid = 0;
+        msg.previous_status = "example_value";
+        msg.current_status = "example_value";
+        publisher_->publish(msg);
+    }
+
+private:
+    rclcpp::Publisher<nav2_msgs::msg::BehaviorTreeStatusChange>::SharedPtr publisher_;
+};
+```
 
 ## Related Messages
 
-- [BehaviorTreeLog](/msgs/kilted/behaviortreelog.html) - Contains arrays of these status change events
-- [All Behavior Tree Messages](/msgs/kilted/index.html#behavior-tree-messages)
-
-## Usage Context
-
-This message represents individual state transitions within Nav2's behavior tree execution. Each status change event provides detailed information about:
-
-- Which specific node changed state
-- What the transition was (from/to which status)
-- When the transition occurred
-- Unique identification of the node instance
-
-These events are essential for:
-- Real-time monitoring of behavior tree execution
-- Debugging navigation behavior issues
-- Performance profiling of different behavior tree nodes
-- Creating detailed execution traces for analysis
-
-The status transitions follow the standard behavior tree node lifecycle, where nodes transition between IDLE, RUNNING, SUCCESS, and FAILURE states based on their execution results.
-
-[Back to Message APIs](/msgs/kilted/)
+- [All Behavior Tree Messages](/kilted/msgs/index.html#behavior-tree-messages)
+- [Message API Overview](/kilted/msgs/index.html)
+- [Nav2 C++ API Documentation](/kilted/html/index.html)

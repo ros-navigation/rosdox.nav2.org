@@ -112,6 +112,6 @@ private:
 
 ## Related Services
 
-- [All Map Services](/srvs/jazzy/index.html#map-services)
-- [Service API Overview](/srvs/jazzy/index.html)
+- [All Map Services](/jazzy/srvs/index.html#map-services)
+- [Service API Overview](/jazzy/srvs/index.html)
 - [Nav2 C++ API Documentation](/jazzy/html/index.html)

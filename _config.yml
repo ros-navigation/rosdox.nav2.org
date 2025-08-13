@@ -23,6 +23,16 @@ collections:
     output: true
     permalink: /:collection/:name/
 
+keep_files:
+  - humble
+  - jazzy
+  - kilted
+  - rolling
+  - nav2-humble
+  - nav2-jazzy
+  - nav2-kilted
+  - nav2-rolling
+
 exclude:
   - .github/
   - scripts/
@@ -30,3 +40,4 @@ exclude:
   - Gemfile*
   - README.md
   - LICENSE
+  - work/

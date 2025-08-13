@@ -23,6 +23,62 @@ Filter information for costmap layers and processing
 
 
 
+## Usage Examples
+
+### Python
+
+```python
+import rclpy
+from rclpy.node import Node
+from nav2_msgs.msg import CostmapFilterInfo
+
+class CostmapFilterInfoPublisher(Node):
+    def __init__(self):
+        super().__init__('costmapfilterinfo_publisher')
+        self.publisher = self.create_publisher(CostmapFilterInfo, 'costmapfilterinfo', 10)
+        
+    def publish_message(self):
+        msg = CostmapFilterInfo()
+        msg.header.frame_id = 'map'
+        msg.header.stamp = self.get_clock().now().to_msg()
+        # Set msg.type as needed
+        msg.filter_mask_topic = 'example_value'
+        msg.base = 0.0
+        msg.multiplier = 0.0
+        self.publisher.publish(msg)
+```
+
+### C++
+
+```cpp
+#include "rclcpp/rclcpp.hpp"
+#include "nav2_msgs/msg/costmap_filter_info.hpp"
+
+class CostmapFilterInfoPublisher : public rclcpp::Node
+{
+public:
+    CostmapFilterInfoPublisher() : Node("costmapfilterinfo_publisher")
+    {
+        publisher_ = create_publisher<nav2_msgs::msg::CostmapFilterInfo>("costmapfilterinfo", 10);
+    }
+
+    void publish_message()
+    {
+        auto msg = nav2_msgs::msg::CostmapFilterInfo();
+        msg.header.frame_id = "map";
+        msg.header.stamp = this->now();
+        // Set msg.type as needed
+        msg.filter_mask_topic = "example_value";
+        msg.base = 0.0;
+        msg.multiplier = 0.0;
+        publisher_->publish(msg);
+    }
+
+private:
+    rclcpp::Publisher<nav2_msgs::msg::CostmapFilterInfo>::SharedPtr publisher_;
+};
+```
+
 ## Related Messages
 
 - [All Costmap Messages](/rolling/msgs/index.html#costmap-messages)

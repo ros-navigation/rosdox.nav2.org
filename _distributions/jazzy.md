@@ -4,8 +4,8 @@ description: "Active Long Term Support (LTS) release - Recommended for productio
 status: "LTS"
 order: 2
 ros_version: "jazzy"
-last_updated: 2025-08-08
-build_date: 2025-08-08
+last_updated: 2025-08-12
+build_date: 2025-08-12
 commit_hash: 2445c37af334d0e2954005ffba8390ff31e7f2fe
 slug: "jazzy"
 ---

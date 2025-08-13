@@ -106,6 +106,6 @@ private:
 
 ## Related Services
 
-- [All Costmap Services](/srvs/rolling/index.html#costmap-services)
-- [Service API Overview](/srvs/rolling/index.html)
+- [All Costmap Services](/rolling/srvs/index.html#costmap-services)
+- [Service API Overview](/rolling/srvs/index.html)
 - [Nav2 C++ API Documentation](/rolling/html/index.html)

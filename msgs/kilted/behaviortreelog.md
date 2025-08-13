@@ -9,28 +9,67 @@ permalink: /msgs/kilted/behaviortreelog.html
 **Package:** `nav2_msgs`  
 **Category:** Behavior Tree Messages
 
-Log data from behavior tree execution including events and status changes
+Logging information from behavior tree execution
 
 ## Message Definition
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `timestamp` | `builtin_interfaces/Time` | ROS time when the log message was sent |
-| `event_log` | `BehaviorTreeStatusChange[]` | Array of behavior tree status change events |
+| `timestamp` | `builtin_interfaces/Time` | ROS time that this log message was sent. |
+| `event_log` | `BehaviorTreeStatusChange[]` | Array of BehaviorTreeStatusChange values |
+
+
+
+## Usage Examples
+
+### Python
+
+```python
+import rclpy
+from rclpy.node import Node
+from nav2_msgs.msg import BehaviorTreeLog
+
+class BehaviorTreeLogPublisher(Node):
+    def __init__(self):
+        super().__init__('behaviortreelog_publisher')
+        self.publisher = self.create_publisher(BehaviorTreeLog, 'behaviortreelog', 10)
+        
+    def publish_message(self):
+        msg = BehaviorTreeLog()
+        # Set msg.timestamp as needed
+        msg.event_log = []  # Fill array as needed
+        self.publisher.publish(msg)
+```
+
+### C++
+
+```cpp
+#include "rclcpp/rclcpp.hpp"
+#include "nav2_msgs/msg/behavior_tree_log.hpp"
+
+class BehaviorTreeLogPublisher : public rclcpp::Node
+{
+public:
+    BehaviorTreeLogPublisher() : Node("behaviortreelog_publisher")
+    {
+        publisher_ = create_publisher<nav2_msgs::msg::BehaviorTreeLog>("behaviortreelog", 10);
+    }
+
+    void publish_message()
+    {
+        auto msg = nav2_msgs::msg::BehaviorTreeLog();
+        // Set msg.timestamp as needed
+        // Fill msg.event_log array as needed
+        publisher_->publish(msg);
+    }
+
+private:
+    rclcpp::Publisher<nav2_msgs::msg::BehaviorTreeLog>::SharedPtr publisher_;
+};
+```
 
 ## Related Messages
 
-- [BehaviorTreeStatusChange](/msgs/kilted/behaviortreestatuschange.html) - Individual status change events contained in the log
-- [All Behavior Tree Messages](/msgs/kilted/index.html#behavior-tree-messages)
-
-## Usage Context
-
-This message is typically published by Nav2's behavior tree executor to provide comprehensive logging of behavior tree execution. It allows external systems to monitor and analyze the execution flow of behavior trees used in navigation tasks.
-
-The log contains a collection of status change events that occurred within a specific time window, making it useful for:
-- Debugging behavior tree execution
-- Performance analysis of navigation behaviors
-- Historical analysis of robot decision-making
-- Integration with external monitoring systems
-
-[Back to Message APIs](/msgs/kilted/)
+- [All Behavior Tree Messages](/kilted/msgs/index.html#behavior-tree-messages)
+- [Message API Overview](/kilted/msgs/index.html)
+- [Nav2 C++ API Documentation](/kilted/html/index.html)

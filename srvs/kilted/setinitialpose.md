@@ -103,6 +103,6 @@ private:
 
 ## Related Services
 
-- [All Localization Services](/srvs/kilted/index.html#localization-services)
-- [Service API Overview](/srvs/kilted/index.html)
+- [All Localization Services](/kilted/srvs/index.html#localization-services)
+- [Service API Overview](/kilted/srvs/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

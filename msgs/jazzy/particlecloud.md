@@ -20,6 +20,56 @@ Collection of particles representing pose distribution in particle filter
 
 
 
+## Usage Examples
+
+### Python
+
+```python
+import rclpy
+from rclpy.node import Node
+from nav2_msgs.msg import ParticleCloud
+
+class ParticleCloudPublisher(Node):
+    def __init__(self):
+        super().__init__('particlecloud_publisher')
+        self.publisher = self.create_publisher(ParticleCloud, 'particlecloud', 10)
+        
+    def publish_message(self):
+        msg = ParticleCloud()
+        msg.header.frame_id = 'map'
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.particles = []  # Fill array as needed
+        self.publisher.publish(msg)
+```
+
+### C++
+
+```cpp
+#include "rclcpp/rclcpp.hpp"
+#include "nav2_msgs/msg/particle_cloud.hpp"
+
+class ParticleCloudPublisher : public rclcpp::Node
+{
+public:
+    ParticleCloudPublisher() : Node("particlecloud_publisher")
+    {
+        publisher_ = create_publisher<nav2_msgs::msg::ParticleCloud>("particlecloud", 10);
+    }
+
+    void publish_message()
+    {
+        auto msg = nav2_msgs::msg::ParticleCloud();
+        msg.header.frame_id = "map";
+        msg.header.stamp = this->now();
+        // Fill msg.particles array as needed
+        publisher_->publish(msg);
+    }
+
+private:
+    rclcpp::Publisher<nav2_msgs::msg::ParticleCloud>::SharedPtr publisher_;
+};
+```
+
 ## Related Messages
 
 - [All Localization Messages](/jazzy/msgs/index.html#localization-messages)

@@ -21,6 +21,58 @@ Speed limit information for navigation areas
 
 
 
+## Usage Examples
+
+### Python
+
+```python
+import rclpy
+from rclpy.node import Node
+from nav2_msgs.msg import SpeedLimit
+
+class SpeedLimitPublisher(Node):
+    def __init__(self):
+        super().__init__('speedlimit_publisher')
+        self.publisher = self.create_publisher(SpeedLimit, 'speedlimit', 10)
+        
+    def publish_message(self):
+        msg = SpeedLimit()
+        msg.header.frame_id = 'map'
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.percentage = True
+        msg.speed_limit = 0.0
+        self.publisher.publish(msg)
+```
+
+### C++
+
+```cpp
+#include "rclcpp/rclcpp.hpp"
+#include "nav2_msgs/msg/speed_limit.hpp"
+
+class SpeedLimitPublisher : public rclcpp::Node
+{
+public:
+    SpeedLimitPublisher() : Node("speedlimit_publisher")
+    {
+        publisher_ = create_publisher<nav2_msgs::msg::SpeedLimit>("speedlimit", 10);
+    }
+
+    void publish_message()
+    {
+        auto msg = nav2_msgs::msg::SpeedLimit();
+        msg.header.frame_id = "map";
+        msg.header.stamp = this->now();
+        msg.percentage = true;
+        msg.speed_limit = 0.0;
+        publisher_->publish(msg);
+    }
+
+private:
+    rclcpp::Publisher<nav2_msgs::msg::SpeedLimit>::SharedPtr publisher_;
+};
+```
+
 ## Related Messages
 
 - [All Control Messages](/humble/msgs/index.html#control-messages)

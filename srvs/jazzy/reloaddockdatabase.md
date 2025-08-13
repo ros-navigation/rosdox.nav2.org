@@ -106,6 +106,6 @@ private:
 
 ## Related Services
 
-- [All Docking Services](/srvs/jazzy/index.html#docking-services)
-- [Service API Overview](/srvs/jazzy/index.html)
+- [All Docking Services](/jazzy/srvs/index.html#docking-services)
+- [Service API Overview](/jazzy/srvs/index.html)
 - [Nav2 C++ API Documentation](/jazzy/html/index.html)

@@ -113,6 +113,6 @@ private:
 
 ## Related Services
 
-- [All Lifecycle Services](/srvs/rolling/index.html#lifecycle-services)
-- [Service API Overview](/srvs/rolling/index.html)
+- [All Lifecycle Services](/rolling/srvs/index.html#lifecycle-services)
+- [Service API Overview](/rolling/srvs/index.html)
 - [Nav2 C++ API Documentation](/rolling/html/index.html)

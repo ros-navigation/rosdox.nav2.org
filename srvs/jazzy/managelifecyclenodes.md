@@ -113,6 +113,6 @@ private:
 
 ## Related Services
 
-- [All Lifecycle Services](/srvs/jazzy/index.html#lifecycle-services)
-- [Service API Overview](/srvs/jazzy/index.html)
+- [All Lifecycle Services](/jazzy/srvs/index.html#lifecycle-services)
+- [Service API Overview](/jazzy/srvs/index.html)
 - [Nav2 C++ API Documentation](/jazzy/html/index.html)

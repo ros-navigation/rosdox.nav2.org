@@ -1,0 +1,120 @@
+---
+layout: default
+title: "UndockRobot Action"
+permalink: /actions/rolling/undockrobot.html
+---
+
+# UndockRobot Action
+
+**Package:** `nav2_msgs`  
+**Category:** Autodocking
+
+Autonomously undock robot from a charging station or docking platform
+
+## Message Definitions
+
+### Goal Message
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `dock_type` | `string` | Type of docking station or charging platform to dock with (e.g., "nova_carter_dock", "charging_dock") |
+| `max_undocking_time` | `float32` | Maximum time to undock |
+
+
+### Result Message
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `NONE` | `uint16` | Success status code indicating the action completed without errors |
+| `DOCK_NOT_VALID` | `uint16` | Error code indicating the dock pose or configuration is invalid |
+| `FAILED_TO_CONTROL` | `uint16` | Error code indicating control system failure during docking maneuver |
+| `TIMEOUT` | `uint16` | Error code indicating the action exceeded its maximum allowed time |
+| `UNKNOWN` | `uint16` | Generic error code for unexpected or unclassified failures |
+| `success` | `bool` | docking success status |
+| `error_code` | `uint16` | Contextual error code, if any |
+| `error_msg` | `string` | Human-readable error message describing what went wrong during action execution |
+
+
+### Feedback Message
+
+No fields defined.
+
+
+## Usage Examples
+
+### Python
+
+```python
+import rclpy
+from rclpy.node import Node
+from rclpy.action import ActionClient
+from nav2_msgs.action import UndockRobot
+
+class Nav2ActionClient(Node):
+    def __init__(self):
+        super().__init__('nav2_action_client')
+        self.action_client = ActionClient(self, UndockRobot, 'undock_robot')
+        
+    def send_goal(self):
+        goal_msg = UndockRobot.Goal()
+        goal_msg.dock_type = 'nova_carter_dock' 
+        
+        self.action_client.wait_for_server()
+        future = self.action_client.send_goal_async(
+            goal_msg, feedback_callback=self.feedback_callback)
+        return future
+        
+    def feedback_callback(self, feedback_msg):
+        self.get_logger().info(f'Received feedback: {feedback_msg.feedback}')
+```
+
+### C++
+
+```cpp
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp_action/rclcpp_action.hpp"
+#include "nav2_msgs/action/undock_robot.hpp"
+
+class Nav2ActionClient : public rclcpp::Node
+{
+public:
+    using UndockRobotAction = nav2_msgs::action::UndockRobot;
+    using GoalHandle = rclcpp_action::ClientGoalHandle<UndockRobotAction>;
+
+    Nav2ActionClient() : Node("nav2_action_client")
+    {
+        action_client_ = rclcpp_action::create_client<UndockRobotAction>(
+            this, "undock_robot");
+    }
+
+    void send_goal()
+    {
+        auto goal_msg = UndockRobotAction::Goal();
+        goal_msg.dock_type = "nova_carter_dock";
+        
+        action_client_->wait_for_action_server();
+        
+        auto send_goal_options = rclcpp_action::Client<UndockRobotAction>::SendGoalOptions();
+        send_goal_options.feedback_callback = 
+            std::bind(&Nav2ActionClient::feedback_callback, this, 
+                     std::placeholders::_1, std::placeholders::_2);
+        
+        action_client_->async_send_goal(goal_msg, send_goal_options);
+    }
+
+private:
+    rclcpp_action::Client<UndockRobotAction>::SharedPtr action_client_;
+    
+    void feedback_callback(GoalHandle::SharedPtr, 
+                          const std::shared_ptr<const UndockRobotAction::Feedback> feedback)
+    {
+        RCLCPP_INFO(this->get_logger(), "Received feedback");
+    }
+};
+```
+
+## Related Actions
+
+- [All Autodocking Actions](/actions/rolling/index.html#autodocking)
+- [Action API Overview](/actions/rolling/index.html)
+- [Nav2 C++ API Documentation](/rolling/html/index.html)

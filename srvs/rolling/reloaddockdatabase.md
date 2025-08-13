@@ -106,6 +106,6 @@ private:
 
 ## Related Services
 
-- [All Docking Services](/srvs/rolling/index.html#docking-services)
-- [Service API Overview](/srvs/rolling/index.html)
+- [All Docking Services](/rolling/srvs/index.html#docking-services)
+- [Service API Overview](/rolling/srvs/index.html)
 - [Nav2 C++ API Documentation](/rolling/html/index.html)

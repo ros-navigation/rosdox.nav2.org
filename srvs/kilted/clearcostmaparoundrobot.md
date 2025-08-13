@@ -106,6 +106,6 @@ private:
 
 ## Related Services
 
-- [All Costmap Services](/srvs/kilted/index.html#costmap-services)
-- [Service API Overview](/srvs/kilted/index.html)
+- [All Costmap Services](/kilted/srvs/index.html#costmap-services)
+- [Service API Overview](/kilted/srvs/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

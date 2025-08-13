@@ -9,54 +9,84 @@ permalink: /msgs/kilted/voxelgrid.html
 **Package:** `nav2_msgs`  
 **Category:** Costmap Messages
 
-3D voxel grid representation for obstacle tracking and collision detection
+3D voxel grid representation for obstacle detection and mapping
 
 ## Message Definition
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `header` | `std_msgs/Header` | Standard ROS header with timestamp and frame information |
-| `data` | `uint32[]` | Voxel data array representing 3D occupancy information |
-| `origin` | `geometry_msgs/Point32` | Origin point of the voxel grid in 3D space |
-| `resolutions` | `geometry_msgs/Vector3` | Resolution of the X, Y, and Z dimensions (meters per voxel) |
-| `size_x` | `uint32` | Number of voxels in X dimension |
-| `size_y` | `uint32` | Number of voxels in Y dimension |
-| `size_z` | `uint32` | Number of voxels in Z dimension |
+| `data` | `uint32[]` | Occupancy grid data as a flat array of cost values |
+| `origin` | `geometry_msgs/Point32` | Real-world pose of the cell at (0,0) in the costmap |
+| `resolutions` | `geometry_msgs/Vector3` | Message field - see Nav2 documentation for specific usage details |
+| `size_x` | `uint32` | Integer numerical value |
+| `size_y` | `uint32` | Integer numerical value |
+| `size_z` | `uint32` | Integer numerical value |
+
+
+
+## Usage Examples
+
+### Python
+
+```python
+import rclpy
+from rclpy.node import Node
+from nav2_msgs.msg import VoxelGrid
+
+class VoxelGridPublisher(Node):
+    def __init__(self):
+        super().__init__('voxelgrid_publisher')
+        self.publisher = self.create_publisher(VoxelGrid, 'voxelgrid', 10)
+        
+    def publish_message(self):
+        msg = VoxelGrid()
+        msg.header.frame_id = 'map'
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.data = []  # Fill array as needed
+        # Set msg.origin as needed
+        # Set msg.resolutions as needed
+        msg.size_x = 0
+        msg.size_y = 0
+        msg.size_z = 0
+        self.publisher.publish(msg)
+```
+
+### C++
+
+```cpp
+#include "rclcpp/rclcpp.hpp"
+#include "nav2_msgs/msg/voxel_grid.hpp"
+
+class VoxelGridPublisher : public rclcpp::Node
+{
+public:
+    VoxelGridPublisher() : Node("voxelgrid_publisher")
+    {
+        publisher_ = create_publisher<nav2_msgs::msg::VoxelGrid>("voxelgrid", 10);
+    }
+
+    void publish_message()
+    {
+        auto msg = nav2_msgs::msg::VoxelGrid();
+        msg.header.frame_id = "map";
+        msg.header.stamp = this->now();
+        // Fill msg.data array as needed
+        // Set msg.origin as needed
+        // Set msg.resolutions as needed
+        msg.size_x = 0;
+        msg.size_y = 0;
+        msg.size_z = 0;
+        publisher_->publish(msg);
+    }
+
+private:
+    rclcpp::Publisher<nav2_msgs::msg::VoxelGrid>::SharedPtr publisher_;
+};
+```
 
 ## Related Messages
 
-- [Costmap](/msgs/kilted/costmap.html) - 2D counterpart for navigation planning
-- [All Costmap Messages](/msgs/kilted/index.html#costmap-messages)
-
-## Usage Context
-
-The VoxelGrid message is used in Nav2's 3D obstacle tracking and costmap generation, particularly in the voxel layer of costmap_2d.
-
-### 3D Obstacle Tracking
-- **Sensor Integration:** Combines data from 3D sensors (3D lidars, depth cameras)
-- **Clearing and Marking:** Tracks which voxels are clear vs occupied
-- **Temporal Persistence:** Maintains obstacle information over time
-
-### Costmap Integration
-- **Projection to 2D:** VoxelGrid data is projected onto 2D costmaps
-- **Obstacle Layer:** Used by obstacle costmap layer for dynamic obstacles
-- **Height Filtering:** Only obstacles within robot height range affect navigation
-
-### Data Encoding
-The uint32 data array typically uses bit flags:
-- **Marked bits:** Indicate voxels with detected obstacles
-- **Cleared bits:** Indicate voxels confirmed as free space
-- **Unknown bits:** Indicate voxels with no sensor information
-
-### Performance Considerations
-- **Memory Usage:** 3D grids can be memory-intensive
-- **Resolution Trade-offs:** Higher resolution improves accuracy but increases computation
-- **Sensor Range:** Grid size should match sensor effective range
-
-### Common Applications
-- **Autonomous vehicles** with 3D lidar sensors
-- **Mobile robots** operating in environments with overhangs
-- **Drones** requiring full 3D obstacle avoidance
-- **Industrial robots** in complex 3D environments
-
-[Back to Message APIs](/msgs/kilted/)
+- [All Costmap Messages](/kilted/msgs/index.html#costmap-messages)
+- [Message API Overview](/kilted/msgs/index.html)
+- [Nav2 C++ API Documentation](/kilted/html/index.html)

@@ -106,6 +106,6 @@ private:
 
 ## Related Services
 
-- [All Docking Services](/srvs/kilted/index.html#docking-services)
-- [Service API Overview](/srvs/kilted/index.html)
+- [All Docking Services](/kilted/srvs/index.html#docking-services)
+- [Service API Overview](/kilted/srvs/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

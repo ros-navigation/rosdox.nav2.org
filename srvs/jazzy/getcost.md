@@ -115,6 +115,6 @@ private:
 
 ## Related Services
 
-- [All Costmap Services](/srvs/jazzy/index.html#costmap-services)
-- [Service API Overview](/srvs/jazzy/index.html)
+- [All Costmap Services](/jazzy/srvs/index.html#costmap-services)
+- [Service API Overview](/jazzy/srvs/index.html)
 - [Nav2 C++ API Documentation](/jazzy/html/index.html)

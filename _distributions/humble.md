@@ -4,8 +4,8 @@ description: "Active Long Term Support (LTS) release - Recommended for productio
 status: "LTS"
 order: 1
 ros_version: "humble"
-last_updated: 2025-08-08
-build_date: 2025-08-08
+last_updated: 2025-08-12
+build_date: 2025-08-12
 commit_hash: 76cdd45da31c7da87a9c2cbefff8e7437b47dae9
 slug: "humble"
 ---

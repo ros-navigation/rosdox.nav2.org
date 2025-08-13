@@ -103,6 +103,6 @@ private:
 
 ## Related Services
 
-- [All Localization Services](/srvs/humble/index.html#localization-services)
-- [Service API Overview](/srvs/humble/index.html)
+- [All Localization Services](/humble/srvs/index.html#localization-services)
+- [Service API Overview](/humble/srvs/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)

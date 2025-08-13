@@ -112,6 +112,6 @@ private:
 
 ## Related Services
 
-- [All Map Services](/srvs/kilted/index.html#map-services)
-- [Service API Overview](/srvs/kilted/index.html)
+- [All Map Services](/kilted/srvs/index.html#map-services)
+- [Service API Overview](/kilted/srvs/index.html)
 - [Nav2 C++ API Documentation](/kilted/html/index.html)

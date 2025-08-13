@@ -112,6 +112,6 @@ private:
 
 ## Related Services
 
-- [All Map Services](/srvs/rolling/index.html#map-services)
-- [Service API Overview](/srvs/rolling/index.html)
+- [All Map Services](/rolling/srvs/index.html#map-services)
+- [Service API Overview](/rolling/srvs/index.html)
 - [Nav2 C++ API Documentation](/rolling/html/index.html)

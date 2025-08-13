@@ -111,6 +111,6 @@ private:
 
 ## Related Services
 
-- [All Lifecycle Services](/srvs/humble/index.html#lifecycle-services)
-- [Service API Overview](/srvs/humble/index.html)
+- [All Lifecycle Services](/humble/srvs/index.html#lifecycle-services)
+- [Service API Overview](/humble/srvs/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)

@@ -107,6 +107,6 @@ private:
 
 ## Related Services
 
-- [All Validation Services](/srvs/humble/index.html#validation-services)
-- [Service API Overview](/srvs/humble/index.html)
+- [All Validation Services](/humble/srvs/index.html#validation-services)
+- [Service API Overview](/humble/srvs/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)

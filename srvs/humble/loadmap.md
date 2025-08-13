@@ -112,6 +112,6 @@ private:
 
 ## Related Services
 
-- [All Map Services](/srvs/humble/index.html#map-services)
-- [Service API Overview](/srvs/humble/index.html)
+- [All Map Services](/humble/srvs/index.html#map-services)
+- [Service API Overview](/humble/srvs/index.html)
 - [Nav2 C++ API Documentation](/humble/html/index.html)
